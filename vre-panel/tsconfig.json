@@ -11,10 +11,10 @@
         "strictNullChecks": true,
         "noUncheckedIndexedAccess": true,
 
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "noUnusedParameters": true,
         "allowUnreachableCode": false,
         "noFallthroughCasesInSwitch": true,

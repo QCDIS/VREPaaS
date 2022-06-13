@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vreapi-deployment
+  labels:
+    app: vreapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vreapi
+  template:
+    metadata:
+      labels:
+        app: vreapi
+    spec:
+      containers:
+        - name: vreapi
+          image: qcdis/vreapi
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8000
+            protocol: TCP

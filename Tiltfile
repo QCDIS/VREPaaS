@@ -1,22 +1,20 @@
 version_settings(constraint='>=0.22.2')
-secret_settings (disable_scrub=True)
+
 
 # API
 
 docker_build(
     'qcdis/vreapi',
     context='.',
-    dockerfile='tilt/vreapis.dev.dockerfile',
+    dockerfile='deploy/vreapis.dev.dockerfile',
     only=['./vreapis/'],
     live_update=[
         sync('./vreapis', '/app'),
-        run('cd /app && /opt/venv/bin/python manage.py makemigrations'),
-        run('cd /app && /opt/venv/bin/python manage.py migrate'),
-        run('cd /app && /opt/venv/bin/pip install -r requirements.txt', trigger='./vreapis/requirements.txt'),
+        run('cd /app && /opt/venv/bin/pip install -r requirements.txt', trigger='./vreapis/requirements.txt')
     ]
 )
 
-k8s_yaml('tilt/vreapis.yaml')
+k8s_yaml('deploy/vreapis.yaml')
 
 k8s_resource(
     'vreapi-deployment',
@@ -29,15 +27,14 @@ k8s_resource(
 docker_build(
     'qcdis/vreapp',
     context='.',
-    dockerfile='tilt/vre-panel.dev.dockerfile',
+    dockerfile='deploy/vre-panel.dev.dockerfile',
     only=['./vre-panel/'],
     live_update=[
-        sync('./vre-panel', '/app'),
-        run('cd /app && npm install', trigger=['./vre-panel/package.json'])
+        sync('./vre-panel', '/app')
     ]
 )
 
-k8s_yaml('tilt/vre-panel.yaml')
+k8s_yaml('deploy/vre-panel.yaml')
 
 k8s_resource(
     'vreapp-deployment',

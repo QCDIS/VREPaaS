@@ -1,21 +1,17 @@
-from sys import stdout
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from . import serializers
+from rest_framework import views
+from rest_framework.response import Response
+from virtual_labs.serializers import VirtualLabSerializer
 from . import models
-from workflows.models import Workflow
-from workflows.serializers import WorkflowSerializer
-import requests
-from vreapis.views import GetSerializerMixin
 
 
-class VirtualLabViewSet(GetSerializerMixin, viewsets.ModelViewSet):
+class Home(views.APIView):
 
-    lookup_field = "slug"
-    queryset = models.VirtualLab.objects.all()
-    serializer_class = serializers.VirtualLabDetailSerializer
-    serializer_action_classes = {
-        'list': serializers.VirtualLabSerializer
+    keycloak_roles = {
+        'GET': ['default-roles-summer-school-22']
     }
 
+    def get(self, request, format=None):
 
+        print(request.roles)
+        vlabs = models.VirtualLab.objects.all()
+        return Response(VirtualLabSerializer(vlabs, many=True).data)

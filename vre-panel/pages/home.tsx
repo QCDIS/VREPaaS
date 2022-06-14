@@ -1,18 +1,9 @@
-import { signIn, useSession } from 'next-auth/react';
 import { Nav } from '../templates/Nav';
+import useAuth from './auth/useAuth';
 
 const Home = () => {
 
-    const { status } = useSession({
-        required: true,
-        onUnauthenticated() {
-            signIn();
-        },
-    })
-
-    if (status === "loading") {
-        return "Loading or not authenticated..."
-    }
+    const isAuthenticated = useAuth(true);
 
     return (
         <div>

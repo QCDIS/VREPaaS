@@ -30,7 +30,8 @@ docker_build(
     dockerfile='deploy/vre-panel.dev.dockerfile',
     only=['./vre-panel/'],
     live_update=[
-        sync('./vre-panel', '/app')
+        sync('./vre-panel', '/app'),
+        run('cd /app && npm install', trigger=['./vre-panel/package.json'])
     ]
 )
 

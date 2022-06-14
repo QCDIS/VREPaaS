@@ -29,7 +29,7 @@ export default function useAuth(shouldRedirect: boolean) {
             if (router.route === '/auth/signin') {
                 router.replace('/');
             }
-            
+
             setIsAuthenticated(true);
         }
 

@@ -4,30 +4,35 @@ import { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { getToken } from 'next-auth/jwt';
+import useAuth from './auth/useAuth';
 
 const VLabs = ({ token }) => {
 
+    const isAuthenticated = useAuth(true);
     const [isOpen, setIsOpen] = useState(false);
     const [vlabs, setVlabs] = useState([]);
 
     useEffect(() => {
 
-        var requestOptions: RequestInit = {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer: " + token.accessToken
-            },
-        };
+        if (isAuthenticated) {
 
-        fetch('http://localhost:8000/api/vlabs/', requestOptions)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                setVlabs(data);
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+            var requestOptions: RequestInit = {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer: " + token.accessToken
+                },
+            };
+
+            fetch('http://localhost:8000/api/vlabs/', requestOptions)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data);
+                    setVlabs(data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        }
     }, []);
 
     const { status } = useSession({
@@ -73,9 +78,9 @@ export async function getServerSideProps(context) {
 
     const { req } = context;
     const secret = process.env.SECRET;
-    const token = await getToken({req, secret});
+    const token = await getToken({ req, secret });
 
-    console.log(token);
+    // console.log(token);
 
     return {
         props: {

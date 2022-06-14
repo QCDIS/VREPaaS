@@ -1,12 +1,39 @@
+import axios from "axios";
 import NextAuth from "next-auth"
 import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak"
 
 const refreshAccessToken = async (token: JWT) => {
   try {
+    // Get a new set of tokens with a refreshToken
+    const tokenResponse = await axios.post(
+      process.env.KEYCLOAK_ISSUER + '/protocol/openid-connect/token',
+      {
+        grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
+        subject_token: token.accessToken,
+        client_id: process.env.KEYCLOAK_CLIENT_ID,
+        requested_token_type: 'urn:ietf:params:oauth:token-type:refresh_token'
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
 
+    console.log(tokenResponse);
+
+    // return {
+    //   ...token,
+    //   accessToken: tokenResponse.data.accessToken,
+    //   accessTokenExpiry: tokenResponse.data.accessTokenExpiry,
+    //   refreshToken: tokenResponse.data.refreshToken
+    // }
   } catch (error) {
-    console.log(error);
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    }
   }
 };
 
@@ -23,7 +50,6 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       if (account && user) {
 
-        console.log(account);
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
         token.accessTokenExpiry = account.expires_at;

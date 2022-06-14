@@ -61,7 +61,6 @@ export default NextAuth({
       expiryDate.setTime(unixTimeZero)
       expiryDate.setSeconds(expiryDate.getSeconds() + token.accessTokenExpiry);
       const refreshElapse = Math.round(expiryDate.getTime() - Date.now());
-      console.log(refreshElapse);
 
       if (refreshElapse > 0) return token;
 

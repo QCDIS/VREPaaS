@@ -3,7 +3,7 @@ import useAuth from './auth/useAuth';
 
 const Home = () => {
 
-    const isAuthenticated = useAuth(true);
+    const _isAuthenticated = useAuth(true);
 
     return (
         <div>

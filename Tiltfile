@@ -1,5 +1,6 @@
 version_settings(constraint='>=0.22.2')
 
+allow_k8s_contexts('kubernetes')
 
 # API
 

@@ -3,7 +3,7 @@ import { NewVREDialog } from '../components/NewVREDialog';
 import { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { getToken } from 'next-auth/jwt';
+import { getToken, JWT } from 'next-auth/jwt';
 import useAuth from './auth/useAuth';
 
 const getSlug = (title: string) => {

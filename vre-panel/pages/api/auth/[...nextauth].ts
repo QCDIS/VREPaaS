@@ -23,12 +23,12 @@ const refreshAccessToken = async (token: JWT) => {
 
     console.log(tokenResponse);
 
-    // return {
-    //   ...token,
-    //   accessToken: tokenResponse.data.accessToken,
-    //   accessTokenExpiry: tokenResponse.data.accessTokenExpiry,
-    //   refreshToken: tokenResponse.data.refreshToken
-    // }
+    return {
+      ...token,
+      accessToken: tokenResponse.data.accessToken,
+      accessTokenExpiry: tokenResponse.data.accessTokenExpiry,
+      refreshToken: tokenResponse.data.refreshToken
+    }
   } catch (error) {
     return {
       ...token,
@@ -45,7 +45,7 @@ export default NextAuth({
       issuer: "https://lifewatch.lab.uvalight.net:32443/auth/realms/ess-22",
     })
   ],
-  secret: process.env.SECRET,
+  secret: "685be204b197364afdd9111d6fb5e87b",
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && user) {

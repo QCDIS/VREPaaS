@@ -6,7 +6,7 @@ import RefreshTokenHandler from './auth/refreshTokenHandler';
 
 export default function App({ Component, pageProps: { session, ...pageProps }} : AppProps): JSX.Element {
 
-  const [interval, setInterval] = useState(0);
+  const [_interval, setInterval] = useState(0);
 
   return (
     <SessionProvider session={session}>

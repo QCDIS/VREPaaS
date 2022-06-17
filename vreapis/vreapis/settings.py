@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-sax-m1rs71&n=b0p+71^&h6zfqlqnk=cw1(n55j3j+l7&vd!n9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["lfw-ds001-i022.lifewatch.dev"]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http:\/\/localhost:\d+$',

@@ -31,7 +31,7 @@ const VLabs = ({ token }) => {
                 },
             };
 
-            fetch('http://localhost:8000/api/vlabs/', requestOptions)
+            fetch('https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api/vlabs/', requestOptions)
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data);
@@ -87,6 +87,8 @@ export async function getServerSideProps(context) {
     const { req } = context;
     const secret = process.env.SECRET;
     const token = await getToken({ req, secret });
+
+    console.log(token);
 
     return {
         props: {

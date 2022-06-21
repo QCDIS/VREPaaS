@@ -21,6 +21,12 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: secret-key
 
 ---
 
@@ -38,3 +44,13 @@ spec:
   selector:
     app: vreapi
   type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: django-secrets
+type: Opaque
+data:
+  secret-key: MW0yZ24waC1tI2o0cUAjaV56cV80anVkX2VhajVyb185OWRlaCgpKDBzKXYxbmtiKCsK

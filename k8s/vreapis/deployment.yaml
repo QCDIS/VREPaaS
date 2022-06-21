@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vreapi-deployment
+  labels:
+    app: vreapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vreapi
+  template:
+    metadata:
+      labels:
+        app: vreapi
+    spec:
+      containers:
+        - name: vreapi
+          image: qcdis/vreapi
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: secret-key
+
+            - name: DJANGO_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: superuser-password
+
+            - name: DJANGO_SUPERUSER_EMAIL
+              value: riccardo.bianchi@lifewatch.eu
+
+            - name: DJANGO_SUPERUSER_USERNAME
+              value: riccardo
+              
+            - name: DJANGO_SETTINGS_MODULE
+              value: vreapis.settings.production

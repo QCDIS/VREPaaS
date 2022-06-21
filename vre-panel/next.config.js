@@ -3,5 +3,9 @@ module.exports = {
   experimental: {
     outputStandalone: true
   },
-  assetPrefix: 'vreapp'
+  assetPrefix: '/vreapp',
+  publicRuntimeConfig: {
+    basePath: '/vreapp',
+    staticFolder: '/vreapp',
+  }
 }

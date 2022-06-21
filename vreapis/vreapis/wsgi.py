@@ -18,6 +18,6 @@ BASE_DIR = CURRENT_DIR.parent
 ENV_FILE_PATH = BASE_DIR / ".env"
 
 dotenv.read_dotenv(str(ENV_FILE_PATH))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vreapis.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vreapis.settings.development')
 
 application = get_wsgi_application()

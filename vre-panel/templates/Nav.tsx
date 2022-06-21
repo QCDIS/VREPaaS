@@ -3,22 +3,25 @@ import { Menu, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from "next-auth/react"
 import useAuth from '../pages/auth/useAuth';
+import getConfig from 'next/config'
+
 
 const Nav = () => {
 
+    const { publicRuntimeConfig } = getConfig()
     const { data: session, status } = useSession()
     const router = useRouter();
     const menu = [
-        { key: 'home', label: 'Home', url: '/home' },
-        { key: 'vlabs', label: 'Virtual Labs', url: '/vlabs' },
+        { key: 'home', label: 'Home', url: `${publicRuntimeConfig.basePath}/home` },
+        { key: 'vlabs', label: 'Virtual Labs', url: `${publicRuntimeConfig.basePath}/vlabs` },
     ];
 
     return (
         <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-xl">
             <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
-                    <a href="/" className="flex items-center">
-                        <img src="LW_ERIC_Logo.png" className="mr-3 h-6 sm:h-10" alt="LifeWatch Logo" />
+                    <a href="/vreapp" className="flex items-center">
+                        <img src={`${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`} className="mr-3 h-6 sm:h-10" alt="LifeWatch Logo" />
                     </a>
                     <div className="flex items-center md:order-2">
                         <div className="relative inline-block text-left">
@@ -27,7 +30,7 @@ const Nav = () => {
                                     {({ open }) => (
                                         <>
                                             <Menu.Button className="inline-flex justify-center w-full">
-                                                <img src='user_placeholder.jpeg' className='h-10 rounded-full border border-slate-300' />
+                                                <img src={`${publicRuntimeConfig.staticFolder}/user_placeholder.jpeg`} className='h-10 rounded-full border border-slate-300' />
                                             </Menu.Button>
 
                                             <Transition

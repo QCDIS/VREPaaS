@@ -21,42 +21,6 @@ spec:
           ports:
           - containerPort: 3000
             protocol: TCP
-          env:
-            - name: NEXTAUTH_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-panel-config
-                  key: NEXTAUTH_URL
-
-            - name: AUTH0_ID
-              valueFrom:
-                secretKeyRef:
-                  name: vre-panel-secrets
-                  key: auth0-id
-
-            - name: AUTH0_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: vre-panel-secrets
-                  key: auth0-secret
-
-            - name: AUTH0_ISSUER
-              valueFrom:
-                secretKeyRef:
-                  name: vre-panel-secrets
-                  key: auth0-issuer
-
-            - name: SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: vre-panel-secrets
-                  key: secret
-
-            - name: VRE_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-panel-config
-                  key: VRE_API_URL
 
 ---
 
@@ -74,27 +38,3 @@ spec:
   selector:
     app: vreapp
   type: ClusterIP
-
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: vre-panel-config
-  labels:
-    app: vreapp-svc
-
-data:
-  NEXTAUTH_URL: http://localhost:3000
-  VRE_API_URL: http://localhost:8000/api
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: vre-panel-secrets
-type: Opaque
-data:
-  secret:
-  auth0-issuer:
-  auth0-secret:
-  auth0-id:

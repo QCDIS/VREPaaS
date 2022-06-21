@@ -22,50 +22,11 @@ spec:
           - containerPort: 8000
             protocol: TCP
           env:
-            - name: KEYCLOAK_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: django-secrets
-                  key: keycloak_client_id
-
-            - name: KEYCLOAK_CLIENT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: django-secrets
-                  key: keycloak_client_secret_key
-
-            - name: KEYCLOAK_SERVER_URL
-              valueFrom:
-                secretKeyRef:
-                  name: django-secrets
-                  key: keycloak_server_url
-
-            - name: KEYCLOAK_REALM
-              valueFrom:
-                secretKeyRef:
-                  name: django-secrets
-                  key: keycloak_realm
-
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: django-secrets
                   key: secret-key
-
-            - name: DJANGO_SUPERUSER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: django-secrets
-                  key: superuser-password
-
-            - name: DJANGO_SUPERUSER_EMAIL
-              value: admin@lifewatch.eu
-
-            - name: DJANGO_SUPERUSER_USERNAME
-              value: admin
-
-            - name: DJANGO_SETTINGS_MODULE
-              value: vreapis.settings.development
 
 ---
 
@@ -92,9 +53,4 @@ metadata:
   name: django-secrets
 type: Opaque
 data:
-  secret-key:
-  superuser-password:
-  keycloak_server_url:
-  keycloak_realm:
-  keycloak_client_secret_key:
-  keycloak_client_id:
+  secret-key: MW0yZ24waC1tI2o0cUAjaV56cV80anVkX2VhajVyb185OWRlaCgpKDBzKXYxbmtiKCsK

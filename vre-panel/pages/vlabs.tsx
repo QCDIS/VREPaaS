@@ -3,8 +3,11 @@ import { NewVREDialog } from '../components/NewVREDialog';
 import { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { getToken, JWT } from 'next-auth/jwt';
+import { getToken } from 'next-auth/jwt';
 import useAuth from './auth/useAuth';
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
 
 const getSlug = (title: string) => {
 
@@ -62,7 +65,7 @@ const VLabs = ({ token }) => {
                     {vlabs.map((vlab: any) => {
                         return (
                             <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10 w-3/6">
-                                <img className="w-full h-40 object-cover" src="lab_icon.png" />
+                                <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
                                 <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
                                 <div className="px-6 py-4">
                                     <p className="text-gray-700 text-base truncate ...">
@@ -85,7 +88,7 @@ const VLabs = ({ token }) => {
 export async function getServerSideProps(context) {
 
     const { req } = context;
-    const secret = process.env.SECRET;
+    const secret = "685be204b197364afdd9111d6fb5e87b";
     const token = await getToken({ req, secret });
 
     return {

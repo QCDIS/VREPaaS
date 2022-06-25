@@ -1,11 +1,13 @@
+console.log(process.env.NODE_ENV);
+
 module.exports = {
   reactStrictMode: true,
   experimental: {
     outputStandalone: true
   },
-  assetPrefix: '/vreapp',
+  assetPrefix: process.env.NODE_ENV === "production" ? '/vreapp' : '',
   publicRuntimeConfig: {
-    basePath: '/vreapp',
-    staticFolder: '/vreapp',
+    basePath: process.env.NODE_ENV === "production" ? '/vreapp' : '',
+    staticFolder: process.env.NODE_ENV === "production" ? '/vreapp' : '',
   }
 }

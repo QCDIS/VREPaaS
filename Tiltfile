@@ -1,5 +1,5 @@
 version_settings(constraint='>=0.22.2')
-
+secret_settings (disable_scrub=True)
 
 # API
 
@@ -32,7 +32,8 @@ docker_build(
     dockerfile='tilt/vre-panel.dev.dockerfile',
     only=['./vre-panel/'],
     live_update=[
-        sync('./vre-panel', '/app')
+        sync('./vre-panel', '/app'),
+        run('cd /app && npm install', trigger=['./vre-panel/package.json'])
     ]
 )
 

@@ -11,8 +11,8 @@ export default function SignIn({ providers }: { providers: any }) {
                 <>
                     {Object.values(providers).map((provider: any) => (
                         <div key={provider.name}>
-                            <button onClick={() => signIn(provider.id, { callbackUrl: "https://lfw-ds001-i022.lifewatch.dev:32443/vreapp/home" })} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-10">
-                                Sign in with {provider.name}
+                            <button onClick={() => signIn(provider.id, { callbackUrl: process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vreapp/vlabs" : "http://localhost:3000/vlabs" })} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-10">
+                                Sign in
                             </button>
                         </div>
                     ))}
@@ -30,7 +30,7 @@ export async function getServerSideProps(context: { req: any; }) {
 
     if (session) {
         return {
-            redirect: { destination: `${publicRuntimeConfig.basePath}/home` },
+            redirect: { destination: `${publicRuntimeConfig.basePath}/vlabs` },
         };
     }
 

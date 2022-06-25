@@ -1,4 +1,6 @@
+from pyexpat import model
 from django.db import models
+from django.contrib.auth.models import User
 
 class VLProfile(models.Model):
 
@@ -11,7 +13,6 @@ class VLProfile(models.Model):
             return self.display_name
 
     class Meta:
-
         verbose_name = "VL Profile"
         verbose_name_plural = "VL Profiles"
 
@@ -42,7 +43,6 @@ class VM(models.Model):
             return self.name
 
     class Meta:
-
         verbose_name = "Virtual Machine"
 
 
@@ -56,7 +56,6 @@ class Topology(models.Model):
             return self.provider
 
     class Meta:
-
         verbose_name = "Topology"
         verbose_name_plural = "Topologies"
 
@@ -71,24 +70,49 @@ class SDIAProvision(models.Model):
         return self.name
     
     class Meta:
-
         verbose_name = "SDIA Provision"
 
 
 class VirtualLab(models.Model):
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
-    provision = models.ForeignKey(SDIAProvision, on_delete=models.SET_NULL, null=True)
-    profiles = models.ManyToManyField(VLProfile)
+    base_url = models.CharField(max_length=100, null=True)
+    fqdn = models.CharField(max_length=100, null=True)
+    ingress_ssl_port = models.CharField(max_length=5, null=True)
+    image_name = models.CharField(max_length=100, null=True)
+    image_tag = models.CharField(max_length=100, null=True)
 
     def __str__(self):
             return self.title
 
     class Meta:
-
         verbose_name = "Virtual Lab"
+
+
+class Workflow(models.Model):
+
+    created = models.DateTimeField(auto_now_add=True, null=True)
+    argo_id = models.CharField(max_length=100, null=True)
+    vlab = models.ForeignKey(VirtualLab, on_delete=models.DO_NOTHING, null=True)
+    status = models.CharField(max_length=10, null=True)
+    progress = models.CharField(max_length=10, null=True)
+
+
+class TokenCredentials(models.Model):
+
+    CHOICES_CREDENTIALS_TYPE = (
+        ('gh', 'Github Repository'),
+        ('we', 'Workflow Engine')
+    )
+
+    created = models.DateTimeField(auto_now_add=True, null=True)
+    name = models.CharField(max_length=100, null=True)
+    type = models.CharField(max_length=2, choices=CHOICES_CREDENTIALS_TYPE, null=True)
+    url = models.URLField(null = True)
+    token = models.CharField(max_length=100, null=True)
+    vlab = models.ForeignKey(VirtualLab, on_delete=models.DO_NOTHING, null=True)
 
 
 class KeyCloakAuth(models.Model):
@@ -103,5 +127,4 @@ class KeyCloakAuth(models.Model):
             return self.issuer
 
     class Meta:
-
         verbose_name = "KeyCloak Auth"

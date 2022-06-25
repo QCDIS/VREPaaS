@@ -43,7 +43,7 @@ const refreshAccessToken = async (token: JWT) => {
 
 export default (req, res) => {
 
-	process.env.NEXTAUTH_URL = "https://lfw-ds001-i022.lifewatch.dev:32443/vreapp/api/auth"
+	process.env.NEXTAUTH_URL =  process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vreapp/api/auth" : "http://localhost:3000";
 
 	return NextAuth(req, res, {
 		providers: [

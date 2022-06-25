@@ -20,7 +20,7 @@ const Nav = () => {
         <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-xl">
             <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
-                    <a href="/vreapp" className="flex items-center">
+                    <a href={publicRuntimeConfig.basePath} className="flex items-center">
                         <img src={`${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`} className="mr-3 h-6 sm:h-10" alt="LifeWatch Logo" />
                     </a>
                     <div className="flex items-center md:order-2">

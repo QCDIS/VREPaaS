@@ -1,167 +1,50 @@
 - model: virtual_labs.VirtualLab
   pk: 1
   fields:
-    title: VLab G1
-    slug: g1
-    description: Description
-    base_url: ess-22/g1
+    title: "Summer School"
+    description: "ENVRI Summer School Virtual Lab"
+    base_url: ess-22/g1/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
+    image_name: qcdis/n-a-a-vre-laserfarm
+    image_tag: v0.1.4-beta
 
 - model: virtual_labs.VirtualLab
   pk: 2
   fields:
-    title: VLab G2
-    slug: g2
-    description: Description
-    base_url: ess-22/g2
+    title: "BIOMAC Laserfarm"
+    description: "BIOMAC Laserfarm Virtual Lab"
+    base_url: laserfarm/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
+    image_name: qcdis/n-a-a-vre-laserfarm
+    image_tag: v0.1.4-beta
 
 - model: virtual_labs.VirtualLab
   pk: 3
   fields:
-    title: VLab G3
-    slug: g3
-    description: Description
-    base_url: ess-22/g3
+    title: "Bird Migration"
+    description: "Bird Migration Virtual Lab"
+    base_url: vol2bird/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
+    image_name: qcdis/n-a-a-vre-laserfarm
+    image_tag: v0.1.4-beta
 
-- model: virtual_labs.VirtualLab
-  pk: 4
+- model: virtual_labs.TokenCredentials
+  pk: 1
   fields:
-    title: VLab G4
-    slug: g4
-    description: Description
-    base_url: ess-22/g4
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
+    name: Github
+    type: "gh"
+    url: https://github.com/QCDIS/NaaVRE-cells-summerschool-22
+    token: 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
+    vlab: 1
 
-- model: virtual_labs.VirtualLab
-  pk: 5
+- model: virtual_labs.TokenCredentials
+  pk: 2
   fields:
-    title: VLab G5
-    slug: g5
-    description: Description
-    base_url: ess-22/g5
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 6
-  fields:
-    title: VLab G6
-    slug: g6
-    description: Description
-    base_url: ess-22/g6
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 7
-  fields:
-    title: VLab G7
-    slug: g7
-    description: Description
-    base_url: ess-22/g7
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 7
-  fields:
-    title: VLab G7
-    slug: g7
-    description: Description
-    base_url: ess-22/g7
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 8
-  fields:
-    title: VLab G8
-    slug: g8
-    description: Description
-    base_url: ess-22/g8
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 10
-  fields:
-    title: VLab G10
-    slug: g10
-    description: Description
-    base_url: ess-22/g10
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 11
-  fields:
-    title: VLab G11
-    slug: g11
-    description: Description
-    base_url: ess-22/g11
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 12
-  fields:
-    title: VLab G12
-    slug: g12
-    description: Description
-    base_url: ess-22/g12
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 13
-  fields:
-    title: VLab G13
-    slug: g13
-    description: Description
-    base_url: ess-22/g13
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
-
-- model: virtual_labs.VirtualLab
-  pk: 14
-  fields:
-    title: VLab G14
-    slug: g14
-    description: Description
-    base_url: ess-22/g14
-    fqdn: lfw-ds001-i022.lifewatch.dev
-    ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
-    image_tag: v0.1.5-beta
+    name: Argo
+    type: "wf"
+    url: https://lfw-ds001-i022.lifewatch.dev:32443/ess-22-argowf/
+    token: eyJhbGciOiJSUzI1NiIsImtpZCI6IjRqWGNWSVoyelFMRV9TenZ3a19vYUVvR0pYTkxpdS1CWjlXVHA0RnFQdmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im5hYXZyZWFwaTItdG9rZW4tZ3JnZmQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoibmFhdnJlYXBpMiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFmMzFkYWNiLWMxYWMtNDJkYy1hYTAwLTM0ZDY0NGVkNjRiNiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0Om5hYXZyZWFwaTIifQ.VWngM11PLYjhUzHPFGQA-fb5JqJjQcNtheIfuDcAHHP0A_rlbQtbWeUPTN_j6mEIm0VTU990-a3hl8LDZeS7iGQknT73TJi8W836zCD6xmJYL9Dnk6JjTfDcLKft7u4auW2_cimdKM60P9psOJyLGGRLYS7tFzXyoEJGPboUrlnmVT03lrzqEUl6Ni1oH0S56HIJBJ89O2GeKhakayKbgesWr3EjELdawbAIBw8pmQE0R0dftddO1tdUXCph_HJkFuiRvt8RqYJiKFL7KogsmwhnSsRlzqncIKAPmKhamtW09E4sNc_Q60QQGmAVmVpaPkCP1jNpY_PRuQMZQmY57g
+    vlab: 1

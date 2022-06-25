@@ -5,8 +5,6 @@ import getConfig from "next/config";
 
 export default function useAuth(shouldRedirect: boolean) {
 
-    console.log("Called useAuth");
-
     const { publicRuntimeConfig } = getConfig()
     const { data: session } = useSession();
     const router = useRouter();

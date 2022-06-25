@@ -34,7 +34,9 @@ const VLabs = ({ token }) => {
                 },
             };
 
-            fetch('http://localhost:8000/api/vlabs/', requestOptions)
+            const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api"
+
+            fetch(`${url}/vlabs`, requestOptions)
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data);
@@ -65,16 +67,15 @@ const VLabs = ({ token }) => {
                     {vlabs.map((vlab: any) => {
                         return (
                             <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10 w-3/6">
-                                <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
-                                <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
-                                <div className="px-6 py-4">
-                                    <p className="text-gray-700 text-base truncate ...">
-                                        {vlab.description}
-                                    </p>
-                                </div>
-                                <Link href="#" passHref>
-                                    <div></div>
-                                </Link>
+                                <a target="_blank" href={`${vlab.endpoint}/`} rel="noopener noreferrer">
+                                    <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
+                                    <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
+                                    <div className="px-6 py-4">
+                                        <p className="text-gray-700 text-base truncate ...">
+                                            {vlab.description}
+                                        </p>
+                                    </div>
+                                </a>
                             </div>
                         );
                     })}

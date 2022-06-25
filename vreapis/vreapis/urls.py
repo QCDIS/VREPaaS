@@ -15,8 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from virtual_labs.views import VirtualLabViewSet, WorkflowViewSet
+
+admin.site.site_header = 'Virtual Labs Administration'
+
+router = routers.DefaultRouter()
+router.register(r'vlabs', VirtualLabViewSet)
+router.register(r'workflows', WorkflowViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/vlabs/', include('virtual_labs.urls'))
+    path('api/', include(router.urls))
 ]

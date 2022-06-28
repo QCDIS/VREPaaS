@@ -1,0 +1,7 @@
+- model: cells.Catalog
+  pk: 1
+  fields:
+    name: "Summer School Catalog"
+    description: "Summer School Catalog"
+    vlab: 1
+

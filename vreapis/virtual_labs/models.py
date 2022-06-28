@@ -91,15 +91,6 @@ class VirtualLab(models.Model):
         verbose_name = "Virtual Lab"
 
 
-class Workflow(models.Model):
-
-    created = models.DateTimeField(auto_now_add=True, null=True)
-    argo_id = models.CharField(max_length=100, null=True)
-    vlab = models.ForeignKey(VirtualLab, on_delete=models.DO_NOTHING, null=True)
-    status = models.CharField(max_length=10, null=True)
-    progress = models.CharField(max_length=10, null=True)
-
-
 class TokenCredentials(models.Model):
 
     CHOICES_CREDENTIALS_TYPE = (

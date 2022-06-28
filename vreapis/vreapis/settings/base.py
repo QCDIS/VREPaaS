@@ -40,6 +40,8 @@ KEYCLOAK_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+    'cells',
+    'workflows',
     'virtual_labs',
     'rest_framework',
     'corsheaders',

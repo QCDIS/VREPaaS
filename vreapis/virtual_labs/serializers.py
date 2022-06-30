@@ -75,6 +75,7 @@ class VirtualLabSerializer(serializers.ModelSerializer):
         model = VirtualLab
         fields = (
             'title',
+            'slug',
             'description',
             'endpoint'
         )
@@ -83,17 +84,16 @@ class VirtualLabSerializer(serializers.ModelSerializer):
 class VirtualLabDetailSerializer(serializers.ModelSerializer):
 
     endpoint = serializers.SerializerMethodField()
-    workflows = WorkflowSerializer(many=True, source='workflow_set')
 
     def get_endpoint(self, vlab):
         return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}"
 
     class Meta:
         model = VirtualLab
+        extra_field_kwargs = {'url': {'lookup_field': 'slug'}}
         fields = (
-            'id',
             'title',
+            'slug',
             'description',
-            'endpoint',
-            'workflows'
+            'endpoint'
         )

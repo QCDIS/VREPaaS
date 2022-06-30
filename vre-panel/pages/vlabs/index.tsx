@@ -1,11 +1,11 @@
-import { Nav } from '../templates/Nav';
-import { NewVREDialog } from '../components/NewVREDialog';
-import { useEffect, useState } from 'react';
-import { useSession, signIn } from 'next-auth/react';
-import Link from 'next/link';
 import { getToken } from 'next-auth/jwt';
-import useAuth from './auth/useAuth';
-import getConfig from 'next/config'
+import { signIn, useSession } from 'next-auth/react';
+import getConfig from 'next/config';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { NewVREDialog } from '../../components/NewVREDialog';
+import { Nav } from '../../templates/Nav';
+import useAuth from '../auth/useAuth';
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -67,15 +67,23 @@ const VLabs = ({ token }) => {
                     {vlabs.map((vlab: any) => {
                         return (
                             <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10 w-3/6">
-                                <a target="_blank" href={`${vlab.endpoint}/`} rel="noopener noreferrer">
-                                    <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
-                                    <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
-                                    <div className="px-6 py-4">
-                                        <p className="text-gray-700 text-base truncate ...">
-                                            {vlab.description}
-                                        </p>
+                                <Link
+                                    href={{
+                                        pathname: '/vlabs/[slug]',
+                                        query: { slug: vlab.slug }
+                                    }}
+                                    as={`/vlabs/${vlab.slug}`}
+                                >
+                                    <div>
+                                        <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
+                                        <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
+                                        <div className="px-6 py-4">
+                                            <p className="text-gray-700 text-base truncate ...">
+                                                {vlab.description}
+                                            </p>
+                                        </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         );
                     })}

@@ -77,7 +77,8 @@ class VirtualLab(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, null=True)
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    slug = models.SlugField(null=True, unique=True)
+    description = models.CharField(max_length=1000)
     base_url = models.CharField(max_length=100, null=True)
     fqdn = models.CharField(max_length=100, null=True)
     ingress_ssl_port = models.CharField(max_length=5, null=True)

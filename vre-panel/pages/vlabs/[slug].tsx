@@ -144,7 +144,7 @@ export default VLabDetails;
 export async function getServerSideProps(context) {
 
     const { req } = context;
-    const secret = process.env.SECRET;
+    const secret = "685be204b197364afdd9111d6fb5e87b";
     const token = await getToken({ req, secret });
 
     return {

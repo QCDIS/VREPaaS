@@ -26,7 +26,14 @@ conda config --add channels conda-forge
 conda install tilt
 ```
 
+#### Start Cluster
+
+```shell
+minikube start
+```
+
 #### Run tilt
+
 ```shell
 tilt up
 ```

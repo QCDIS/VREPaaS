@@ -2,7 +2,8 @@
   pk: 1
   fields:
     title: Summer School
-    description: ENVRI Summer School Virtual Lab
+    slug: summer-school
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
     base_url: ess-22/g1/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
@@ -13,7 +14,8 @@
   pk: 2
   fields:
     title: BIOMAC Laserfarm
-    description: BIOMAC Laserfarm Virtual Lab
+    slug: biomac-laserfarm
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
     base_url: laserfarm/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
@@ -24,7 +26,8 @@
   pk: 3
   fields:
     title: Bird Migration
-    description: Bird Migration Virtual Lab
+    slug: bird-migration
+    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
     base_url: vol2bird/
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443

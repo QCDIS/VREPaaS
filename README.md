@@ -22,7 +22,6 @@ conda activate paas
 Install [tilt](https://docs.tilt.dev/install.html) via conda 
 
 ```shell
-conda config --add channels conda-forge
 conda install tilt
 ```
 

@@ -23,6 +23,7 @@ Install [tilt](https://docs.tilt.dev/install.html) via conda
 
 ```shell
 conda install tilt
+conda install -c conda-forge minikube 
 ```
 
 #### Start Cluster

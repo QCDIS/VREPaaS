@@ -33,14 +33,11 @@ class WorkflowViewSet(GetSerializerMixin,
         vlab_query_set = VirtualLab.objects.filter(slug=vlab_slug)
 
         if vlab_slug:
-
             if vlab_query_set.exists():
-
                 vlab = vlab_query_set.get()
                 return models.Workflow.objects.filter(vlab=vlab.id)
 
         else:
-
             return models.Workflow.objects.all()
 
 
@@ -128,4 +125,4 @@ class WorkflowViewSet(GetSerializerMixin,
         if new_workflow.is_valid(raise_exception=True):
             new_workflow.save()
 
-        return Response(resp_detail.json())
+        return Response(new_workflow.data)

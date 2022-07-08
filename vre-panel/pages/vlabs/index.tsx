@@ -72,7 +72,7 @@ const VLabs = ({ token }) => {
                                         pathname: '/vlabs/[slug]',
                                         query: { slug: vlab.slug }
                                     }}
-                                    as={`/vlabs/${vlab.slug}`}
+                                    as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
                                 >
                                     <div>
                                         <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />

@@ -63,10 +63,10 @@ const VLabs = ({ token }) => {
         <div>
             <Nav />
             <div className='min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300'>
-                <div className='flex flex-row'>
+                <div className='grid grid-cols-3'>
                     {vlabs.map((vlab: any) => {
                         return (
-                            <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10 w-3/6">
+                            <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10">
                                 <Link
                                     href={{
                                         pathname: '/vlabs/[slug]',
@@ -75,7 +75,7 @@ const VLabs = ({ token }) => {
                                     as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
                                 >
                                     <div>
-                                        <img className="w-full h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/lab_icon.png`} />
+                                        <img className="w-full h-56 object-cover" src={`${publicRuntimeConfig.staticFolder}/envri_summer_school.png`} />
                                         <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
                                         <div className="px-6 py-4">
                                             <p className="text-gray-700 text-base truncate ...">

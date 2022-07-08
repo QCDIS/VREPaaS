@@ -1,53 +1,83 @@
 - model: virtual_labs.VirtualLab
   pk: 1
   fields:
-    title: Summer School
-    slug: summer-school
-    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
-    base_url: ess-22/g1/
+    title: VLab G1
+    slug: g1
+    description: Description
+    base_url: ess-22/g1
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm
-    image_tag: v0.1.4-beta
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
 
 - model: virtual_labs.VirtualLab
   pk: 2
   fields:
-    title: BIOMAC Laserfarm
-    slug: biomac-laserfarm
-    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
-    base_url: laserfarm/
+    title: VLab G2
+    slug: g2
+    description: Description
+    base_url: ess-22/g2
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm
-    image_tag: v0.1.4-beta
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
 
 - model: virtual_labs.VirtualLab
   pk: 3
   fields:
-    title: Bird Migration
-    slug: bird-migration
-    description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada in risus eu consequat. Nam lobortis at justo eu tempor. Aenean pretium ligula dolor, et mollis ligula vestibulum quis. Aliquam erat volutpat. Vivamus vel nunc non orci fringilla condimentum vitae a erat. Nullam a ante elementum, cursus libero sed, tempus purus. Cras volutpat convallis felis at consectetur. Pellentesque sit amet velit quis odio lobortis tincidunt vitae eget purus. Nam sit amet nulla in lectus efficitur egestas quis eget sem. Proin posuere justo mi, vel scelerisque augue ornare id. Mauris quis enim sollicitudin, dapibus ipsum ut, hendrerit neque. Fusce at risus nisl. Nulla eget aliquam lectus. Vestibulum commodo est est, et tincidunt velit rhoncus eu. Cras in suscipit dui.
-    base_url: vol2bird/
+    title: VLab G3
+    slug: g3
+    description: Description
+    base_url: ess-22/g3
     fqdn: lfw-ds001-i022.lifewatch.dev
     ingress_ssl_port: 32443
-    image_name: qcdis/n-a-a-vre-laserfarm
-    image_tag: v0.1.4-beta
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
 
-- model: virtual_labs.TokenCredentials
-  pk: 1
+- model: virtual_labs.VirtualLab
+  pk: 4
   fields:
-    name: Github
-    type: gh
-    url: https://github.com/QCDIS/NaaVRE-cells-summerschool-22
-    token: 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
-    vlab: 1
+    title: VLab G4
+    slug: g4
+    description: Description
+    base_url: ess-22/g4
+    fqdn: lfw-ds001-i022.lifewatch.dev
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
 
-- model: virtual_labs.TokenCredentials
-  pk: 2
+- model: virtual_labs.VirtualLab
+  pk: 5
   fields:
-    name: Argo
-    type: wf
-    url: https://lfw-ds001-i022.lifewatch.dev:32443/ess-22-argowf/
-    token: eyJhbGciOiJSUzI1NiIsImtpZCI6IjRqWGNWSVoyelFMRV9TenZ3a19vYUVvR0pYTkxpdS1CWjlXVHA0RnFQdmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im5hYXZyZWFwaTItdG9rZW4tZ3JnZmQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoibmFhdnJlYXBpMiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImFmMzFkYWNiLWMxYWMtNDJkYy1hYTAwLTM0ZDY0NGVkNjRiNiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0Om5hYXZyZWFwaTIifQ.VWngM11PLYjhUzHPFGQA-fb5JqJjQcNtheIfuDcAHHP0A_rlbQtbWeUPTN_j6mEIm0VTU990-a3hl8LDZeS7iGQknT73TJi8W836zCD6xmJYL9Dnk6JjTfDcLKft7u4auW2_cimdKM60P9psOJyLGGRLYS7tFzXyoEJGPboUrlnmVT03lrzqEUl6Ni1oH0S56HIJBJ89O2GeKhakayKbgesWr3EjELdawbAIBw8pmQE0R0dftddO1tdUXCph_HJkFuiRvt8RqYJiKFL7KogsmwhnSsRlzqncIKAPmKhamtW09E4sNc_Q60QQGmAVmVpaPkCP1jNpY_PRuQMZQmY57g
-    vlab: 1
+    title: VLab G5
+    slug: g5
+    description: Description
+    base_url: ess-22/g5
+    fqdn: lfw-ds001-i022.lifewatch.dev
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
+
+- model: virtual_labs.VirtualLab
+  pk: 6
+  fields:
+    title: VLab G6
+    slug: g6
+    description: Description
+    base_url: ess-22/g6
+    fqdn: lfw-ds001-i022.lifewatch.dev
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta
+
+- model: virtual_labs.VirtualLab
+  pk: 7
+  fields:
+    title: VLab G7
+    slug: g7
+    description: Description
+    base_url: ess-22/g7
+    fqdn: lfw-ds001-i022.lifewatch.dev
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-laserfarm-ess-22
+    image_tag: v0.1.5-beta

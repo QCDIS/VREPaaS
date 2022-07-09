@@ -1,8 +1,6 @@
-import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from "next-auth/react"
-import useAuth from '../pages/auth/useAuth';
 import getConfig from 'next/config'
 
 

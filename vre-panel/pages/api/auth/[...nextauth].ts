@@ -25,7 +25,7 @@ const refreshAccessToken = async (token: JWT) => {
 			}
 		);
 
-		console.log(tokenResponse);
+		// console.log(tokenResponse);
 
 		return {
 			...token,
@@ -64,7 +64,7 @@ export default (req, res) => {
 					token.user = user;
 				}
 
-				console.log(token);
+				// console.log(token);
 	
 				const unixTimeZero = Date.parse('01 Jan 1970 00:00:00 GMT');
 				const expiryDate = new Date();

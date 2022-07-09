@@ -69,7 +69,7 @@ class VirtualLabSerializer(serializers.ModelSerializer):
     endpoint = serializers.SerializerMethodField()
 
     def get_endpoint(self, vlab):
-        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}"
+        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}/"
 
     class Meta:
         model = VirtualLab
@@ -86,7 +86,7 @@ class VirtualLabDetailSerializer(serializers.ModelSerializer):
     endpoint = serializers.SerializerMethodField()
 
     def get_endpoint(self, vlab):
-        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}"
+        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}/"
 
     class Meta:
         model = VirtualLab

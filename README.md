@@ -37,3 +37,14 @@ minikube start
 ```shell
 tilt up
 ```
+
+# Deploy Webapp
+```
+$make deploy-app
+```
+
+
+# Deploy API
+```
+$make deploy-api
+```

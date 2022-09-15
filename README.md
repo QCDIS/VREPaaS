@@ -48,3 +48,8 @@ $make deploy-app
 ```
 $make deploy-api
 ```
+
+# API Admin
+To add/reomve resources go to: https://HOST/vre-api/admin/
+
+

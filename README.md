@@ -2,7 +2,7 @@
 
 
 ## Development 
-
+This project is usgin Django rest framework. 
 
 ### Install Anaconda
 

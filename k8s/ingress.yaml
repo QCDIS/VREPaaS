@@ -1,0 +1,41 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: vre-paas
+  namespace: paas
+  labels:
+    app: vre-paas
+    component: ingress
+    heritage: Helm
+    release: vre-paas
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+    meta.helm.sh/release-name: vre-paas
+    meta.helm.sh/release-namespace: paas
+    nginx.ingress.kubernetes.io/add-base-url: 'true'
+    nginx.ingress.kubernetes.io/proxy-body-size: 600m
+    nginx.org/client-max-body-size: 600m
+spec:
+  tls:
+    - hosts:
+        - lfw-ds001-i022.lifewatch.dev
+      secretName: lfw-ds001-i022.lifewatch.dev-tls
+  rules:
+    - host: lfw-ds001-i022.lifewatch.dev
+      http:
+        paths:
+          - path: /vre-api/
+            pathType: Prefix
+            backend:
+              service:
+                name: vreapi
+                port:
+                  number: 8000
+          - path: /vreapp/
+            pathType: Prefix
+            backend:
+              service:
+                name: vreapi
+                port:
+                  number: 3000

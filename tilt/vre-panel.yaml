@@ -21,6 +21,10 @@ spec:
           ports:
           - containerPort: 3000
             protocol: TCP
+          env:
+            - name: VRE_API_URL
+              value: http://localhost:8000/api
+
 
 ---
 

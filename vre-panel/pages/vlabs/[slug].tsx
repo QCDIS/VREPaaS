@@ -29,7 +29,7 @@ const VLabDetails = ({ token }) => {
             },
         };
 
-        const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api";
+        const url = process.env.VRE_API_URL;
 
         const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
         return res.json();
@@ -46,7 +46,7 @@ const VLabDetails = ({ token }) => {
             },
         };
 
-        const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api";
+        const url = process.env.VRE_API_URL;
         const res = await fetch(`${url}/workflows?vlab_slug=${slug}`, requestOptions);
 
         setLoadingWorkflows(false);

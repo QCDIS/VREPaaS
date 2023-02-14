@@ -177,3 +177,5 @@ jspm_packages
 .node_repl_history
 .next
 /package-lock.json
+
+tilt/secrets.yaml

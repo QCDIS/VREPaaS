@@ -25,13 +25,13 @@ spec:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: django-secrets
+                  name: django-secrets.yaml
                   key: secret-key
 
             - name: DJANGO_SUPERUSER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: django-secrets
+                  name: django-secrets.yaml
                   key: superuser-password
 
             - name: DJANGO_SUPERUSER_EMAIL
@@ -65,7 +65,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: django-secrets
+  name: django-secrets.yaml
 type: Opaque
 data:
   secret-key:

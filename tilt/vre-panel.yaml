@@ -55,7 +55,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: vre-panel-secrets
+  name: vre-panel-secrets.yaml
 type: Opaque
 data:
   secret:

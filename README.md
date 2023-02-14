@@ -38,6 +38,12 @@ minikube start
 tilt up
 ```
 
+# Encrypt secrets 
+
+
+conda install -c conda-forge git-crypt
+
+
 # Deploy Webapp
 ```
 $make deploy-app

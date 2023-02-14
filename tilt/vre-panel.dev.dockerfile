@@ -9,6 +9,5 @@ ADD ./vre-panel .
 
 RUN chmod +x -R .
 
-
 EXPOSE 3000
 CMD ["npm", "run", "dev"]

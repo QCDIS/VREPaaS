@@ -27,8 +27,8 @@ class WorkflowViewSet(GetSerializerMixin,
     }
 
     def get_queryset(self):
-
         query_params = self.request.query_params
+        print('get_queryset query_params: ' + str(query_params))
         vlab_slug = query_params.get('vlab_slug', None)
         vlab_query_set = VirtualLab.objects.filter(slug=vlab_slug)
 
@@ -41,8 +41,8 @@ class WorkflowViewSet(GetSerializerMixin,
             return models.Workflow.objects.all()
 
     def list(self, request, *args, **kwargs):
-
         query_params = self.request.query_params
+        print('list query_params: ' + str(query_params))
         vlab_slug = query_params.get('vlab_slug', None)
 
         if vlab_slug:
@@ -50,12 +50,16 @@ class WorkflowViewSet(GetSerializerMixin,
         else:
             ARGO_URL = os.getenv('ARGO_URL')
 
+        print('ARGO_URL: '+ARGO_URL)
+        print('ARGO_API_TOKEN: ' + os.getenv('ARGO_API_TOKEN'))
         resp_list = requests.get(
             ARGO_URL,
             headers={
                 'Authorization': os.getenv('ARGO_API_TOKEN')
             }
         )
+        print('------------------------------------------------------------------------')
+        print('resp_list: ' + str(resp_list))
 
         resp_list_data = resp_list.json()
 
@@ -83,7 +87,6 @@ class WorkflowViewSet(GetSerializerMixin,
 
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
-
         ARGO_API_URL = os.getenv('ARGO_URL')+'/api/v1/workflows/ess-22'
         ARGO_URL = os.getenv('ARGO_URL')+'/workflows/ess-22'
 
@@ -97,7 +100,6 @@ class WorkflowViewSet(GetSerializerMixin,
                 'Authorization': os.getenv('ARGO_API_TOKEN')
             }
         )
-
         resp_submit_data = resp_submit.json()
 
         resp_detail = requests.get(

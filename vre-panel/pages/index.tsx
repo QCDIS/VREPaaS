@@ -33,11 +33,11 @@ const VLabs = () => {
             //         "Authorization": "Bearer: " + token.accessToken
             //     },
             // };
-            const vre_api_url = process.env.VRE_API_URL
+            const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
+            
             fetch(`${vre_api_url}/vlabs`)
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data);
                     setVlabs(data);
                 })
                 .catch((error) => {

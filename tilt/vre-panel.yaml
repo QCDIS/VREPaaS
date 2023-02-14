@@ -22,12 +22,6 @@ spec:
           - containerPort: 3000
             protocol: TCP
           env:
-            - name: NEXTAUTH_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-panel-config
-                  key: NEXTAUTH_URL
-
             - name: AUTH0_ID
               valueFrom:
                 secretKeyRef:
@@ -51,13 +45,19 @@ spec:
                 secretKeyRef:
                   name: vre-panel-secrets
                   key: secret
-
-            - name: VRE_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-panel-config
-                  key: VRE_API_URL
-
+          volumeMounts:
+          - mountPath: /app/.env.local
+            name: env-local
+            readOnly: true
+            subPath: .env.local
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: .env
+            path: .env.local
+          name: env-local
+        name: env-local
 ---
 
 apiVersion: v1
@@ -80,11 +80,13 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: vre-panel-config
+  name: env-local
   labels:
     app: vreapp-svc
 
 data:
-  NEXTAUTH_URL: http://localhost:3000
-  VRE_API_URL: http://localhost:8000/api
+  .env: |-
+    NEXT_PUBLIC_ENV_NEXTAUTH_URL=http://localhost:3000
+    NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost:8000/api
+    NEXTAUTH_URL=http://localhost:3000
 

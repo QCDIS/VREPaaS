@@ -38,3 +38,27 @@ spec:
   selector:
     app: vreapp
   type: ClusterIP
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vre-panel-config
+  labels:
+    app: vreapp-svc
+
+data:
+  NEXTAUTH_URL: http://localhost:3000
+  VRE_API_URL: http://localhost:8000/api
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vre-panel-secrets
+type: Opaque
+data:
+  secret:
+  auth0-issuer:
+  auth0-secret:
+  auth0-id:

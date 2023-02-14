@@ -2,7 +2,9 @@ from dataclasses import fields
 from pyexpat import model
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from virtual_labs.models import VM, SDIAProvision, Topology, VLProfile, VirtualLab, Workflow
+from virtual_labs.models import VM, SDIAProvision, Topology, VLProfile, VirtualLab
+from workflows.models import Workflow
+from workflows.serializers import WorkflowSerializer
 
 
 class VMSerializer(serializers.ModelSerializer):
@@ -60,12 +62,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'username'
         ]
-
-
-class WorkflowSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Workflow
 
 
 class VirtualLabSerializer(serializers.ModelSerializer):

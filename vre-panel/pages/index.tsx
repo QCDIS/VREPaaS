@@ -33,13 +33,11 @@ const VLabs = () => {
             //         "Authorization": "Bearer: " + token.accessToken
             //     },
             // };
-
-            const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api"
-
-            fetch(`${url}/vlabs`)
+            const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
+            
+            fetch(`${vre_api_url}/vlabs`)
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log(data);
                     setVlabs(data);
                 })
                 .catch((error) => {
@@ -97,7 +95,7 @@ const VLabs = () => {
 export async function getServerSideProps(context) {
 
     const { req } = context;
-    const secret = "685be204b197364afdd9111d6fb5e87b";
+    const secret = process.env.SECRET;
     const token = await getToken({ req, secret });
 
     return {

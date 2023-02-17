@@ -42,18 +42,18 @@ const refreshAccessToken = async (token: JWT) => {
 };
 
 export default (req, res) => {
-
-	process.env.NEXTAUTH_URL =  process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vreapp/api/auth" : "http://localhost:3000";
-
 	return NextAuth(req, res, {
 		providers: [
 			KeycloakProvider({
-				clientId: "paas",
-				clientSecret: "62ac41ad-474b-4c15-abc0-a8350f987198",
-				issuer: "https://lifewatch.lab.uvalight.net:32443/auth/realms/ess-22",
+				clientId: process.env.AUTH0_ID,
+				clientSecret: process.env.AUTH0_SECRET,
+				issuer:  process.env.AUTH0_ISSUER,
 			})
 		],
-		secret: "685be204b197364afdd9111d6fb5e87b",
+		// The secret should be set to a reasonably long random string.
+        // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
+        // a separate secret is defined explicitly for encrypting the JWT.
+		secret:  process.env.SECRET,
 		callbacks: {
 			async jwt({ token, user, account }) {
 				if (account && user) {

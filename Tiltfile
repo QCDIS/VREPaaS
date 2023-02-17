@@ -16,7 +16,7 @@ docker_build(
     ]
 )
 
-k8s_yaml('tilt/vreapis.yaml')
+k8s_yaml(['tilt/vreapis.yaml','tilt/django-secrets.yaml','tilt/vre-api-config.yaml'])
 
 k8s_resource(
     'vreapi-deployment',
@@ -37,7 +37,7 @@ docker_build(
     ]
 )
 
-k8s_yaml('tilt/vre-panel.yaml')
+k8s_yaml(['tilt/vre-panel.yaml','tilt/vre-panel-secrets.yaml'])
 
 k8s_resource(
     'vreapp-deployment',

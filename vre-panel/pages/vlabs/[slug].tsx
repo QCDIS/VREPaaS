@@ -20,7 +20,7 @@ const VLabDetails = ({ token }) => {
     const [workflows, setWorkflows] = useState([])
     const [loadingWorkflow, setLoadingWorkflows] = useState(false)
 
-    const fecthVlab = async () => {
+    const fetchVlab = async () => {
 
         var requestOptions: RequestInit = {
             method: "GET",
@@ -29,7 +29,7 @@ const VLabDetails = ({ token }) => {
             },
         };
 
-        const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api";
+        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
 
         const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
         return res.json();
@@ -46,9 +46,8 @@ const VLabDetails = ({ token }) => {
             },
         };
 
-        const url = process.env.NODE_ENV == "production" ? "https://lfw-ds001-i022.lifewatch.dev:32443/vre-api/api" : "http://localhost:8000/api";
+        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
         const res = await fetch(`${url}/workflows?vlab_slug=${slug}`, requestOptions);
-
         setLoadingWorkflows(false);
 
         return res.json();
@@ -56,9 +55,8 @@ const VLabDetails = ({ token }) => {
 
     useEffect(() => {
         if (isAuthenticated) {
-
             Promise.all([
-                fecthVlab().then(setVlab),
+                fetchVlab().then(setVlab),
                 fetchWorkflows().then(setWorkflows)
             ])
         }
@@ -66,11 +64,9 @@ const VLabDetails = ({ token }) => {
 
 
     const getSpinningButtonClass = () => {
-
         if (loadingWorkflow) {
             return "w-5 h-5 animate-spin";
         }
-
         return "w-5 h-5";
     }
 
@@ -144,7 +140,7 @@ export default VLabDetails;
 export async function getServerSideProps(context) {
 
     const { req } = context;
-    const secret = "685be204b197364afdd9111d6fb5e87b";
+    const secret = process.env.SECRET;
     const token = await getToken({ req, secret });
 
     return {

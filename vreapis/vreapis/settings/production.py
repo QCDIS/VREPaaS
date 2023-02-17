@@ -1,14 +1,15 @@
+import os
+
 from vreapis.settings.base import *
 
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["lfw-ds001-i022.lifewatch.dev"]
-
-CSRF_TRUSTED_ORIGINS = ['https://lfw-ds001-i022.lifewatch.dev:32443']
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST')]
+CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r'^https:\/\/lfw-ds001-i022.lifewatch.dev:\d+$',
+    os.getenv('CORS_ALLOWED_ORIGIN_REGEXES'),
 ]
 
 FORCE_SCRIPT_NAME = '/vre-api/'

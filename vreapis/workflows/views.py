@@ -1,18 +1,15 @@
 import os
-from email.policy import HTTP
-import io
 
 import requests
 from rest_framework import mixins, viewsets
-from rest_framework.parsers import JSONParser
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from vreapis.views import GetSerializerMixin
-from . import serializers
-from virtual_labs.models import VirtualLab
-from virtual_labs.serializers import VirtualLabDetailSerializer
 
+from virtual_labs.models import VirtualLab
+from vreapis.views import GetSerializerMixin
 from . import models, serializers
+
+ARGO_URL = os.getenv('ARGO_URL')+'/api/v1/workflows/'
 
 
 class WorkflowViewSet(GetSerializerMixin,
@@ -27,6 +24,7 @@ class WorkflowViewSet(GetSerializerMixin,
     }
 
     def get_queryset(self):
+        print('----------------get_queryset-------------------------')
         query_params = self.request.query_params
         print('get_queryset query_params: ' + str(query_params))
         vlab_slug = query_params.get('vlab_slug', None)
@@ -41,19 +39,17 @@ class WorkflowViewSet(GetSerializerMixin,
             return models.Workflow.objects.all()
 
     def list(self, request, *args, **kwargs):
+        print('----------------list-------------------------')
         query_params = self.request.query_params
         print('list query_params: ' + str(query_params))
         vlab_slug = query_params.get('vlab_slug', None)
-
         if vlab_slug:
-            ARGO_URL = os.getenv('ARGO_URL') + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
+            call_url = ARGO_URL + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
         else:
-            ARGO_URL = os.getenv('ARGO_URL')
+            call_url = ARGO_URL
 
-        print('ARGO_URL: '+ARGO_URL)
-        print('ARGO_API_TOKEN: ' + os.getenv('ARGO_API_TOKEN'))
         resp_list = requests.get(
-            ARGO_URL,
+            call_url,
             headers={
                 'Authorization': os.getenv('ARGO_API_TOKEN')
             }
@@ -64,7 +60,6 @@ class WorkflowViewSet(GetSerializerMixin,
         resp_list_data = resp_list.json()
 
         if resp_list_data['items']:
-
             items = resp_list_data['items']
             instances = self.get_queryset()
 
@@ -87,14 +82,14 @@ class WorkflowViewSet(GetSerializerMixin,
 
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
-        ARGO_API_URL = os.getenv('ARGO_URL')+'/api/v1/workflows/ess-22'
-        ARGO_URL = os.getenv('ARGO_URL')+'/workflows/ess-22'
+        print('----------------submit-------------------------')
+        call_url = ARGO_URL+'/ess-22'
 
         workflow = request.data['workflow_payload']
         vlab_slug = request.data['vlab']
 
         resp_submit = requests.post(
-            ARGO_API_URL,
+            call_url,
             json=workflow,
             headers={
                 'Authorization': os.getenv('ARGO_API_TOKEN')
@@ -103,7 +98,7 @@ class WorkflowViewSet(GetSerializerMixin,
         resp_submit_data = resp_submit.json()
 
         resp_detail = requests.get(
-            f"{ARGO_API_URL}/{resp_submit_data['metadata']['name']}",
+            f"{call_url}/{resp_submit_data['metadata']['name']}",
             json=workflow,
             headers={
                 'Authorization': os.getenv('ARGO_API_TOKEN')
@@ -115,7 +110,7 @@ class WorkflowViewSet(GetSerializerMixin,
         vlab = VirtualLab.objects.get(slug=vlab_slug)
         new_data = {'argo_id': resp_submit_data['metadata']['name'],
                     'status': f"{resp_detail_data['status']['phase']} - {resp_detail_data['status']['progress']}",
-                    'vlab': vlab.id, 'argo_url': f"{ARGO_URL}/{resp_detail_data['metadata']['name']}"}
+                    'vlab': vlab.id, 'argo_url': f"{call_url}/{resp_detail_data['metadata']['name']}"}
 
         new_workflow = serializers.WorkflowSerializer(data=new_data)
 

@@ -48,7 +48,6 @@ const VLabDetails = ({ token }) => {
 
         const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
         const res = await fetch(`${url}/workflows?vlab_slug=${slug}`, requestOptions);
-        console.log('res vlabs: '+res.json())
         setLoadingWorkflows(false);
 
         return res.json();

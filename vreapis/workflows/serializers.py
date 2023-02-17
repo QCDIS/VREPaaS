@@ -2,6 +2,7 @@ from unittest import result
 from .models import Workflow
 from rest_framework import serializers
 
+
 class WorkflowListSerializer(serializers.ListSerializer):
 
     def save(self, **kwargs):
@@ -9,7 +10,7 @@ class WorkflowListSerializer(serializers.ListSerializer):
         return super().save(**kwargs)
 
     def update(self, instances, validated_data):
-        
+
         print("List update called")
 
         wf_mapping = {wf.argo_id: wf for wf in instances}
@@ -31,11 +32,9 @@ class WorkflowListSerializer(serializers.ListSerializer):
 
 
 class WorkflowSerializer(serializers.ModelSerializer):
-
     argo_id = serializers.CharField()
 
     class Meta:
         model = Workflow
         fields = "__all__"
         list_serializer_class = WorkflowListSerializer
-

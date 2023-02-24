@@ -3,7 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
+import dynamic from "next/dynamic";
 
+const CatalogMapView = dynamic(() => import("../../components/catalog_map"), { ssr:false })
 
 const VLabDetails = ({ token }) => {
 
@@ -73,8 +75,8 @@ const VLabDetails = ({ token }) => {
     return (
         <div>
             <Nav />
-            <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-3 gap-4 p-5 min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300">
-                <div className="row-span-4 col-span-2 shadow-lg bg-white p-10">
+            <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-4 gap-4 p-5 min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300">
+                <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
                     <p className="text-4xl font-sans">{vlab.title}</p>
                     <a target="blank" href={vlab.endpoint}>
                         <button className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-5">
@@ -128,6 +130,9 @@ const VLabDetails = ({ token }) => {
                 </div>
                 <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
                     <p className="text-2xl font-sans">Catalogs</p>
+                </div>
+                <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
+                    <CatalogMapView/>
                 </div>
             </div>
         </div>

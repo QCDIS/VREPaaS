@@ -2,6 +2,8 @@ import {
     Map,
     geoJSON,
     LatLngBounds,
+    Polygon,
+    Marker,
 } from "leaflet";
 import {
     MapContainer,
@@ -17,28 +19,39 @@ async function get_features(api_endpoint: String, bounds: LatLngBounds) {
         headers: {
             'Content-Type': 'application/json',
         }
-        };
-    console.log(url, requestOptions);
+    };
     const res = await fetch(url, requestOptions);
     return res.json();
 }
 
-async function render_features(api_endpoint: String, map: Map) {
-    const shapes = await get_features(api_endpoint, map.getBounds());
-    geoJSON(shapes)
-        .bindPopup((layer) => layer.feature.properties.name)
-        .addTo(map);
+async function render_features(map: Map) {
+    map.eachLayer((layer)=>{
+        console.log(layer);
+        if (
+            (layer instanceof Polygon)
+            || (layer instanceof Marker)
+        )
+        {
+            layer.remove();
+        }
+    });
+
+
+    const geo_json = geoJSON()
+    geo_json.bindPopup((layer) => layer.feature.properties.name);
+    geo_json.addTo(map);
+
+    const url = process.env.NEXT_PUBLIC_ENV_WFS_API_URL;
+    get_features(`${url}/shapes`, map.getBounds()).then((d) =>geo_json.addData(d));
+    get_features(`${url}/markers`, map.getBounds()).then((d) =>geo_json.addData(d));
+
+
 }
 
 function CatalogItems() {
-    const url = process.env.NEXT_PUBLIC_ENV_WFS_API_URL;
     const map = useMapEvents({
-        moveend: () => {
-            render_features(`${url}/shapes`, map);
-            render_features(`${url}/markers`, map);
-        },
+        moveend: () => render_features(map),
     });
-    console.log(map)
     return null
 }
 

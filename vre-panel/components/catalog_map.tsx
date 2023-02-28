@@ -26,7 +26,6 @@ async function get_features(api_endpoint: String, bounds: LatLngBounds) {
 
 async function render_features(map: Map) {
     map.eachLayer((layer)=>{
-        console.log(layer);
         if (
             (layer instanceof Polygon)
             || (layer instanceof Marker)
@@ -36,7 +35,6 @@ async function render_features(map: Map) {
         }
     });
 
-
     const geo_json = geoJSON()
     geo_json.bindPopup((layer) => layer.feature.properties.name);
     geo_json.addTo(map);
@@ -44,27 +42,30 @@ async function render_features(map: Map) {
     const url = process.env.NEXT_PUBLIC_ENV_WFS_API_URL;
     get_features(`${url}/shapes`, map.getBounds()).then((d) =>geo_json.addData(d));
     get_features(`${url}/markers`, map.getBounds()).then((d) =>geo_json.addData(d));
-
-
 }
 
-function CatalogItems() {
+function CallbackHooks() {
     const map = useMapEvents({
         moveend: () => render_features(map),
     });
-    return null
+    return null;
 }
 
 const CatalogMap = () => {
-  return (
-      <MapContainer id="map" center={[52.5, 5]} zoom={8} style={{height: "100%", width: "100%"}}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <CatalogItems/>
-      </MapContainer>
-  )
+    return (
+        <MapContainer
+            id="map"
+            center={[52.5, 5]} zoom={8}
+            style={{height: "100%", width: "100%"}}
+            whenCreated={render_features}
+        >
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <CallbackHooks/>
+        </MapContainer>
+    )
 }
 
 export default CatalogMap

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'virtual_labs',
     'data_products',
     'rest_framework',
+    'rest_framework_gis',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',

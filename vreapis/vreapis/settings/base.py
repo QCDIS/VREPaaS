@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'cells',
     'workflows',
     'virtual_labs',
+    'data_products',
     'rest_framework',
     'corsheaders',
     'django.contrib.admin',

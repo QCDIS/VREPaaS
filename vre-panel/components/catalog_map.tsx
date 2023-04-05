@@ -39,7 +39,7 @@ async function render_features(map: Map) {
     geo_json.bindPopup((layer) => layer.feature.properties.name);
     geo_json.addTo(map);
 
-    const url = process.env.NEXT_PUBLIC_ENV_WFS_API_URL;
+    const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
     get_features(`${url}/shapes`, map.getBounds()).then((d) =>geo_json.addData(d));
     get_features(`${url}/markers`, map.getBounds()).then((d) =>geo_json.addData(d));
 }

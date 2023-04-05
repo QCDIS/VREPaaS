@@ -44,3 +44,12 @@ k8s_resource(
     port_forwards='3000:3000',
     labels=['vreapp']
 )
+
+# DB
+
+k8s_yaml([ 'tilt/vre-depts-db.yaml'])
+
+k8s_resource(
+    'db-deployment',
+    labels=['db'],
+)

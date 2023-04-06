@@ -15,7 +15,8 @@ class DataProductsViewSet(
         mixins.CreateModelMixin,
         viewsets.GenericViewSet,
         ):
-    queryset = models.DataProduct.objects.all()
+    model = models.DataProduct
+    queryset = model.objects.all()
     serializer_class = serializers.DataProductSerializer
     serializer_action_classes = {
         'list': serializers.DataProductSerializer,
@@ -25,16 +26,17 @@ class DataProductsViewSet(
         print(request.data)
         return super().create(request)
 
+    def get_queryset(self):
+        vlab_slug = self.request.query_params.get('vlab_slug', None)
+        if vlab_slug:
+            return self.model.objects.filter(vlab__slug=vlab_slug)
+        else:
+            return self.model.objects.all()
 
-class GeoDataProductsViewSet(
-        GetSerializerMixin,
-        mixins.RetrieveModelMixin,
-        mixins.UpdateModelMixin,
-        mixins.ListModelMixin,
-        mixins.CreateModelMixin,
-        viewsets.GenericViewSet,
-        ):
-    queryset = models.GeoDataProduct.objects.all()
+
+class GeoDataProductsViewSet(DataProductsViewSet):
+    model = models.GeoDataProduct
+    queryset = model.objects.all()
     serializer_class = serializers.GeoDataProductSerializer
     serializer_action_classes = {
         'list': serializers.GeoDataProductSerializer,
@@ -42,7 +44,3 @@ class GeoDataProductsViewSet(
     bbox_filter_field = 'spatial_coverage'
     bbox_filter_include_overlapping = True
     filter_backends = (filters.InBBoxFilter,)
-
-    def create(self, request, *args, **kwargs):
-        print(request.data)
-        return super().create(request)

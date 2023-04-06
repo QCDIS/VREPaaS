@@ -191,7 +191,7 @@ const VLabDetails = ({ token }) => {
                     </table>
                 </div>
                 <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
-                    <CatalogMapView/>
+                    <CatalogMapView vlab_slug={slug}/>
                 </div>
             </div>
         </div>

@@ -12,49 +12,54 @@ import {
 } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 
-async function get_features(api_endpoint: String, bounds: LatLngBounds) {
-    const url = `${api_endpoint}/?format=json&in_bbox=${bounds.toBBoxString()}`;
-    const requestOptions: RequestInit = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    };
-    const res = await fetch(url, requestOptions);
-    return res.json();
-}
 
-async function render_features(map: Map) {
-    map.eachLayer((layer)=>{
-        if (
-            (layer instanceof Polygon)
-            || (layer instanceof Marker)
-        )
-        {
-            layer.remove();
-        }
-    });
 
-    const geo_json = geoJSON()
-    geo_json.bindPopup((layer) => layer.feature.properties.name);
-    geo_json.addTo(map);
+const CatalogMap = ({vlab_slug}) => {
 
-    const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
-    get_features(`${url}/geodataprods`, map.getBounds()).then((d) =>geo_json.addData(d));
-}
+    async function get_features(api_endpoint: String, bounds: LatLngBounds) {
+        const url = `${api_endpoint}/?format=json&in_bbox=${bounds.toBBoxString()}&vlab_slug=${vlab_slug}`;
+        const requestOptions: RequestInit = {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        };
+        const res = await fetch(url, requestOptions);
+        console.log(res)
+        return res.json();
+    }
 
-function CallbackHooks() {
-    const map = useMapEvents({
-        moveend: () => render_features(map),
-    });
-    return null;
-}
+    async function render_features(map: Map) {
+        map.eachLayer((layer)=>{
+            if (
+              (layer instanceof Polygon)
+              || (layer instanceof Marker)
+            )
+            {
+                layer.remove();
+            }
+        });
 
-const CatalogMap = () => {
+        const geo_json = geoJSON()
+        geo_json.bindPopup((layer) => layer.feature.properties.name);
+        geo_json.addTo(map);
+
+        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
+        console.log(vlab_slug)
+        get_features(`${url}/geodataprods`, map.getBounds()).then((d) =>geo_json.addData(d));
+    }
+
+    function CallbackHooks() {
+        const map = useMapEvents({
+            moveend: () => render_features(map),
+        });
+        return null;
+    }
+
     return (
         <MapContainer
             id="map"
-            center={[52.5, 5]} zoom={8}
+            center={[50, 10]} zoom={3.5}
             style={{height: "100%", width: "100%"}}
             whenCreated={render_features}
         >

@@ -6,7 +6,7 @@ secret_settings (disable_scrub=True)
 docker_build(
     'qcdis/vreapi',
     context='.',
-    dockerfile='tilt/vreapis.dev.dockerfile',
+    dockerfile='tilt/vreapis/Dockerfile',
     only=['./vreapis/'],
     live_update=[
         sync('./vreapis', '/app'),
@@ -29,7 +29,7 @@ k8s_resource(
 docker_build(
     'qcdis/vreapp',
     context='.',
-    dockerfile='tilt/vre-panel.dev.dockerfile',
+    dockerfile='tilt/vre-panel/Dockerfile',
     only=['./vre-panel/'],
     live_update=[
         sync('./vre-panel', '/app'),

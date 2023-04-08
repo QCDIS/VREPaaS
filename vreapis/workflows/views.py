@@ -11,7 +11,6 @@ from . import models, serializers
 
 ARGO_URL = os.getenv('ARGO_URL')+'/api/v1/workflows/'
 
-
 class WorkflowViewSet(GetSerializerMixin,
                       mixins.RetrieveModelMixin,
                       mixins.UpdateModelMixin,
@@ -95,6 +94,8 @@ class WorkflowViewSet(GetSerializerMixin,
                 'Authorization': os.getenv('ARGO_API_TOKEN')
             }
         )
+        if resp_submit.status_code != 201 or resp_submit.status_code != 200:
+            return Response({'message': 'Error in submitting workflow'}, status=resp_submit.status_code)
         resp_submit_data = resp_submit.json()
 
         resp_detail = requests.get(
@@ -104,6 +105,8 @@ class WorkflowViewSet(GetSerializerMixin,
                 'Authorization': os.getenv('ARGO_API_TOKEN')
             }
         )
+        if resp_detail.status_code != 201 or resp_detail.status_code != 200:
+            return Response({'message': 'Error in getting workflow details'}, status=resp_detail.status_code)
 
         resp_detail_data = resp_detail.json()
 

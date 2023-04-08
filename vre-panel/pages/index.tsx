@@ -73,9 +73,9 @@ const VLabs = () => {
                                     as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
                                 >
                                     <div>
-                                        <img className="w-72 h-40 object-cover" src={`${publicRuntimeConfig.staticFolder}/market-research.png`} />
-                                        <div className="font-bold text-l mb-2 bg-blue-300 text-white p-5">{vlab.title}</div>
-                                        <div className="px-6 py-4">
+                                        <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`} />
+                                        <div className="font-bold text-l mb-2 bg-blue-500 text-white p-5">{vlab.title}</div>
+                                        <div className="px-3 py-2">
                                             <p className="text-gray-700 text-base truncate ...">
                                                 {vlab.description}
                                             </p>

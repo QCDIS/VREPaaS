@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
 
+interface VLabDetailsProps {
+    token?: any;
+  }
 
-const VLabDetails = ({ token }) => {
+
+const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
 
     const vlabPlaceholder = {
         title: "Loading ..",
@@ -137,7 +141,7 @@ const VLabDetails = ({ token }) => {
 
 export default VLabDetails;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context:any) {
 
     const { req } = context;
     const secret = process.env.SECRET;

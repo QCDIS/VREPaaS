@@ -6,8 +6,8 @@ WORKDIR /app
 # COPY package.json ./
 # RUN yarn install --frozen-lockfile
 
-# If using npm with a `package-lock.json` comment out above and use below instead
-COPY ./package.json ./package-lock.json ./ 
+COPY ./package.json ./
+RUN npm install --omit=dev
 RUN npm ci
 
 # Rebuild the source code only when needed

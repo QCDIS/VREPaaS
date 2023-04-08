@@ -1,8 +1,8 @@
-import Link from 'next/link';
+// import Link from 'next/link';
 import { Menu, Transition } from '@headlessui/react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from "next-auth/react"
-import useAuth from '../pages/auth/useAuth';
+// import useAuth from '../pages/auth/useAuth';
 import getConfig from 'next/config'
 
 
@@ -10,11 +10,11 @@ const Nav = () => {
 
     const { publicRuntimeConfig } = getConfig()
     const { data: session, status } = useSession()
-    const router = useRouter();
-    const menu = [
+    // const router = useRouter();
+    // const menu = [
         // { key: 'home', label: 'Home', url: `${publicRuntimeConfig.basePath}/home` },
         // { key: 'vlabs', label: 'Virtual Labs', url: `${publicRuntimeConfig.basePath}/vlabs` },
-    ];
+    // ];
 
     return (
         <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-xl">

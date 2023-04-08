@@ -2,6 +2,7 @@ import axios from "axios";
 import NextAuth from "next-auth"
 import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak"
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 import getConfig from 'next/config'
 
@@ -41,7 +42,7 @@ const refreshAccessToken = async (token: JWT) => {
 	}
 };
 
-export default (req, res) => {
+export default (req : NextApiRequest, res: NextApiResponse) => {
 	return NextAuth(req, res, {
 		providers: [
 			KeycloakProvider({

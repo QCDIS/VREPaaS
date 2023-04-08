@@ -6,12 +6,13 @@ WORKDIR /app
 # COPY package.json ./
 # RUN yarn install --frozen-lockfile
 
+# If using npm with a `package-lock.json` comment out above and use below instead
 COPY ./package.json ./
-RUN npm install --omit=dev
+RUN npm install
 RUN npm ci
 
 # Rebuild the source code only when needed
-FROM node:16-alpine AS builder
+FROM node:19-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

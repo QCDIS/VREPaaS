@@ -1,0 +1,26 @@
+name: make release
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  call-build-container-vreapis:
+    uses: QCDIS/VREPaaS/.github/workflows/build-container.yml@main
+    with:
+      docker_folder: vreapis
+      tag: vreapi
+      push: true
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+  call-build-container-vre-panel:
+    uses: QCDIS/VREPaaS/.github/workflows/build-container.yml@main
+    with:
+      docker_folder: vre-panel
+      tag: vreapp
+      push: true
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}

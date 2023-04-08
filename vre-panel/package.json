@@ -12,7 +12,7 @@
     "@react-keycloak/ssr": "~3.3.0",
     "@tailwindcss/line-clamp": "latest",
     "axios": "~0.26.1",
-    "cookie": "~0.4.2",
+    "cookie": "~0.5.0",
     "http": "~0.0.1-security",
     "keycloak-js": "~16.1.1",
     "next": "12.2.5",

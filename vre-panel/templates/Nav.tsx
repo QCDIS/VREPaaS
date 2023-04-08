@@ -21,7 +21,7 @@ const Nav = () => {
             <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <a href={publicRuntimeConfig.basePath} className="flex items-center">
-                        <img src={`${publicRuntimeConfig.staticFolder}/envri_logo_final.png`} className="mr-3 h-6 h-14" alt="LifeWatch Logo" />
+                        <img src={`${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`} className="mr-3 h-6 h-14" alt="LifeWatch Logo" />
                     </a>
                     <div className="flex items-center md:order-2">
                         <div className="relative inline-block text-left">

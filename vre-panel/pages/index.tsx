@@ -1,5 +1,5 @@
 import { getToken } from 'next-auth/jwt';
-import { signIn, useSession } from 'next-auth/react';
+// import { signIn, useSession } from 'next-auth/react';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -92,7 +92,7 @@ const VLabs = () => {
     )
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context:any) {
 
     const { req } = context;
     const secret = process.env.SECRET;

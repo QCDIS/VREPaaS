@@ -6,6 +6,7 @@ WORKDIR /app
 # COPY package.json ./
 # RUN yarn install --frozen-lockfile
 
+COPY .env ./
 # If using npm with a `package-lock.json` comment out above and use below instead
 COPY ./package.json ./
 RUN npm install
@@ -16,7 +17,6 @@ FROM node:19-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.

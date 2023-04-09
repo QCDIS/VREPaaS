@@ -4,13 +4,6 @@ import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
 
-if (typeof window === 'undefined') {
-    // Only load the dotenv-flow library on the server-side
-    const dotenv = require('dotenv-flow').config();
-    console.log(dotenv.parsed);
-  }
-
-
 interface VLabDetailsProps {
     token?: any;
   }

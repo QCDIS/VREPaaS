@@ -13,7 +13,6 @@
     "@tailwindcss/line-clamp": "latest",
     "axios": "~0.26.1",
     "cookie": "~0.5.0",
-    "dotenv-flow": "~3.2.0",
     "http": "~0.0.1-security",
     "keycloak-js": "~16.1.1",
     "next": "12.2.5",

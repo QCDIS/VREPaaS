@@ -9,5 +9,6 @@ module.exports = {
   publicRuntimeConfig: {
     basePath: process.env.NODE_ENV === "production" ? '/vreapp' : '',
     staticFolder: process.env.NODE_ENV === "production" ? '/vreapp' : '',
+    myVar: 'myVar'
   }
 }

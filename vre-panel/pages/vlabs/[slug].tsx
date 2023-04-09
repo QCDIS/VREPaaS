@@ -3,6 +3,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV !== 'production') {
+    const result = dotenv.config({ path: '.env.production' });
+    if (result.error) {
+        throw result.error;
+    }
+}
+
 
 interface VLabDetailsProps {
     token?: any;

@@ -17,7 +17,7 @@ spec:
       containers:
         - name: vreapi
           image: qcdis/vreapi
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
           - containerPort: 8000
             protocol: TCP
@@ -69,10 +69,10 @@ spec:
               value: admin@lifewatch.eu
 
             - name: DJANGO_SUPERUSER_USERNAME
-              value: admin
-
-            - name: DJANGO_SETTINGS_MODULE
-              value: vreapis.settings.development
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: django-user
 
             - name: ARGO_URL
               valueFrom:
@@ -103,3 +103,6 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: ALLOWED_HOST
+
+            - name: DJANGO_SETTINGS_MODULE
+              value: vreapis.settings.production

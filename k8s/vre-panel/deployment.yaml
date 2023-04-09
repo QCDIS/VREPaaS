@@ -46,16 +46,16 @@ spec:
                   name: vre-panel-secrets
                   key: secret
           volumeMounts:
-          - mountPath: /app/.env.production.local
-            name: env-local
+          - mountPath: /app/.env.production
+            name: env-production
             readOnly: true
-            subPath: .env.production.local
+            subPath: .env.production
 
       volumes:
       - configMap:
           defaultMode: 420
           items:
           - key: .env
-            path: .env.production.local
-          name: env-local
-        name: env-local
+            path: .env.production
+          name: env-production
+        name: env-production

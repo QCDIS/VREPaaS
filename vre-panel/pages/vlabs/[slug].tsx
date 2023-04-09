@@ -7,6 +7,10 @@ const dotenv = require('dotenv');
 
 const result = dotenv.config({ path: '.env.production' });
 
+if (result.error) {
+  throw result.error;
+}
+
 interface VLabDetailsProps {
     token?: any;
   }

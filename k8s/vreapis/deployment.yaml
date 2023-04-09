@@ -69,7 +69,10 @@ spec:
               value: admin@lifewatch.eu
 
             - name: DJANGO_SUPERUSER_USERNAME
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: django-user
 
             - name: ARGO_URL
               valueFrom:

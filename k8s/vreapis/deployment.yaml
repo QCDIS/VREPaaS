@@ -103,3 +103,6 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: ALLOWED_HOST
+
+            - name: DJANGO_SETTINGS_MODULE
+              value: vreapis.settings.production

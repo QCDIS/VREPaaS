@@ -45,6 +45,10 @@ spec:
                 secretKeyRef:
                   name: vre-panel-secrets
                   key: secret
+
+            - name: NEXT_PUBLIC_ENV_VRE_API_URL
+              value: http://vreapi:8000/api
+
 #          volumeMounts:
 #          - mountPath: /app/.env
 #            name: env

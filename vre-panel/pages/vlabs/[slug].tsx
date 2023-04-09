@@ -7,7 +7,9 @@ import getConfig from 'next/config'
 
 const { publicRuntimeConfig } = getConfig()
 
+console.log('---------------publicRuntimeConfig------------------')
 console.log(publicRuntimeConfig.myVar)
+console.log(publicRuntimeConfig.someValue)
 
 
 interface VLabDetailsProps {

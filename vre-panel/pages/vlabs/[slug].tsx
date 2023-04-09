@@ -34,7 +34,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
         };
 
         const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
-
+        console.log("Featching vlabs from:" + url + "/vlabs/"+slug)
         const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
         return res.json();
     }

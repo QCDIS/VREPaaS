@@ -50,6 +50,7 @@ spec:
             name: env-local
             readOnly: true
             subPath: .env.local
+
       volumes:
       - configMap:
           defaultMode: 420
@@ -86,7 +87,6 @@ metadata:
 
 data:
   .env: |-
-    NEXT_PUBLIC_ENV_NEXTAUTH_URL=http://localhost:3000
-    NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost:8000/api
+    NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost/api
     NEXTAUTH_URL=http://localhost:3000
 

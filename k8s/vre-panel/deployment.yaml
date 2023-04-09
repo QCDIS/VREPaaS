@@ -45,11 +45,13 @@ spec:
                 secretKeyRef:
                   name: vre-panel-secrets
                   key: secret
+
           volumeMounts:
           - mountPath: /app/.env.local
             name: env-local
             readOnly: true
             subPath: .env.local
+
       volumes:
       - configMap:
           defaultMode: 420

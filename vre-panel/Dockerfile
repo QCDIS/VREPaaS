@@ -6,7 +6,6 @@ WORKDIR /app
 # COPY package.json ./
 # RUN yarn install --frozen-lockfile
 
-COPY .env ./
 # If using npm with a `package-lock.json` comment out above and use below instead
 COPY ./package.json ./
 RUN npm install

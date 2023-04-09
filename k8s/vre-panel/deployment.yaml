@@ -47,7 +47,7 @@ spec:
                   key: secret
           volumeMounts:
           - mountPath: /app/.env.production
-            name: env-production
+            name: env
             readOnly: true
             subPath: .env.production
 
@@ -57,5 +57,5 @@ spec:
           items:
           - key: .env
             path: .env.production
-          name: env-production
-        name: env-production
+          name: env
+        name: env

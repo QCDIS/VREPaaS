@@ -17,7 +17,7 @@ spec:
       containers:
         - name: vreapi
           image: qcdis/vreapi
-          imagePullPolicy: Never
+          imagePullPolicy: Alyways
           ports:
           - containerPort: 8000
             protocol: TCP

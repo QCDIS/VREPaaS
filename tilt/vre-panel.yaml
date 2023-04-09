@@ -46,19 +46,19 @@ spec:
                   name: vre-panel-secrets
                   key: secret
           volumeMounts:
-          - mountPath: /app/.env.local
-            name: env-local
+          - mountPath: /app/.env.production
+            name: env-production
             readOnly: true
-            subPath: .env.local
+            subPath: .env.production
 
       volumes:
       - configMap:
           defaultMode: 420
           items:
           - key: .env
-            path: .env.local
-          name: env-local
-        name: env-local
+            path: .env.production
+          name: env-production
+        name: env-production
 ---
 
 apiVersion: v1
@@ -81,7 +81,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: env-local
+  name: env-production
   labels:
     app: vreapp-svc
 

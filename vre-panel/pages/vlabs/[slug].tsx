@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
-const dotenv = require('dotenv-flow').config();
 
-if (process.env.NODE_ENV !== 'production') {
-    
+if (typeof window === 'undefined') {
+    // Only load the dotenv-flow library on the server-side
+    const dotenv = require('dotenv-flow').config();
     console.log(dotenv.parsed);
-}
+  }
 
 
 interface VLabDetailsProps {

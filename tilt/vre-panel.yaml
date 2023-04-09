@@ -47,17 +47,17 @@ spec:
                   key: secret
 
           volumeMounts:
-          - mountPath: /app/.env.production
+          - mountPath: /app/.env
             name: env
             readOnly: true
-            subPath: .env.production
+            subPath: .env
 
       volumes:
       - configMap:
           defaultMode: 420
           items:
           - key: .env
-            path: .env.production
+            path: .env
           name: env
         name: env
 ---

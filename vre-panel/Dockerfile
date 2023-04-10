@@ -58,4 +58,6 @@ ENV PORT 3000
 
 COPY .env .env
 
+RUN echo $NEXT_PUBLIC_ENV_VRE_API_URL
+
 ENTRYPOINT ["/app/entrypoint.sh"]

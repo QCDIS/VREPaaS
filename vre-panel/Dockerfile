@@ -17,6 +17,7 @@ WORKDIR /app
 
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+RUN chmod +x entrypoint.sh
 
 RUN NEXT_PUBLIC_ENV_VRE_API_URL=APP_NEXT_PUBLIC_ENV_VRE_API_URL npm run build
 

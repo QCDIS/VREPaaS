@@ -15,6 +15,7 @@ RUN npm ci
 FROM node:19-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+
 COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -24,7 +25,9 @@ COPY . .
 #RUN yarn build
 
 # If using npm comment out above and use below instead
-RUN npm run build
+# RUN npm run build
+
+RUN NEXT_PUBLIC_ENV_VRE_API_URL=APP_NEXT_PUBLIC_ENV_VRE_API_URL npm run build
 
 # Production image, copy all the files and run next
 FROM node:19-alpine AS runner
@@ -48,7 +51,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 COPY entrypoint.sh ./entrypoint.sh
-COPY .env .env
+# COPY .env .env
 RUN chown -R nextjs:nodejs /app
 RUN chmod +x ./entrypoint.sh
 
@@ -58,5 +61,6 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-# CMD ["node", "server.js"]
-cmd ["./entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD ["node", "server.js"]

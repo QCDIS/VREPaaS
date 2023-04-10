@@ -3,13 +3,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
-import getConfig from 'next/config'
-
-const { publicRuntimeConfig } = getConfig()
-
-console.log('---------------publicRuntimeConfig------------------')
-console.log(publicRuntimeConfig.myVar)
-console.log(publicRuntimeConfig.someValue)
 
 
 interface VLabDetailsProps {

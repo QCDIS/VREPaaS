@@ -37,6 +37,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# You only need to copy next.config.js if you are NOT using the default configuration
+# COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
 
@@ -56,4 +58,7 @@ EXPOSE 3000
 ENV PORT 3000
 
 COPY .env .env
+
+RUN echo $NEXT_PUBLIC_ENV_VRE_API_URL
+
 ENTRYPOINT ["/app/entrypoint.sh"]

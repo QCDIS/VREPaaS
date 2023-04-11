@@ -80,6 +80,13 @@ spec:
                   name: vre-api-config
                   key: ARGO_URL
 
+            - name: ARGO_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: ARGO_NAMESPACE
+
+
             - name: CALL_BACK_URL
               valueFrom:
                 configMapKeyRef:

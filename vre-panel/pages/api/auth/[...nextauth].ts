@@ -11,6 +11,7 @@ const { publicRuntimeConfig } = getConfig()
 const refreshAccessToken = async (token: JWT) => {
 	try {
 		// Get a new set of tokens with a refreshToken
+		console.log("KEYCLOAK_ISSUER", process.env.KEYCLOAK_ISSUER)
 		const tokenResponse = await axios.post(
 			process.env.KEYCLOAK_ISSUER + '/protocol/openid-connect/token',
 			{

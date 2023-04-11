@@ -26,6 +26,7 @@ export default function SignIn({ providers }: { providers: any }) {
 export async function getServerSideProps(context: { req: any; }) {
 
     const { req } = context;
+    console.log("getProviders")
     const providers = await getProviders()
     const session = await getSession({ req })
     if (session) {

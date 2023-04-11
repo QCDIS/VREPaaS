@@ -17,7 +17,7 @@ spec:
       containers:
         - name: vreapp
           image: qcdis/vreapp
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           ports:
           - containerPort: 3000
             protocol: TCP
@@ -45,16 +45,18 @@ spec:
                 secretKeyRef:
                   name: vre-panel-secrets
                   key: secret
-          volumeMounts:
-          - mountPath: /app/.env.local
-            name: env-local
-            readOnly: true
-            subPath: .env.local
-      volumes:
-      - configMap:
-          defaultMode: 420
-          items:
-          - key: .env
-            path: .env.local
-          name: env-local
-        name: env-local
+
+#          volumeMounts:
+#          - mountPath: /app/.env
+#            name: env
+#            readOnly: true
+#            subPath: .env
+#
+#      volumes:
+#      - configMap:
+#          defaultMode: 420
+#          items:
+#          - key: .env
+#            path: .env
+#          name: env
+#        name: env

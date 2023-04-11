@@ -34,6 +34,7 @@ const VLabs = () => {
             //     },
             // };
             const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
+            console.log('Featching vlabs from:'+vre_api_url+'/vlabs')
             
             fetch(`${vre_api_url}/vlabs`)
                 .then((res) => res.json())

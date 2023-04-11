@@ -45,19 +45,21 @@ spec:
                 secretKeyRef:
                   name: vre-panel-secrets
                   key: secret
+
           volumeMounts:
-          - mountPath: /app/.env.local
-            name: env-local
+          - mountPath: /app/.env
+            name: env
             readOnly: true
-            subPath: .env.local
+            subPath: .env
+
       volumes:
       - configMap:
           defaultMode: 420
           items:
           - key: .env
-            path: .env.local
-          name: env-local
-        name: env-local
+            path: .env
+          name: env
+        name: env
 ---
 
 apiVersion: v1
@@ -80,13 +82,12 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: env-local
+  name: env
   labels:
     app: vreapp-svc
 
 data:
   .env: |-
-    NEXT_PUBLIC_ENV_NEXTAUTH_URL=http://localhost:3000
     NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost:8000/api
     NEXTAUTH_URL=http://localhost:3000
 

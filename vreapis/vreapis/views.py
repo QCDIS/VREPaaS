@@ -1,5 +1,4 @@
 
-
 class GetSerializerMixin(object):
 
     def get_serializer_class(self):

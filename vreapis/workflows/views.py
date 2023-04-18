@@ -85,6 +85,9 @@ class WorkflowViewSet(GetSerializerMixin,
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
         print('----------------submit-------------------------')
+        if not argo_api_wf_url:
+            return Response({'message': 'Argo API URL not set'}, status=500)
+
         if argo_api_wf_url.endswith('/'):
             call_url = argo_api_wf_url+namespace
         else:
@@ -118,6 +121,8 @@ class WorkflowViewSet(GetSerializerMixin,
         resp_detail_data = resp_detail.json()
 
         vlab = VirtualLab.objects.get(slug=vlab_slug)
+        if not argo_url:
+            return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"
         new_data = {'argo_id': resp_submit_data['metadata']['name'],
                     'status': f"{resp_detail_data['status']['phase']} - {resp_detail_data['status']['progress']}",

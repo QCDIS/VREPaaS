@@ -87,6 +87,8 @@ class WorkflowViewSet(GetSerializerMixin,
         print('----------------submit-------------------------')
         if not argo_api_wf_url:
             return Response({'message': 'Argo API URL not set'}, status=500)
+        if not namespace:
+            return Response({'message': 'Argo namespace not set'}, status=500)
 
         if argo_api_wf_url.endswith('/'):
             call_url = argo_api_wf_url+namespace
@@ -96,6 +98,9 @@ class WorkflowViewSet(GetSerializerMixin,
         workflow = request.data['workflow_payload']
         vlab_slug = request.data['vlab']
 
+        if not argo_api_token:
+            return Response({'message': 'Argo API token not set'}, status=500)
+
         resp_submit = requests.post(
             call_url,
             json=workflow,
@@ -103,7 +108,7 @@ class WorkflowViewSet(GetSerializerMixin,
                 'Authorization': argo_api_token
             }
         )
-        print(resp_submit.status_code)
+
         if resp_submit.status_code != 200:
             return Response({'message': 'Error in submitting workflow'}, status=resp_submit.status_code)
         resp_submit_data = resp_submit.json()
@@ -119,8 +124,10 @@ class WorkflowViewSet(GetSerializerMixin,
             return Response({'message': 'Error in getting workflow details'}, status=resp_detail.status_code)
 
         resp_detail_data = resp_detail.json()
-
-        vlab = VirtualLab.objects.get(slug=vlab_slug)
+        try:
+            vlab = VirtualLab.objects.get(slug=vlab_slug)
+        except VirtualLab.DoesNotExist:
+            return Response({'message': 'Virtual Lab not found'}, status=404)
         if not argo_url:
             return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"
@@ -132,5 +139,7 @@ class WorkflowViewSet(GetSerializerMixin,
 
         if new_workflow.is_valid(raise_exception=True):
             new_workflow.save()
+        else:
+            return Response({'message': 'Error in saving workflow'}, status=500)
 
         return Response(new_workflow.data)

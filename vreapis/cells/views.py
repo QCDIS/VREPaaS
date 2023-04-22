@@ -8,12 +8,11 @@ from . import models, serializers
 
 
 class CellsViewSet(GetSerializerMixin,
-                      mixins.RetrieveModelMixin,
-                      mixins.UpdateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.CreateModelMixin,
-                      viewsets.GenericViewSet):
-
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.CreateModelMixin,
+                   viewsets.GenericViewSet):
     queryset = models.Cell.objects.all()
     serializer_class = serializers.CellSerializer
     serializer_action_classes = {
@@ -21,6 +20,5 @@ class CellsViewSet(GetSerializerMixin,
     }
 
     def create(self, request, *args, **kwargs):
-        
         print(request.data)
         return super().create(request)

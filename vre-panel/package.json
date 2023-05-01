@@ -24,7 +24,7 @@
     "use-subscription": "~1.8.0"
   },
   "devDependencies": {
-    "@types/node": "~18.15.11",
+    "@types/node": "~18.16.3",
     "@types/react": "~18.2.0",
     "autoprefixer": "~10.4.2",
     "axios-mock-adapter": "~1.21.4",

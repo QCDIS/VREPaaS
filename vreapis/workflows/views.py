@@ -10,9 +10,10 @@ from vreapis.views import GetSerializerMixin
 from . import models, serializers
 
 argo_url = os.getenv('ARGO_URL')
-argo_api_wf_url = argo_url+'/api/v1/workflows/'
-argo_api_token = os.getenv('ARGO_API_TOKEN')
+argo_api_wf_url = argo_url + '/api/v1/workflows/'
+argo_api_token = os.getenv('ARGO_API_TOKEN').replace('"', '')
 namespace = os.getenv('ARGO_NAMESPACE')
+
 
 class WorkflowViewSet(GetSerializerMixin,
                       mixins.RetrieveModelMixin,
@@ -91,9 +92,9 @@ class WorkflowViewSet(GetSerializerMixin,
             return Response({'message': 'Argo namespace not set'}, status=500)
 
         if argo_api_wf_url.endswith('/'):
-            call_url = argo_api_wf_url+namespace
+            call_url = argo_api_wf_url + namespace
         else:
-            call_url = argo_api_wf_url+'/'+namespace
+            call_url = argo_api_wf_url + '/' + namespace
 
         workflow = request.data['workflow_payload']
         vlab_slug = request.data['vlab']

@@ -111,7 +111,7 @@ class WorkflowViewSet(GetSerializerMixin,
         )
 
         if resp_submit.status_code != 200:
-            return Response({'message': 'Error in submitting workflow'}, status=resp_submit.status_code)
+            return Response(resp_submit.text, status=resp_submit.status_code)
         resp_submit_data = resp_submit.json()
 
         resp_detail = requests.get(
@@ -122,7 +122,7 @@ class WorkflowViewSet(GetSerializerMixin,
             }
         )
         if resp_detail.status_code != 200:
-            return Response({'message': 'Error in getting workflow details'}, status=resp_detail.status_code)
+            return Response(resp_submit.text, status=resp_detail.status_code)
 
         resp_detail_data = resp_detail.json()
         try:

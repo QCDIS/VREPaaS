@@ -179,3 +179,5 @@ jspm_packages
 /package-lock.json
 
 tilt/secrets.yaml
+tilt/django-secrets.yaml
+tilt/vre-api-config.yaml

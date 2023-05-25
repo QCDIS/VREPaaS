@@ -67,115 +67,87 @@ The username is hardcoded in k8s/vreapis/deplyment.yaml in the env 'DJANGO_SUPER
 # Argo Workflows
 
 ## Generate Token
+
 ```shell
 kubectl apply -f - <<EOF
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: vreapp
+  name: vre-api
   namespace: argo
 rules:
   - verbs:
       - get
       - watch
-      - list
-    apiGroups:
-      - ''
-    resources:
-      - configmaps
-      - events
-  - verbs:
-      - get
-      - list
-      - watch
-      - delete
+      - patch
     apiGroups:
       - ''
     resources:
       - pods
   - verbs:
       - get
-      - list
+      - watch
     apiGroups:
       - ''
     resources:
       - pods/log
   - verbs:
+      - create
+    apiGroups:
+      - ''
+    resources:
+      - pods/exec
+  - verbs:
+      - list
+      - watch
+      - create
       - get
       - update
-    apiGroups:
-      - ''
-    resources:
-      - secrets
-    resourceNames:
-      - sso
-  - verbs:
-      - create
-    apiGroups:
-      - ''
-    resources:
-      - secrets
-  - verbs:
-      - get
-      - list
-      - watch
-    apiGroups:
-      - ''
-    resources:
-      - serviceaccounts
-  - verbs:
-      - get
-      - list
-      - watch
-    apiGroups:
-      - ''
-    resources:
-      - secrets
-  - verbs:
-      - watch
-      - create
-      - patch
-    apiGroups:
-      - ''
-    resources:
-      - events
-  - verbs:
-      - create
-      - get
-      - list
-      - watch
-      - update
-      - patch
       - delete
     apiGroups:
       - argoproj.io
     resources:
-      - eventsources
-      - sensors
-      - workflows
-      - workfloweventbindings
+      - workflowtasksets
+      - workflowartifactgctasks
       - workflowtemplates
-      - cronworkflows
+      - workflows
+  - verbs:
+      - patch
+    apiGroups:
+      - argoproj.io
+    resources:
+      - workflowtasksets/status
+      - workflowartifactgctasks/status
+      - workflows/status
 EOF
-```shell
-kubectl create sa vreapp -n argo
 ```
+
 ```shell
-kubectl create rolebinding vreapp --role=vreapp --serviceaccount=argo:vreapp -n argo
+kubectl create sa vre-api -n argo
 ```
+
+```shell
+kubectl create rolebinding vre-api --role=vre-api --serviceaccount=argo:vre-api -n argo
+```
+
 ```shell
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
   namespace: argo
-  name: vreapp.service-account-token
+  name: vre-api.service-account-token
   annotations:
-    kubernetes.io/service-account.name: vreapp
+    kubernetes.io/service-account.name: vre-api
 type: kubernetes.io/service-account-token
 EOF
 ```
+
 ```shell
-ARGO_TOKEN="Bearer $(kubectl get secret vreapp.service-account-token -n argo -o=jsonpath='{.data.token}' | base64 --decode)"
+ARGO_TOKEN="Bearer $(kubectl get secret vre-api.service-account-token -n argo -o=jsonpath='{.data.token}' | base64 --decode)"
+```
+
+```shell
+echo -n $ARGO_TOKEN | base64 -w 0
 ```
 

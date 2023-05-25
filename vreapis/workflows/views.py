@@ -8,6 +8,11 @@ from rest_framework.response import Response
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
 from . import models, serializers
+import logging
+
+logger = logging.getLogger(__name__)
+FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(format=FORMAT)
 
 argo_url = os.getenv('ARGO_URL')
 argo_api_wf_url = argo_url + '/api/v1/workflows/'
@@ -42,23 +47,28 @@ class WorkflowViewSet(GetSerializerMixin,
             return models.Workflow.objects.all()
 
     def list(self, request, *args, **kwargs):
-        print('----------------list-------------------------')
+        logger.debug('----------------list-------------------------')
         query_params = self.request.query_params
-        print('list query_params: ' + str(query_params))
+        logger.debug('list query_params: ' + str(query_params))
+
         vlab_slug = query_params.get('vlab_slug', None)
         if vlab_slug:
             call_url = argo_api_wf_url + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
         else:
             call_url = argo_api_wf_url
 
+        logger.debug('call_url: ' + call_url)
         resp_list = requests.get(
             call_url,
             headers={
                 'Authorization': argo_api_token
             }
         )
-        print('------------------------------------------------------------------------')
-        print('resp_list: ' + str(resp_list))
+        logger.debug('------------------------------------------------------------------------')
+        logger.debug('resp_list: ' + str(resp_list))
+        if resp_list.status_code != 200:
+            logger.warning('Error getting workflows. Status_code: ' + str(resp_list.status_code)+' - ' + str(resp_list.text))
+            return Response(resp_list.text, status=resp_list.status_code)
 
         resp_list_data = resp_list.json()
 
@@ -78,14 +88,14 @@ class WorkflowViewSet(GetSerializerMixin,
             wf_serializer = serializers.WorkflowSerializer(instances, data=data_items, partial=True, many=True)
 
             if wf_serializer.is_valid(raise_exception=True):
-                print("Serializer is valid")
+                logger.debug("Serializer is valid")
                 wf_serializer.save()
 
         return super().list(self, request, *args, **kwargs)
 
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
-        print('----------------submit-------------------------')
+        logger.debug('----------------submit-------------------------')
         if not argo_api_wf_url:
             return Response({'message': 'Argo API URL not set'}, status=500)
         if not namespace:

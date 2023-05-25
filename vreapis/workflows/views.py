@@ -32,9 +32,9 @@ class WorkflowViewSet(GetSerializerMixin,
     }
 
     def get_queryset(self):
-        print('----------------get_queryset-------------------------')
+        logger.debug('----------------get_queryset-------------------------')
         query_params = self.request.query_params
-        print('get_queryset query_params: ' + str(query_params))
+        logger.debug('get_queryset query_params: ' + str(query_params))
         vlab_slug = query_params.get('vlab_slug', None)
         vlab_query_set = VirtualLab.objects.filter(slug=vlab_slug)
 

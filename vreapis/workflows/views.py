@@ -45,11 +45,19 @@ class WorkflowViewSet(GetSerializerMixin,
         print('----------------list-------------------------')
         query_params = self.request.query_params
         print('list query_params: ' + str(query_params))
+
+        if not namespace:
+            return Response({'message': 'Argo namespace not set'}, status=500)
+        if argo_api_wf_url.endswith('/'):
+            call_url = argo_api_wf_url + namespace
+        else:
+            call_url = argo_api_wf_url + '/' + namespace
+
         vlab_slug = query_params.get('vlab_slug', None)
         if vlab_slug:
-            call_url = argo_api_wf_url + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
+            call_url = call_url + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
         else:
-            call_url = argo_api_wf_url
+            call_url = call_url
 
         resp_list = requests.get(
             call_url,

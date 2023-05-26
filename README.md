@@ -80,6 +80,7 @@ rules:
       - get
       - watch
       - patch
+      - delete
     apiGroups:
       - ''
     resources:
@@ -87,6 +88,7 @@ rules:
   - verbs:
       - get
       - watch
+      - patch
     apiGroups:
       - ''
     resources:
@@ -111,6 +113,7 @@ rules:
       - workflowartifactgctasks
       - workflowtemplates
       - workflows
+      - cronworkflows
   - verbs:
       - patch
     apiGroups:

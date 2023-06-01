@@ -1,10 +1,13 @@
+import React from "react";
 import {
     Map,
+    GeoJSON,
     geoJSON,
     LatLngBounds,
     Polygon,
     Marker,
 } from "leaflet";
+import { Geometry } from "geojson";
 import {
     MapContainer,
     TileLayer,
@@ -12,9 +15,11 @@ import {
 } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 
+interface CatalogMapProps{
+    vlab_slug?: string;
+}
 
-
-const CatalogMap = ({vlab_slug}) => {
+const CatalogMap: React.FC<CatalogMapProps> = ({vlab_slug}) => {
 
     async function get_features(api_endpoint: String, bounds: LatLngBounds) {
         const url = `${api_endpoint}/?format=json&in_bbox=${bounds.toBBoxString()}&vlab_slug=${vlab_slug}`;
@@ -40,12 +45,33 @@ const CatalogMap = ({vlab_slug}) => {
             }
         });
 
-        const geo_json = geoJSON()
-        geo_json.bindPopup((layer) => layer.feature.properties.name);
+        let geo_json: GeoJSON<any, Geometry>
+
+        function highlightFeature(e) {
+            let layer = e.target;
+            layer.setStyle({
+                weight: 5,
+                color: '#669',
+                fillOpacity: 0.7,
+            });
+        }
+
+        function resetHighlight(e) {
+            geo_json.resetStyle(e.target);
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+            });
+            layer.bindPopup(feature.properties.title);
+        }
+
+        geo_json = geoJSON(null, {onEachFeature});
         geo_json.addTo(map);
 
         const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
-        console.log(vlab_slug)
         get_features(`${url}/geodataprods`, map.getBounds()).then((d) =>geo_json.addData(d));
     }
 

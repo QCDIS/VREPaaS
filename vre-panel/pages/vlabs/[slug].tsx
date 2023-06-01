@@ -7,7 +7,12 @@ import dynamic from "next/dynamic";
 
 const CatalogMapView = dynamic(() => import("../../components/catalog_map"), { ssr:false })
 
-const VLabDetails = ({ token }) => {
+interface VLabDetailsProps {
+    token?: any;
+  }
+
+
+const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
 
     const vlabPlaceholder = {
         title: "Loading ..",
@@ -34,7 +39,7 @@ const VLabDetails = ({ token }) => {
         };
 
         const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
-
+        console.log("Featching vlabs from:" + url + "/vlabs/"+slug)
         const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
         return res.json();
     }
@@ -201,7 +206,7 @@ const VLabDetails = ({ token }) => {
 
 export default VLabDetails;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context:any) {
 
     const { req } = context;
     const secret = process.env.SECRET;

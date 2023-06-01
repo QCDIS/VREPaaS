@@ -19,26 +19,91 @@ spec:
           image: qcdis/vreapi
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
-              protocol: TCP
+          - containerPort: 8000
+            protocol: TCP
           env:
-            - name: SECRET_KEY
+            - name: KEYCLOAK_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: django-secrets.yaml
-                  key: secret-key
+                  name: django-secrets
+                  key: keycloak_client_id
+
+            - name: KEYCLOAK_CLIENT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: keycloak_client_secret_key
+
+            - name: KEYCLOAK_SERVER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: keycloak_server_url
+
+            - name: KEYCLOAK_REALM
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: keycloak_realm
 
             - name: DJANGO_SUPERUSER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: django-secrets.yaml
+                  name: django-secrets
                   key: superuser-password
 
+            - name: ARGO_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: argo_api_token
+
+
             - name: DJANGO_SUPERUSER_EMAIL
-              value: riccardo.bianchi@lifewatch.eu
+              value: admin@lifewatch.eu
 
             - name: DJANGO_SUPERUSER_USERNAME
-              value: riccardo
-              
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: django-user
+
+            - name: ARGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: ARGO_URL
+
+            - name: ARGO_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: ARGO_NAMESPACE
+
+
+            - name: CALL_BACK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: CALL_BACK_URL
+
+            - name: CORS_ALLOWED_ORIGIN_REGEXES
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: CORS_ALLOWED_ORIGIN_REGEXES
+
+            - name: TRUSTED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: TRUSTED_ORIGINS
+
+            - name: ALLOWED_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: ALLOWED_HOST
+
             - name: DJANGO_SETTINGS_MODULE
               value: vreapis.settings.production

@@ -2,6 +2,7 @@ import axios from "axios";
 import NextAuth from "next-auth"
 import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak"
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 import getConfig from 'next/config'
 
@@ -10,6 +11,7 @@ const { publicRuntimeConfig } = getConfig()
 const refreshAccessToken = async (token: JWT) => {
 	try {
 		// Get a new set of tokens with a refreshToken
+		console.log("KEYCLOAK_ISSUER", process.env.KEYCLOAK_ISSUER)
 		const tokenResponse = await axios.post(
 			process.env.KEYCLOAK_ISSUER + '/protocol/openid-connect/token',
 			{
@@ -41,7 +43,10 @@ const refreshAccessToken = async (token: JWT) => {
 	}
 };
 
-export default (req, res) => {
+export default (req : NextApiRequest, res: NextApiResponse) => {
+	console.log("AUTH0_ID", process.env.AUTH0_ID);
+	console.log("AUTH0_SECRET", process.env.AUTH0_SECRET);
+	console.log("AUTH0_ISSUER", process.env.AUTH0_ISSUER);
 	return NextAuth(req, res, {
 		providers: [
 			KeycloakProvider({

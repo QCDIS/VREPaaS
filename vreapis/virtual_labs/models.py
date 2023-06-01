@@ -2,15 +2,15 @@ from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
 
-class VLProfile(models.Model):
 
+class VLProfile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     display_name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     image = models.CharField(max_length=100)
 
     def __str__(self):
-            return self.display_name
+        return self.display_name
 
     class Meta:
         verbose_name = "VL Profile"
@@ -18,7 +18,6 @@ class VLProfile(models.Model):
 
 
 class VM(models.Model):
-
     CHOICES_ASSIGN_PUBLIC_IP = (
         ('yes', 'Yes'),
         ('no', 'No')
@@ -40,20 +39,19 @@ class VM(models.Model):
     user_name = models.CharField(max_length=100)
 
     def __str__(self):
-            return self.name
+        return self.name
 
     class Meta:
         verbose_name = "Virtual Machine"
 
 
 class Topology(models.Model):
-
     created = models.DateTimeField(auto_now_add=True)
     domain = models.CharField(max_length=100)
     provider = models.CharField(max_length=100)
 
     def __str__(self):
-            return self.provider
+        return self.provider
 
     class Meta:
         verbose_name = "Topology"
@@ -61,20 +59,18 @@ class Topology(models.Model):
 
 
 class SDIAProvision(models.Model):
-
     name = models.CharField(max_length=100, default='')
     vms = models.ManyToManyField(VM)
     topology = models.ForeignKey(Topology, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = "SDIA Provision"
 
 
 class VirtualLab(models.Model):
-
     created = models.DateTimeField(auto_now_add=True, null=True)
     title = models.CharField(max_length=100)
     slug = models.SlugField(null=True, unique=True)
@@ -86,14 +82,13 @@ class VirtualLab(models.Model):
     image_tag = models.CharField(max_length=100, null=True)
 
     def __str__(self):
-            return self.title
+        return self.title
 
     class Meta:
         verbose_name = "Virtual Lab"
 
 
 class TokenCredentials(models.Model):
-
     CHOICES_CREDENTIALS_TYPE = (
         ('gh', 'Github Repository'),
         ('we', 'Workflow Engine')
@@ -102,13 +97,12 @@ class TokenCredentials(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     name = models.CharField(max_length=100, null=True)
     type = models.CharField(max_length=2, choices=CHOICES_CREDENTIALS_TYPE, null=True)
-    url = models.URLField(null = True)
+    url = models.URLField(null=True)
     token = models.CharField(max_length=100, null=True)
     vlab = models.ForeignKey(VirtualLab, on_delete=models.DO_NOTHING, null=True)
 
 
 class KeyCloakAuth(models.Model):
-
     created = models.DateTimeField(auto_now_add=True)
     issuer = models.CharField(max_length=100)
     client_id = models.CharField(max_length=100)
@@ -116,7 +110,7 @@ class KeyCloakAuth(models.Model):
     realm_name = models.CharField(max_length=100)
 
     def __str__(self):
-            return self.issuer
+        return self.issuer
 
     class Meta:
         verbose_name = "KeyCloak Auth"

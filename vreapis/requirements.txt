@@ -9,4 +9,5 @@ pyyaml
 requests
 django-dotenv
 django-cors-headers
+django-extensions
 psycopg2==2.9.5

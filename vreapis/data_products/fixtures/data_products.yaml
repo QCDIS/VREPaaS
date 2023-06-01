@@ -4,7 +4,7 @@
     created: 2023-04-06 08:29:18.504885+00:00
     title: Sample data product
     description: Sample data product
-    vlab: 1
+    vlab: 3
     workflow: n-a-a-vre-dev-skoulouzis-gcjcn
     data_url: https://example.org
 - model: data_products.DataProduct
@@ -13,7 +13,7 @@
     created: 2023-04-06 08:33:20.002010+00:00
     title: Sample geo data product
     description: Sample geo data product
-    vlab: 1
+    vlab: 3
     workflow: n-a-a-vre-dev-skoulouzis-6zvkb
     data_url: https://example.org
 - model: data_products.GeoDataProduct

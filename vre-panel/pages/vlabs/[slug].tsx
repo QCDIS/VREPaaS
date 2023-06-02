@@ -91,7 +91,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
     }, [isAuthenticated]);
 
 
-    const getSpinningButtonClass = (loadingStatus) => {
+    const getSpinningButtonClass = (loadingStatus: boolean) => {
         if (loadingStatus) {
             return "w-5 h-5 animate-spin";
         }
@@ -172,7 +172,6 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
                             <th className="bg-blue-200 border text-left px-8 py-4">Description</th>
                         </tr>
                         </thead>
-                        {vlab != null ? (
                           <tbody>
                           {dataProducts.map((dataProduct) => {
                               return (
@@ -189,10 +188,6 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
                               )
                           })}
                           </tbody>
-                        ) : (
-                          <tbody>
-                          </tbody>
-                        )}
                     </table>
                 </div>
                 <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">

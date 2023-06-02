@@ -6,8 +6,13 @@ import {
     LatLngBounds,
     Polygon,
     Marker,
+    Layer,
+    LeafletMouseEvent,
 } from "leaflet";
-import { Geometry } from "geojson";
+import {
+    Feature,
+    Geometry,
+} from "geojson";
 import {
     MapContainer,
     TileLayer,
@@ -15,8 +20,8 @@ import {
 } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 
-interface CatalogMapProps{
-    vlab_slug?: string;
+interface CatalogMapProps {
+    vlab_slug?: string | string[] | undefined;
 }
 
 const CatalogMap: React.FC<CatalogMapProps> = ({vlab_slug}) => {
@@ -34,20 +39,22 @@ const CatalogMap: React.FC<CatalogMapProps> = ({vlab_slug}) => {
         return res.json();
     }
 
-    async function render_features(map: Map) {
-        map.eachLayer((layer)=>{
+    async function render_features(map: Map | null) {
+        if (!map) {
+            return;
+        }
+        map.eachLayer((layer) => {
             if (
               (layer instanceof Polygon)
               || (layer instanceof Marker)
-            )
-            {
+            ) {
                 layer.remove();
             }
         });
 
         let geo_json: GeoJSON<any, Geometry>
 
-        function highlightFeature(e) {
+        function highlightFeature(e: LeafletMouseEvent) {
             let layer = e.target;
             layer.setStyle({
                 weight: 5,
@@ -56,19 +63,21 @@ const CatalogMap: React.FC<CatalogMapProps> = ({vlab_slug}) => {
             });
         }
 
-        function resetHighlight(e) {
+        function resetHighlight(e: { target: Layer }) {
             geo_json.resetStyle(e.target);
         }
 
-        function onEachFeature(feature, layer) {
+        function onEachFeature(feature: Feature, layer: Layer) {
             layer.on({
                 mouseover: highlightFeature,
                 mouseout: resetHighlight,
             });
-            layer.bindPopup(feature.properties.title);
+            if (feature.properties !== null) {
+                layer.bindPopup(feature.properties.title);
+            }
         }
 
-        geo_json = geoJSON(null, {onEachFeature});
+        geo_json = geoJSON([], {onEachFeature});
         geo_json.addTo(map);
 
         const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
@@ -87,7 +96,7 @@ const CatalogMap: React.FC<CatalogMapProps> = ({vlab_slug}) => {
             id="map"
             center={[50, 10]} zoom={3.5}
             style={{height: "100%", width: "100%"}}
-            whenCreated={render_features}
+            ref={render_features}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

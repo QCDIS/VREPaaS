@@ -14,16 +14,6 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 
 FORCE_SCRIPT_NAME = '/vre-api/'
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv('DB_ENGINE'),
-        "OPTIONS": {
-            "service": os.getenv('DB_SERVICE'),
-            "passfile": ".passfile",
-        },
-    }
-}
-
 WHITENOISE_STATIC_PREFIX = '/static/'
 STATIC_URL = '/vre-api' + WHITENOISE_STATIC_PREFIX
 STATIC_ROOT = BASE_DIR / "staticfiles"

@@ -15,9 +15,12 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 FORCE_SCRIPT_NAME = '/vre-api/'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": os.getenv('DB_ENGINE'),
+        "OPTIONS": {
+            "service": os.getenv('DB_SERVICE'),
+            "passfile": ".passfile",
+        },
     }
 }
 

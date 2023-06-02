@@ -50,3 +50,4 @@ rules:
       - workflowtasksets/status
       - workflowartifactgctasks/status
       - workflows/status
+      - cronworkflows/status

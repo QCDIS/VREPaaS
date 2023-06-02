@@ -62,7 +62,10 @@ spec:
               value: admin@lifewatch.eu
 
             - name: DJANGO_SUPERUSER_USERNAME
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: django-user
 
             - name: DJANGO_SETTINGS_MODULE
               value: vreapis.settings.development

@@ -123,8 +123,8 @@ spec:
 
             - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: vre-api-config
+                secretKeyRef:
+                  name: django-secrets
                   key: DB_PASSWORD
 
             - name: DB_NAME

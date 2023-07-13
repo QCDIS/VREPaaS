@@ -174,3 +174,11 @@ LOGGING = {
         },
     },
 }
+
+
+BASE_PATH = os.environ.get('BASE_PATH', '').strip('/')
+
+STATIC_URL = '/static/'
+if BASE_PATH:
+    STATIC_URL = f'{BASE_PATH}/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"

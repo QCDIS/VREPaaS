@@ -21,6 +21,8 @@ from cells.views import CellsViewSet
 from workflows.views import WorkflowViewSet
 from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
 
+from vreapis.settings.base import BASE_PATH
+
 admin.site.site_header = 'Virtual Labs Administration'
 
 router = routers.DefaultRouter()
@@ -34,3 +36,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
 ]
+
+if BASE_PATH:
+    urlpatterns = [path(f'{BASE_PATH}/', include(urlpatterns))]

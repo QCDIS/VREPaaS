@@ -21,7 +21,11 @@ k8s_yaml(['tilt/vreapis.yaml','tilt/django-secrets.yaml','tilt/vre-api-config.ya
 k8s_resource(
     'vreapi-deployment',
     port_forwards='8000:8000',
-    labels=['vreapi']
+    labels=['vreapi'],
+    links=[
+        'http://localhost:8000/paas/api/api/',
+        'http://localhost:8000/paas/api/admin/',
+    ]
 )
 
 # Panel
@@ -42,7 +46,10 @@ k8s_yaml(['tilt/vre-panel.yaml','tilt/vre-panel-secrets.yaml'])
 k8s_resource(
     'vreapp-deployment',
     port_forwards='3000:3000',
-    labels=['vreapp']
+    labels=['vreapp'],
+    links=[
+        'http://localhost:3000/paas/app/',
+    ]
 )
 
 # DB

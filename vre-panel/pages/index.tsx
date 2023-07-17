@@ -71,7 +71,6 @@ const VLabs = () => {
                                         pathname: '/vlabs/[slug]',
                                         query: { slug: vlab.slug }
                                     }}
-                                    as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
                                 >
                                     <div>
                                         <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`} />

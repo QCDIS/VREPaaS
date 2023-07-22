@@ -58,18 +58,14 @@ spec:
                   name: django-secrets
                   key: argo_api_token
 
-
             - name: DJANGO_SUPERUSER_EMAIL
               value: admin@lifewatch.eu
 
             - name: DJANGO_SUPERUSER_USERNAME
-              value: admin
-
-            - name: ARGO_URL
               valueFrom:
-                configMapKeyRef:
-                  name: vre-api-config
-                  key: ARGO_URL
+                secretKeyRef:
+                  name: django-secrets
+                  key: django-user
 
             - name: DJANGO_SETTINGS_MODULE
               value: vreapis.settings.development
@@ -109,6 +105,43 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: ARGO_NAMESPACE
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_PORT
+
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: DB_PASSWORD
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_NAME
+
+            - name: BASE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: BASE_PATH
+
 ---
 
 apiVersion: v1

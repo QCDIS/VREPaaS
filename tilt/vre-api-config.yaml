@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vre-api-config
+  labels:
+    app: vreapp-svc
+data:
+  ALLOWED_HOST: 'localhost'
+  ARGO_NAMESPACE: 'argo'
+  ARGO_URL: 'https://lifewatch.lab.uvalight.net:32443/ess-22-argowf'
+  CALL_BACK_URL: 'http://localhost:3000/'
+  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lifewatch.lab.uvalight.net:\d+$'
+  TRUSTED_ORIGINS: 'http://localhost:3000'

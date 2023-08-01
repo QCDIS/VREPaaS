@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-build-container-vreapis:
-    uses: QCDIS/VREPaaS/.github/workflows/build-container.yml@main
+    uses: ./.github/workflows/build-container.yml
     with:
       docker_folder: vreapis
       tag: vreapi
@@ -17,7 +17,7 @@ jobs:
       docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
   call-build-container-vre-panel:
-    uses: QCDIS/VREPaaS/.github/workflows/build-container.yml@main
+    uses: ./.github/workflows/build-container.yml
     with:
       docker_folder: vre-panel
       tag: vreapp

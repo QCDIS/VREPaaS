@@ -42,9 +42,9 @@ const DataProducts: FC<DataProductsProps> = ({map, vlab_slug}) => {
     }
 
     const getFeatures = useCallback(() => {
-        let api_endpoint = `${publicRuntimeConfig.apiUrl}/geodataprods`
+        const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
         let bounds = map.getBounds()
-        const url = `${api_endpoint}/?format=json&in_bbox=${bounds.toBBoxString()}&vlab_slug=${vlab_slug}`;
+        const url = `${apiUrl}/geodataprods/?format=json&in_bbox=${bounds.toBBoxString()}&vlab_slug=${vlab_slug}`;
         const requestOptions: RequestInit = {
             method: "GET",
             headers: {

@@ -144,7 +144,7 @@ class WorkflowViewSet(GetSerializerMixin,
         try:
             vlab = VirtualLab.objects.get(slug=vlab_slug)
         except VirtualLab.DoesNotExist:
-            return Response({'message': 'Virtual Lab not found'}, status=404)
+            return Response({'message': 'Virtual Lab: '+vlab_slug+' not found'}, status=404)
         if not argo_url:
             return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"

@@ -14,6 +14,7 @@ import {
 } from "react-leaflet";
 import hash from 'object-hash';
 import 'leaflet/dist/leaflet.css';
+import getConfig from 'next/config';
 
 interface DataProductsProps {
     map: L.Map;
@@ -25,6 +26,8 @@ interface CatalogMapProps {
 }
 
 const DataProducts: FC<DataProductsProps> = ({map, vlab_slug}) => {
+
+    const { publicRuntimeConfig } = getConfig()
 
     const [data, setData] = useState<GeoJsonObject>({'type': 'Feature'})
     const [geoJSON, setGeoJSON] = useState<L.GeoJSON | null>(null)
@@ -39,7 +42,7 @@ const DataProducts: FC<DataProductsProps> = ({map, vlab_slug}) => {
     }
 
     const getFeatures = useCallback(() => {
-        let api_endpoint = `${process.env.NEXT_PUBLIC_ENV_VRE_API_URL}/geodataprods`
+        let api_endpoint = `${publicRuntimeConfig.apiUrl}/geodataprods`
         let bounds = map.getBounds()
         const url = `${api_endpoint}/?format=json&in_bbox=${bounds.toBBoxString()}&vlab_slug=${vlab_slug}`;
         const requestOptions: RequestInit = {

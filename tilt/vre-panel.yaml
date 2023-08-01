@@ -88,6 +88,5 @@ metadata:
 
 data:
   .env: |-
-    NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost:8000/paas/api/api
-    NEXT_PUBLIC_ENV_BASE_PATH=/paas/app
-    NEXTAUTH_URL=http://localhost:3000/paas/app/api/auth
+    API_URL=http://localhost:8000/vre-api/api/
+    FRONTEND_BASE_PATH=/vreapp

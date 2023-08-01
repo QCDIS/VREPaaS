@@ -7,8 +7,6 @@ import { NewVREDialog } from '../components/NewVREDialog';
 import { Nav } from '../templates/Nav';
 // import useAuth from './auth/useAuth';
 
-const { publicRuntimeConfig } = getConfig()
-
 const getSlug = (title: string) => {
 
     return title
@@ -18,6 +16,8 @@ const getSlug = (title: string) => {
 }
 
 const VLabs = () => {
+
+    const { publicRuntimeConfig } = getConfig()
 
     // const isAuthenticated = useAuth(true);
     const [isOpen, setIsOpen] = useState(false);
@@ -33,10 +33,10 @@ const VLabs = () => {
             //         "Authorization": "Bearer: " + token.accessToken
             //     },
             // };
-            const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
-            console.log('Featching vlabs from:'+vre_api_url+'/vlabs')
+            const api_endpoint = `${publicRuntimeConfig.apiUrl}/vlabs`
+            console.log(`Featching vlabs from: ${api_endpoint}`)
             
-            fetch(`${vre_api_url}/vlabs`)
+            fetch(api_endpoint)
                 .then((res) => res.json())
                 .then((data) => {
                     setVlabs(data);

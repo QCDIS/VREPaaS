@@ -5,10 +5,10 @@ module.exports = {
   experimental: {
     outputStandalone: true
   },
-  basePath: process.env.NEXT_PUBLIC_ENV_BASE_PATH,
+  basePath: process.env.FRONTEND_BASE_PATH,
   publicRuntimeConfig: {
-    basePath: process.env.NEXT_PUBLIC_ENV_BASE_PATH,
-    staticFolder: process.env.NEXT_PUBLIC_ENV_BASE_PATH,
-    NEXT_PUBLIC_ENV_VRE_API_URL: process.env.NEXT_PUBLIC_ENV_VRE_API_URL
+    basePath: process.env.FRONTEND_BASE_PATH,
+    staticFolder: process.env.FRONTEND_BASE_PATH,
+    apiUrl: process.env.API_URL
   }
 }

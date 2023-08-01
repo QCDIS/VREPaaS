@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
 import dynamic from "next/dynamic";
+import getConfig from 'next/config';
 
 const CatalogMapView = dynamic(() => import("../../components/catalog_map"), { ssr:false })
 
@@ -13,6 +14,8 @@ interface VLabDetailsProps {
 
 
 const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
+
+    const { publicRuntimeConfig } = getConfig()
 
     const vlabPlaceholder = {
         title: "Loading ..",
@@ -38,7 +41,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
+        const url = publicRuntimeConfig.apiUrl;
         console.log("Featching vlabs from:" + url + "/vlabs/"+slug)
         const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
         return res.json();
@@ -55,7 +58,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
+        const url = publicRuntimeConfig.apiUrl;
         const res = await fetch(`${url}/workflows?vlab_slug=${slug}`, requestOptions);
         setLoadingWorkflows(false);
 
@@ -73,7 +76,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL;
+        const url = publicRuntimeConfig.apiUrl;
         const res = await fetch(`${url}/dataprods?vlab_slug=${slug}`, requestOptions);
         setLoadingDataProducts(false);
 

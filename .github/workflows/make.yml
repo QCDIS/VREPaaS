@@ -18,9 +18,16 @@ jobs:
 
   call-build-container-vre-panel:
     uses: ./.github/workflows/build-container.yml
+    strategy:
+      matrix:
+        environment:
+          - development
+          - staging
+          - production
     with:
       docker_folder: vre-panel
       tag: vreapp
+      environment: ${{ matrix.environment }}
       push: false
     secrets:
       docker_username: ${{ secrets.DOCKERHUB_USERNAME }}

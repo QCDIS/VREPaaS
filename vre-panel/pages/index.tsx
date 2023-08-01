@@ -33,10 +33,8 @@ const VLabs = () => {
             //         "Authorization": "Bearer: " + token.accessToken
             //     },
             // };
-            const api_endpoint = `${publicRuntimeConfig.apiUrl}/vlabs`
-            console.log(`Featching vlabs from: ${api_endpoint}`)
-            
-            fetch(api_endpoint)
+            const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
+            fetch(`${apiUrl}/vlabs`)
                 .then((res) => res.json())
                 .then((data) => {
                     setVlabs(data);

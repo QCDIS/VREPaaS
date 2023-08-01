@@ -41,9 +41,8 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = publicRuntimeConfig.apiUrl;
-        console.log("Featching vlabs from:" + url + "/vlabs/"+slug)
-        const res = await fetch(`${url}/vlabs/${slug}`, requestOptions);
+        const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
+        const res = await fetch(`${apiUrl}/vlabs/${slug}`, requestOptions);
         return res.json();
     }
 
@@ -58,8 +57,8 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = publicRuntimeConfig.apiUrl;
-        const res = await fetch(`${url}/workflows?vlab_slug=${slug}`, requestOptions);
+        const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
+        const res = await fetch(`${apiUrl}/workflows?vlab_slug=${slug}`, requestOptions);
         setLoadingWorkflows(false);
 
         return res.json();
@@ -76,8 +75,8 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
             },
         };
 
-        const url = publicRuntimeConfig.apiUrl;
-        const res = await fetch(`${url}/dataprods?vlab_slug=${slug}`, requestOptions);
+        const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
+        const res = await fetch(`${apiUrl}/dataprods?vlab_slug=${slug}`, requestOptions);
         setLoadingDataProducts(false);
 
         return res.json();

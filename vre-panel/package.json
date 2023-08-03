@@ -27,7 +27,7 @@
     "@types/node": "~20.4.5",
     "@types/react": "~18.2.0",
     "autoprefixer": "~10.4.2",
-    "axios-mock-adapter": "~1.21.4",
+    "axios-mock-adapter": "~1.21.5",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.4",
     "postcss": "~8.4.27"

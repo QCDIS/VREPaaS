@@ -147,7 +147,7 @@ export async function getServerSideProps(context:any) {
     const { req } = context;
     const secret = process.env.SECRET;
     const token = await getToken({ req, secret });
-
+    console.log(token)
     return {
         props: {
             token: token

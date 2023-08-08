@@ -4,13 +4,12 @@ import requests
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
 from . import models, serializers
 import logging
+from keycloak import KeycloakOpenID
 
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
@@ -27,13 +26,18 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
-    authentication_classes = [TokenAuthentication]  # Add Token Authentication
-    permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
         'list': serializers.WorkflowSerializer
     }
+    server_url = os.getenv('KEYCLOAK_SERVER_URL')
+    if not server_url.endswith('/'):
+        server_url = server_url + '/'
+    keycloak_openid = KeycloakOpenID(server_url=server_url,
+                                     client_id=os.getenv('KEYCLOAK_CLIENT_ID'),
+                                     realm_name=os.getenv('KEYCLOAK_REALM'),
+                                     client_secret_key=os.getenv('KEYCLOAK_CLIENT_SECRET_KEY'))
 
     def get_queryset(self):
         logger.debug('----------------get_queryset-------------------------')
@@ -49,6 +53,15 @@ class WorkflowViewSet(GetSerializerMixin,
 
         else:
             return models.Workflow.objects.all()
+
+    def check_token(self, request):
+        if 'Authorization' not in request.headers:
+            logger.debug('Authorization not in request.headers')
+            return Response({'message': 'Unauthorized'}, status=401)
+        access_token = request.headers['Authorization'].replace('Bearer: ', '')
+        logger.debug('access_token: ' + access_token)
+        userinfo = self.keycloak_openid.userinfo(access_token)
+        return userinfo
 
     def list(self, request, *args, **kwargs):
         logger.debug('----------------list-------------------------')
@@ -77,7 +90,8 @@ class WorkflowViewSet(GetSerializerMixin,
         logger.debug('------------------------------------------------------------------------')
         logger.debug('resp_list: ' + str(resp_list))
         if resp_list.status_code != 200:
-            logger.warning('Error getting workflows. Status_code: ' + str(resp_list.status_code)+' - ' + str(resp_list.text))
+            logger.warning(
+                'Error getting workflows. Status_code: ' + str(resp_list.status_code) + ' - ' + str(resp_list.text))
             return Response(resp_list.text, status=resp_list.status_code)
 
         resp_list_data = resp_list.json()
@@ -100,12 +114,16 @@ class WorkflowViewSet(GetSerializerMixin,
             if wf_serializer.is_valid(raise_exception=True):
                 logger.debug("Serializer is valid")
                 wf_serializer.save()
-
         return super().list(self, request, *args, **kwargs)
 
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
         logger.debug('----------------submit-------------------------')
+        userinfo = self.check_token(request)
+        if isinstance(userinfo, Response):
+            return userinfo
+        logger.debug('userinfo: ' + str(userinfo))
+
         if not argo_api_wf_url:
             return Response({'message': 'Argo API URL not set'}, status=500)
         if not namespace:
@@ -148,7 +166,7 @@ class WorkflowViewSet(GetSerializerMixin,
         try:
             vlab = VirtualLab.objects.get(slug=vlab_slug)
         except VirtualLab.DoesNotExist:
-            return Response({'message': 'Virtual Lab: '+vlab_slug+' not found'}, status=404)
+            return Response({'message': 'Virtual Lab: ' + vlab_slug + ' not found'}, status=404)
         if not argo_url:
             return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"

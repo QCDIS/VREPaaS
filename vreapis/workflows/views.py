@@ -4,6 +4,8 @@ import requests
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
@@ -25,6 +27,8 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
+    authentication_classes = [TokenAuthentication]  # Add Token Authentication
+    permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
@@ -73,7 +77,8 @@ class WorkflowViewSet(GetSerializerMixin,
         logger.debug('------------------------------------------------------------------------')
         logger.debug('resp_list: ' + str(resp_list))
         if resp_list.status_code != 200:
-            logger.warning('Error getting workflows. Status_code: ' + str(resp_list.status_code)+' - ' + str(resp_list.text))
+            logger.warning(
+                'Error getting workflows. Status_code: ' + str(resp_list.status_code) + ' - ' + str(resp_list.text))
             return Response(resp_list.text, status=resp_list.status_code)
 
         resp_list_data = resp_list.json()
@@ -144,7 +149,7 @@ class WorkflowViewSet(GetSerializerMixin,
         try:
             vlab = VirtualLab.objects.get(slug=vlab_slug)
         except VirtualLab.DoesNotExist:
-            return Response({'message': 'Virtual Lab not found'}, status=404)
+            return Response({'message': 'Virtual Lab: ' + vlab_slug + ' not found'}, status=404)
         if not argo_url:
             return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"

@@ -3,6 +3,9 @@ FROM python:3.11.4-slim
 COPY ./vreapis /app
 WORKDIR /app
 
+RUN apt update && \
+    apt install -y libpq-dev gcc gdal-bin
+
 RUN python3 -m venv /opt/venv
 
 RUN /opt/venv/bin/pip install pip --upgrade && \

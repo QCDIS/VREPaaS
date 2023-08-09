@@ -8,3 +8,5 @@ requests
 django-dotenv
 django-cors-headers
 django-extensions
+django-filter~=22.1.0
+psycopg2==2.9.5

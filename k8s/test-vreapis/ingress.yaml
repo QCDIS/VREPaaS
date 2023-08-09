@@ -22,7 +22,7 @@ spec:
     - host: lifewatch.lab.uvalight.net
       http:
         paths:
-          - path: /vreapi-test(/|$)(.*)
+          - path: /(/|$)(.*)
             pathType: Prefix
             backend:
               service:

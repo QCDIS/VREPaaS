@@ -5,11 +5,10 @@ metadata:
   labels:
     app: vreapi-svc
 spec:
-  type: NodePort
   ports:
     - port: 8000
       protocol: TCP
       targetPort: 8000
   selector:
     app: vreapi
-  type: ClusterIP
+  type: NodePort

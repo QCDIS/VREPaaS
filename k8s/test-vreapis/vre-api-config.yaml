@@ -12,5 +12,5 @@ data:
   CALL_BACK_URL: http://localhost:3000/
   ARGO_URL: https://lifewatch.lab.uvalight.net:32443/argowf
   ARGO_NAMESPACE: argo
-  URL_PATH: /vreapi-test
+  URL_PATH: /vre-api-test
 

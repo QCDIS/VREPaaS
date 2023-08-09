@@ -8,7 +8,7 @@ metadata:
 data:
   ALLOWED_HOST: 'http://localhost:3000'
   TRUSTED_ORIGINS: 'http://localhost:3000'
-  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lfw-ds001-i022.lifewatch.dev:\d+$'
+  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lifewatch.lab.uvalight.net:\d+$'
   CALL_BACK_URL: http://localhost:3000/
   ARGO_URL: https://lifewatch.lab.uvalight.net:32443/argowf
   ARGO_NAMESPACE: argo

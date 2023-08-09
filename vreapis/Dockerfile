@@ -1,8 +1,7 @@
 FROM python:3.11.4-slim
 
-COPY ./vreapis /app
+COPY . /app
 WORKDIR /app
-
 RUN apt update && \
     apt install -y libpq-dev gcc gdal-bin
 

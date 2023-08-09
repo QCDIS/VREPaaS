@@ -109,6 +109,12 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: ARGO_NAMESPACE
+
+            - name: URL_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: URL_PATH
 ---
 
 apiVersion: v1

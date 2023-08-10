@@ -6,10 +6,10 @@ metadata:
     app: vreapp-svc
 
 data:
-  ALLOWED_HOST: 'http://localhost:3000'
-  TRUSTED_ORIGINS: 'http://localhost:3000'
-  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lfw-ds001-i022.lifewatch.dev:\d+$'
-  CALL_BACK_URL: http://localhost:3000/
+  ALLOWED_HOST: 'lifewatch.lab.uvalight.net'
+  TRUSTED_ORIGINS: 'https://lifewatch.lab.uvalight.net:32443'
+  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\\/\\/lifewatch.lab.uvalight.net:\\d+$'
+  CALL_BACK_URL: https://lifewatch.lab.uvalight.net:32443/vre-api-test/
   ARGO_URL: https://lifewatch.lab.uvalight.net:32443/argowf
   ARGO_NAMESPACE: argo
   BASE_PATH: /vre-api-test

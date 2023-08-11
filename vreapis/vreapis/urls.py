@@ -48,7 +48,7 @@ router.register(r'geodataprods', GeoDataProductsViewSet)
 urlpatterns = [
     re_path(r'^'+BASE_PATH, include([
         path('admin/', admin.site.urls),
-        path('api/', include(router.urls))
+        re_path(r'^api/', include(router.urls)),
     ]))
     ]
 

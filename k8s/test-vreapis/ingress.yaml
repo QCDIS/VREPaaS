@@ -29,10 +29,3 @@ spec:
                 name: vreapi-svc
                 port:
                   number: 8000
-          - path: /vreapp(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: vreapp-svc
-                port:
-                  number: 3000

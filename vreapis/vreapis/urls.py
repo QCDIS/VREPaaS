@@ -33,12 +33,9 @@ router.register(r'dataprods', DataProductsViewSet)
 router.register(r'geodataprods', GeoDataProductsViewSet)
 
 urlpatterns = [
-    re_path('admin/', admin.site.urls),
-    re_path('api/', include(router.urls))
+    path('admin/', admin.site.urls),
+    path('api/', include(router.urls))
 ]
-
-
-
 
 if BASE_PATH:
     urlpatterns = [path(f'{BASE_PATH}/', include(urlpatterns))]

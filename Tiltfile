@@ -67,7 +67,10 @@ k8s_resource(
 
 # Ingress
 
-k8s_yaml([ 'tilt/ingress.yaml'])
+k8s_yaml(['tilt/ingress.yaml'])
+
+
+
 
 helm_remote('ingress-nginx',
             version="4.0.2",

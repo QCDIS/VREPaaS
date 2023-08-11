@@ -11,4 +11,4 @@ spec:
       targetPort: 8000
   selector:
     app: vreapi
-  type: ClusterIP
+  type: NodePort

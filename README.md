@@ -14,8 +14,7 @@ Close the terminal and start a new one to activate conda.
 
 Create and activate conda environment:
 ```shell
-conda create -n paas  python=3.9 
-conda activate paas
+conda env update --file environment.yaml
 ```
 
 #### Install tilt

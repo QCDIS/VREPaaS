@@ -27,7 +27,7 @@ from vreapis.settings.base import BASE_PATH
 admin.site.site_header = 'Virtual Labs Administration'
 
 router = routers.DefaultRouter()
-router.register(r'assignments', AssignmentViewSet)
+# router.register(r'assignments', AssignmentViewSet)
 router.register(r'vlabs', VirtualLabViewSet)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'cells', CellsViewSet)

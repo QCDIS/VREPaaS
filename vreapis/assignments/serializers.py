@@ -2,9 +2,7 @@ from dataclasses import fields
 from pyexpat import model
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from assignments.models import VM, SDIAProvision, Topology, AssignmentProfile, Assignments
-from workflows.models import Workflow
-from workflows.serializers import WorkflowSerializer
+from assignments.models import AssignmentProfile, Assignments
 
 
 class UserSerializer(serializers.ModelSerializer):

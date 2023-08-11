@@ -6,7 +6,7 @@ metadata:
     app: vreapp-svc
 
 data:
-  ALLOWED_HOSTS: '*'
+  ALLOWED_HOST: '*'
   TRUSTED_ORIGINS: 'https://lifewatch.lab.uvalight.net:32443'
   CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lifewatch.lab.uvalight.net:\d+$'
   CALL_BACK_URL: https://lifewatch.lab.uvalight.net:32443/vre-api-test/

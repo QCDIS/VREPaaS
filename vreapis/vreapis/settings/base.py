@@ -14,14 +14,13 @@ from pathlib import Path
 import os
 from django.core.management.utils import get_random_secret_key
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = get_random_secret_key()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
@@ -44,7 +43,9 @@ INSTALLED_APPS = [
     'cells',
     'workflows',
     'virtual_labs',
+    'data_products',
     'rest_framework',
+    'rest_framework_gis',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -87,17 +89,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vreapis.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "HOST": os.environ['DB_HOST'],
+        "NAME": os.environ['DB_NAME'],
+        "PASSWORD": os.environ['DB_PASSWORD'],
+        "PORT": os.environ['DB_PORT'],
+        "USER": os.environ['DB_USER'],
+        }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -117,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -128,7 +131,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -167,3 +169,11 @@ LOGGING = {
         },
     },
 }
+
+
+BASE_PATH = os.environ.get('BASE_PATH', '').strip('/')
+
+STATIC_URL = '/static/'
+if BASE_PATH:
+    STATIC_URL = f'{BASE_PATH}/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"

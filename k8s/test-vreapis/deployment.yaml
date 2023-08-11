@@ -14,10 +14,12 @@ spec:
       labels:
         app: vreapi
     spec:
+      nodeSelector:
+        test-node: "true"
       containers:
         - name: vreapi
-          image: qcdis/vreapi
-          imagePullPolicy: Always
+          image: vreapi-test
+          imagePullPolicy: Never
           ports:
           - containerPort: 8000
             protocol: TCP

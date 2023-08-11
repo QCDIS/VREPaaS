@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import getConfig from "next/config";
 
 export default function useAuth(shouldRedirect: boolean) {
-
+    
     const { publicRuntimeConfig } = getConfig()
     const { data: session } = useSession();
     const router = useRouter();

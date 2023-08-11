@@ -22,8 +22,7 @@ conda activate paas
 Install [tilt](https://docs.tilt.dev/install.html) via conda 
 
 ```shell
-conda install -c conda-forge tilt 
-conda install -c conda-forge minikube 
+conda env update --file environment.yaml
 ```
 
 #### Start Cluster
@@ -37,6 +36,23 @@ minikube start
 ```shell
 tilt up
 ```
+
+To start the dashboard run:
+```shell
+minikube dashboard
+```
+
+#### Configure Ingress 
+
+Enable the ingress addon:
+```shell
+minikube addons enable ingress
+```
+
+To test the ingress follow these instructions: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+
+```shell
 
 # Encrypt secrets 
 

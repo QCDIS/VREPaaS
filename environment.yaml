@@ -1,0 +1,9 @@
+name: paas
+channels:
+  - conda-forge
+dependencies:
+  - tilt
+  - python>=3.9
+  - minikube
+  - kubernetes-helm
+

@@ -1,5 +1,6 @@
 version_settings(constraint='>=0.22.2')
 secret_settings (disable_scrub=True)
+load('ext://helm_remote', 'helm_remote')
 
 # API
 
@@ -25,7 +26,8 @@ k8s_resource(
     links=[
         'http://localhost:8000/paas/api/api/',
         'http://localhost:8000/paas/api/admin/',
-    ]
+    ],
+    resource_deps=['db-deployment']
 )
 
 # Panel
@@ -49,7 +51,8 @@ k8s_resource(
     labels=['vreapp'],
     links=[
         'http://localhost:3000/paas/app/',
-    ]
+    ],
+    resource_deps=['vreapi-deployment']
 )
 
 # DB
@@ -60,3 +63,15 @@ k8s_resource(
     'db-deployment',
     labels=['db'],
 )
+
+# Bare metal ingress controller (nodeport-based)
+helm_remote('ingress-nginx',
+            version="4.6.1",
+            set=['controller.admissionWebhooks.enabled=false'],
+            repo_name='ingress-nginx',
+            values=[ 'tilt/ingress-nginx-values.yaml'],
+            repo_url='https://kubernetes.github.io/ingress-nginx')
+
+
+# Ingress
+k8s_yaml([ 'tilt/ingress.yaml'])

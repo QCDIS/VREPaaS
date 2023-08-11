@@ -179,3 +179,4 @@ jspm_packages
 /package-lock.json
 
 tilt/secrets.yaml
+tilt/django-secrets.yaml

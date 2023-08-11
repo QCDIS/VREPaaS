@@ -25,7 +25,7 @@ spec:
     - host: lfw-ds001-i022.lifewatch.dev
       http:
         paths:
-          - path: /vre-api-test(/|$)(.*)
+          - path: /vre-api-tes(/|$)(.*)
             pathType: Prefix
             backend:
               service:

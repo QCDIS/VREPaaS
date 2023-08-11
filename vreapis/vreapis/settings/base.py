@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'cells',
     'workflows',
     'virtual_labs',
+    'data_products',
     'rest_framework',
+    'rest_framework_gis',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -91,9 +94,13 @@ WSGI_APPLICATION = 'vreapis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "HOST": os.environ['DB_HOST'],
+        "NAME": os.environ['DB_NAME'],
+        "PASSWORD": os.environ['DB_PASSWORD'],
+        "PORT": os.environ['DB_PORT'],
+        "USER": os.environ['DB_USER'],
+        }
 }
 
 # Password validation
@@ -162,3 +169,11 @@ LOGGING = {
         },
     },
 }
+
+
+BASE_PATH = os.environ.get('BASE_PATH', '').strip('/')
+
+STATIC_URL = '/static/'
+if BASE_PATH:
+    STATIC_URL = f'{BASE_PATH}/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"

@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: vreapi-deployment
   labels:
-    app: vreapi-test
+    app: vreapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vreapi-test
+      app: vreapi
   template:
     metadata:
       labels:
-        app: vreapi-test
+        app: vreapi
     spec:
       nodeSelector:
         test-node: "true"
@@ -60,7 +60,6 @@ spec:
                   name: django-secrets
                   key: argo_api_token
 
-
             - name: DJANGO_SUPERUSER_EMAIL
               value: admin@lifewatch.eu
 
@@ -70,48 +69,71 @@ spec:
                   name: django-secrets
                   key: django-user
 
+            - name: DJANGO_SETTINGS_MODULE
+              value: vreapis.settings.production
+
             - name: ARGO_URL
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
+                  name: vre-api-config
                   key: ARGO_URL
-
-            - name: ARGO_NAMESPACE
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-api-test-config
-                  key: ARGO_NAMESPACE
-
 
             - name: CALL_BACK_URL
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
+                  name: vre-api-config
                   key: CALL_BACK_URL
 
             - name: CORS_ALLOWED_ORIGIN_REGEXES
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
+                  name: vre-api-config
                   key: CORS_ALLOWED_ORIGIN_REGEXES
 
             - name: TRUSTED_ORIGINS
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
+                  name: vre-api-config
                   key: TRUSTED_ORIGINS
 
             - name: ALLOWED_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
+                  name: vre-api-config
                   key: ALLOWED_HOST
 
-            - name: URL_PATH
+            - name: ARGO_NAMESPACE
               valueFrom:
                 configMapKeyRef:
-                  name: vre-api-test-config
-                  key: URL_PATH
+                  name: vre-api-config
+                  key: ARGO_NAMESPACE
 
-            - name: DJANGO_SETTINGS_MODULE
-              value: vreapis.settings.production
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_HOST
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_PORT
+
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: DB_PASSWORD
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: DB_NAME

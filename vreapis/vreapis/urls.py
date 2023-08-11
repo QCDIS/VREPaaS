@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
 from cells.views import CellsViewSet
@@ -33,9 +33,12 @@ router.register(r'dataprods', DataProductsViewSet)
 router.register(r'geodataprods', GeoDataProductsViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    re_path('admin/', admin.site.urls),
+    re_path('api/', include(router.urls))
 ]
+
+
+
 
 if BASE_PATH:
     urlpatterns = [path(f'{BASE_PATH}/', include(urlpatterns))]

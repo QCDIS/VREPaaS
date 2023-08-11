@@ -7,5 +7,5 @@ metadata:
 
 data:
   .env: |-
-    NEXT_PUBLIC_ENV_VRE_API_URL=http://localhost:8000/api
-    NEXTAUTH_URL=http://localhost:3000
+    API_BASE_PATH=/vre-api/api
+    FRONTEND_BASE_PATH=/vreapp

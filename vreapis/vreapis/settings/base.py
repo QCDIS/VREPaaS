@@ -21,7 +21,7 @@ SECRET_KEY = get_random_secret_key()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 

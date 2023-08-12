@@ -27,13 +27,13 @@ spec:
             httpGet:
               path: "/api/"
               port: 8000
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: "/api/"
               port: 8000
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 5
           env:
             - name: KEYCLOAK_CLIENT_ID

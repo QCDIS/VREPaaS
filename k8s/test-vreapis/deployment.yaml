@@ -26,11 +26,11 @@ spec:
           livenessProbe:
             httpGet:
               path: "vre-api-test/api/"
-              port: http
+              port: 8000
           readinessProbe:
             httpGet:
               path: "vre-api-test/api/"
-              port: http
+              port: 8000
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:

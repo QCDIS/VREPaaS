@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
 from cells.views import CellsViewSet
@@ -22,6 +22,8 @@ from workflows.views import WorkflowViewSet
 from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
 
 from vreapis.settings.base import BASE_PATH
+
+
 
 admin.site.site_header = 'Virtual Labs Administration'
 

@@ -12,7 +12,7 @@ data:
   CALL_BACK_URL: http://localhost:3000/
   ARGO_URL: https://lifewatch.lab.uvalight.net:32443/argowf
   ARGO_NAMESPACE: argo
-  BASE_PATH: /vre-api
+  BASE_PATH: /vre-api-test
   DB_HOST: db-service
   DB_PORT: '5432'
   DB_NAME: vreapi

@@ -4,10 +4,10 @@ declare namespace NodeJS {
         KEYCLOAK_CLIENT_ID: string,
         KEYCLOAK_CLIENT_SECRET: string,
         KEYCLOAK_ISSUER: string,
+        VRE_API_URL: string,
         AUTH0_ID: string,
         AUTH0_SECRET: string,
         AUTH0_ISSUER: string,
-        API_BASE_PATH: string,
-        FRONTEND_BASE_PATH: string,
+        NEXT_PUBLIC_ENV_VRE_API_URL: string
     }
 }

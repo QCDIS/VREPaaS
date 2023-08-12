@@ -31,6 +31,9 @@ spec:
             httpGet:
               path: "vre-api-test/api/"
               port: 8000
+            httpGet:
+              path: "/"
+              port: 8000
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:

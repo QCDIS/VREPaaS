@@ -23,14 +23,14 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
-#          livenessProbe:
-#            httpGet:
-#              path: "vre-api-test/api/"
-#              port: 8000
-#          readinessProbe:
-#            httpGet:
-#              path: "vre-api-test/api/"
-#              port: 8000
+          livenessProbe:
+            httpGet:
+              path: "/api/"
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: "/api/"
+              port: 8000
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:

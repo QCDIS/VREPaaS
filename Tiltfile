@@ -1,11 +1,11 @@
 version_settings(constraint='>=0.22.2')
 secret_settings (disable_scrub=True)
-load('ext://helm_remote', 'helm_remote')
+load('ext://namespace', 'namespace_create', 'namespace_inject')
 
 # API
 
 docker_build(
-    'qcdis/vreapi',
+    'vreapi-local',
     context='.',
     dockerfile='tilt/vreapis/Dockerfile',
     only=['./vreapis/'],
@@ -68,13 +68,3 @@ k8s_resource(
 # Ingress
 
 k8s_yaml(['tilt/ingress.yaml'])
-
-
-
-
-helm_remote('ingress-nginx',
-            version="4.0.2",
-            repo_name='ingress-nginx',
-            set=['controller.admissionWebhooks.enabled=false'],
-            values=['tilt/ingress-nginx-values.yaml'],
-            repo_url='https://kubernetes.github.io/ingress-nginx')

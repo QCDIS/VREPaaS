@@ -177,7 +177,6 @@ LOGGING = {
 
 
 BASE_PATH = os.environ.get('BASE_PATH', '').strip('/')
-FORCE_SCRIPT_NAME = '/'
 STATIC_URL = '/static/'
 if BASE_PATH:
     STATIC_URL = f'{BASE_PATH}/static/'

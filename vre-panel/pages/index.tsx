@@ -34,15 +34,17 @@ const VLabs = () => {
             //     },
             // };
             const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
-            console.log('Featching assignments from:'+vre_api_url+'/assignments')
             
-            fetch(`${vre_api_url}/assignments`)
+            const url = new URL("http://localhost:8000/api/vlabs")
+            console.log(url)
+            
+            fetch(url)
                 .then((res) => res.json())
                 .then((data) => {
                     setVlabs(data);
                 })
                 .catch((error) => {
-                    console.log(error)
+                    console.log('Featching error:'+error)
                 });
         // }
     }, []);

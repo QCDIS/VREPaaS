@@ -5,10 +5,10 @@ module.exports = {
   experimental: {
     outputStandalone: true
   },
-  basePath: process.env.FRONTEND_BASE_PATH,
+  assetPrefix: process.env.NODE_ENV === "production" ? '/vreapp' : '',
   publicRuntimeConfig: {
-    basePath: process.env.FRONTEND_BASE_PATH,
-    staticFolder: process.env.FRONTEND_BASE_PATH,
-    apiBasePath: process.env.API_BASE_PATH,
+    basePath: process.env.NODE_ENV === "production" ? '/vreapp' : '',
+    staticFolder: process.env.NODE_ENV === "production" ? '/vreapp' : '',
+    NEXT_PUBLIC_ENV_VRE_API_URL: process.env.NEXT_PUBLIC_ENV_VRE_API_URL
   }
 }

@@ -17,27 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
-from assignments.views import AssignmentViewSet
 from cells.views import CellsViewSet
 from workflows.views import WorkflowViewSet
-from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
-
-from vreapis.settings.base import BASE_PATH
 
 admin.site.site_header = 'Virtual Labs Administration'
 
 router = routers.DefaultRouter()
-router.register(r'assignments', AssignmentViewSet)
 router.register(r'vlabs', VirtualLabViewSet)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'cells', CellsViewSet)
-router.register(r'dataprods', DataProductsViewSet)
-router.register(r'geodataprods', GeoDataProductsViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
 ]
-
-if BASE_PATH:
-    urlpatterns = [path(f'{BASE_PATH}/', include(urlpatterns))]
+print(urlpatterns)

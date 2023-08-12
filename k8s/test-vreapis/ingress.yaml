@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: vre-paas
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - lifewatch.lab.uvalight.net

@@ -7,4 +7,5 @@ cd /app/
 /opt/venv/bin/python manage.py migrate
 /opt/venv/bin/python manage.py loaddata virtual_labs
 /opt/venv/bin/python manage.py createsuperuser --no-input
-/opt/venv/bin/gunicorn --worker-tmp-dir /dev/shm vreapis.wsgi:application --bind "0.0.0.0:${APP_PORT}"
+/opt/venv/bin/python manage.py runserver
+#/opt/venv/bin/gunicorn --worker-tmp-dir /dev/shm vreapis.wsgi:application --bind "0.0.0.0:${APP_PORT}"

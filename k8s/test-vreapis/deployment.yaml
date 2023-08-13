@@ -23,18 +23,18 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
-#          livenessProbe:
-#            httpGet:
-#              path: "/api/"
-#              port: 8000
-#            initialDelaySeconds: 60
-#            periodSeconds: 10
-#          readinessProbe:
-#            httpGet:
-#              path: "/api/"
-#              port: 8000
-#            initialDelaySeconds: 60
-#            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: "/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:

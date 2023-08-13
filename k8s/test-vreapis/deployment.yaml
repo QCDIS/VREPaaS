@@ -14,13 +14,27 @@ spec:
       labels:
         app: vreapi
     spec:
+      nodeSelector:
+        test-node: "true"
       containers:
         - name: vreapi
-          image: qcdis/vreapi
-          imagePullPolicy: Always
+          image: vreapi-test
+          imagePullPolicy: Never
           ports:
           - containerPort: 8000
             protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: "/vre-api-test/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/vre-api-test/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:
@@ -99,12 +113,6 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: ALLOWED_HOST
-
-            - name: URL_PATH
-              valueFrom:
-                configMapKeyRef:
-                  name: vre-api-config
-                  key: URL_PATH
 
             - name: ARGO_NAMESPACE
               valueFrom:

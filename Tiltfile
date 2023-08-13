@@ -1,10 +1,11 @@
 version_settings(constraint='>=0.22.2')
 secret_settings (disable_scrub=True)
+load('ext://namespace', 'namespace_create', 'namespace_inject')
 
 # API
 
 docker_build(
-    'qcdis/vreapi',
+    'vreapi-local',
     context='.',
     dockerfile='tilt/vreapis/Dockerfile',
     only=['./vreapis/'],
@@ -21,7 +22,12 @@ k8s_yaml(['tilt/vreapis.yaml','tilt/django-secrets.yaml','tilt/vre-api-config.ya
 k8s_resource(
     'vreapi-deployment',
     port_forwards='8000:8000',
-    labels=['vreapi']
+    labels=['vreapi'],
+    links=[
+        'http://localhost:8000/paas/api/api/',
+        'http://localhost:8000/paas/api/admin/',
+    ],
+    resource_deps=['db-deployment']
 )
 
 # Panel
@@ -42,5 +48,23 @@ k8s_yaml(['tilt/vre-panel.yaml','tilt/vre-panel-secrets.yaml'])
 k8s_resource(
     'vreapp-deployment',
     port_forwards='3000:3000',
-    labels=['vreapp']
+    labels=['vreapp'],
+    links=[
+        'http://localhost:3000/paas/app/',
+    ],
+    resource_deps=['vreapi-deployment']
 )
+
+# DB
+
+k8s_yaml([ 'tilt/vre-depts-db.yaml'])
+
+k8s_resource(
+    'db-deployment',
+    labels=['db'],
+)
+
+
+# Ingress
+
+k8s_yaml(['tilt/ingress.yaml'])

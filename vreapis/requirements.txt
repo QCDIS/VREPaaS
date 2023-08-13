@@ -1,5 +1,7 @@
 django>=4.0.0,<4.1.0
 djangorestframework
+djangorestframework-gis~=1.0.0
+django-filter~=22.1.0
 whitenoise
 django-keycloak-auth
 python-keycloak
@@ -9,3 +11,4 @@ requests
 django-dotenv
 django-cors-headers
 django-extensions
+psycopg2==2.9.5

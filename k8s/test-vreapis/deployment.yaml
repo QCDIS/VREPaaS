@@ -25,13 +25,13 @@ spec:
             protocol: TCP
           livenessProbe:
             httpGet:
-              path: $(BASE_PATH)"/api/"
+              path: "/vre-api-test/api/"
               port: 8000
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: $(BASE_PATH)"/api/"
+              path: "/vre-api-test/api/"
               port: 8000
             initialDelaySeconds: 60
             periodSeconds: 10

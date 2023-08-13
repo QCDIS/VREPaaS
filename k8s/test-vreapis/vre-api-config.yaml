@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vre-api-config
+  labels:
+    app: vreapp-svc
+
+data:
+  ALLOWED_HOST: '*'
+  TRUSTED_ORIGINS: 'https://lifewatch.lab.uvalight.net:32443'
+  CORS_ALLOWED_ORIGIN_REGEXES: r'^https:\/\/lifewatch.lab.uvalight.net:\d+$'
+  CALL_BACK_URL: https://lifewatch.lab.uvalight.net:32443/vre-api/
+  ARGO_URL: https://lifewatch.lab.uvalight.net:32443/argowf
+  ARGO_NAMESPACE: argo
+  BASE_PATH: /vre-api-test
+  DB_USER: vreapi
+  DB_HOST: db-service
+  DB_PORT: '5432'
+  DB_NAME: vreapi

@@ -7,8 +7,6 @@ import { NewVREDialog } from '../components/NewVREDialog';
 import { Nav } from '../templates/Nav';
 // import useAuth from './auth/useAuth';
 
-const { publicRuntimeConfig } = getConfig()
-
 const getSlug = (title: string) => {
 
     return title
@@ -18,6 +16,8 @@ const getSlug = (title: string) => {
 }
 
 const VLabs = () => {
+
+    const { publicRuntimeConfig } = getConfig()
 
     // const isAuthenticated = useAuth(true);
     const [isOpen, setIsOpen] = useState(false);
@@ -33,10 +33,8 @@ const VLabs = () => {
             //         "Authorization": "Bearer: " + token.accessToken
             //     },
             // };
-            const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
-            console.log('Featching vlabs from:'+vre_api_url+'/vlabs')
-            
-            fetch(`${vre_api_url}/vlabs`)
+            const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
+            fetch(`${apiUrl}/vlabs`)
                 .then((res) => res.json())
                 .then((data) => {
                     setVlabs(data);
@@ -71,7 +69,6 @@ const VLabs = () => {
                                         pathname: '/vlabs/[slug]',
                                         query: { slug: vlab.slug }
                                     }}
-                                    as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
                                 >
                                     <div>
                                         <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`} />

@@ -65,6 +65,7 @@ class WorkflowViewSet(GetSerializerMixin,
 
     def list(self, request, *args, **kwargs):
         logger.debug('----------------list-------------------------')
+        userinfo = self.check_token(request)
         query_params = self.request.query_params
         logger.debug('list query_params: ' + str(query_params))
 

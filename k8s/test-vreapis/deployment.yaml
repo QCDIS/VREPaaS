@@ -25,13 +25,13 @@ spec:
             protocol: TCP
           livenessProbe:
             httpGet:
-              path: "/api/"
+              path: $(BASE_PATH)"/api/"
               port: 8000
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: "/api/"
+              path: $(BASE_PATH)"/api/"
               port: 8000
             initialDelaySeconds: 60
             periodSeconds: 10

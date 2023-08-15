@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cells',
     'workflows',
     'virtual_labs',
+    'assignments',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',

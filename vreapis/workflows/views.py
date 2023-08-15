@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from virtual_labs.models import VirtualLab
+from assignments.models import Assignment
 from vreapis.views import GetSerializerMixin
 from . import models, serializers
 import logging

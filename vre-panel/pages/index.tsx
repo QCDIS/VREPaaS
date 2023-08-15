@@ -35,8 +35,9 @@ const VLabs = () => {
             // };
             const vre_api_url = process.env.NEXT_PUBLIC_ENV_VRE_API_URL
             
-            const url = new URL("http://localhost:8000/api/vlabs")
-            console.log(url)
+            const url = new URL("http://localhost:8000/api/vlabs");
+            const url2 = new URL("http://localhost:8000/api/assignments");
+            console.log(url);
             
             fetch(url)
                 .then((res) => res.json())
@@ -46,6 +47,19 @@ const VLabs = () => {
                 .catch((error) => {
                     console.log('Featching error:'+error)
                 });
+
+                try {
+                    fetch(url2)
+                    .then((res) => console.log('Got back:'+res))
+                    .catch((error) => {
+                        console.log('Featching error:'+error)
+                    });
+                  } catch (error) {
+                    console.error(error);
+                    // Expected output: ReferenceError: nonExistentFunction is not defined
+                    // (Note: the exact output may be browser-dependent)
+                  }
+                  
         // }
     }, []);
 

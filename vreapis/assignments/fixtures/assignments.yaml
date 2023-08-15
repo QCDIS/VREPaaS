@@ -1,0 +1,35 @@
+- model: assignments.Assignment
+  pk: 1
+  fields:
+    title: KEvin
+    slug: vol2bird
+    description: Vertical profiling of biological scatterers
+    base_url: ess-22/vol2bird
+    fqdn: lifewatch.lab.uvalight.net
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-vol2bird
+    image_tag: v1.10-beta
+
+- model: assignments.Assignment
+  pk: 2
+  fields:
+    title: Ate
+    slug: multiply
+    description: Integration of different types of data in a MULTIscale SENTINEL land surface information retrieval Platform (MULTIPLY).
+    base_url: multiply
+    fqdn: lifewatch.lab.uvalight.net
+    ingress_ssl_port: 32443
+    image_name: n-a-a-vre-multiply
+    image_tag: v1.10-beta
+
+- model: assignments.Assignment
+  pk: 3
+  fields:
+    title: all the nachos
+    slug: laserfarm
+    description: Laserfarm (Laserchicken Framework for Applications in Research in Macro-ecology) provides a FOSS wrapper to Laserchicken supporting the use of massive LiDAR point cloud data sets for macro-ecology, from data preparation to scheduling and execution of distributed processing across a cluster of compute nodes.
+    base_url: laserfarm
+    fqdn: lifewatch.lab.uvalight.net
+    ingress_ssl_port: 32443
+    image_name: qcdis/n-a-a-vre-laserfarm
+    image_tag: v1.10-beta

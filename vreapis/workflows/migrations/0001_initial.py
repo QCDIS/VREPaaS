@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(max_length=50, null=True)),
                 ('progress', models.CharField(max_length=50, null=True)),
                 ('argo_url', models.URLField(null=True)),
-                ('vlab', models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='virtual_labs.virtuallab')),
+                ('vlab', models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='virtual_labs.virtuallab'))
             ],
         ),
     ]

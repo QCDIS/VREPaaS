@@ -17,10 +17,6 @@ CURRENT_DIR = pathlib.Path(__file__).resolve().parent
 BASE_DIR = CURRENT_DIR.parent
 ENV_FILE_PATH = BASE_DIR / ".env"
 
-print(2000*"=")
-print(ENV_FILE_PATH)
-raise Exception("You fucked up")
-
 dotenv.read_dotenv(str(ENV_FILE_PATH))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vreapis.settings.development')
 

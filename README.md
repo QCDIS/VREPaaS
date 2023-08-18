@@ -151,3 +151,13 @@ ARGO_TOKEN="Bearer $(kubectl get secret vre-api.service-account-token -n argo -o
 echo -n $ARGO_TOKEN | base64 -w 0
 ```
 
+
+# Install GitGuardian pre-commit hook
+
+```shell
+pip install pre-commit
+pre-commit install
+pip install ggshield
+ggshield auth login
+```
+

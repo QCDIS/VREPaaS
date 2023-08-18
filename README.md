@@ -159,6 +159,5 @@ pip install pre-commit
 pre-commit install
 pip install ggshield
 ggshield auth login
-//
 ```
 

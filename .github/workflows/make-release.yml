@@ -21,8 +21,7 @@ jobs:
       matrix:
         environment:
           - development
-          - staging
-          - production
+          - test
     with:
       docker_folder: vre-panel
       tag: vreapp

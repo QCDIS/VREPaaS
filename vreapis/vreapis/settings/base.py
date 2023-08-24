@@ -22,7 +22,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http:\/\/localhost:\d+$',

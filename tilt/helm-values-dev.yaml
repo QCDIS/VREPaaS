@@ -12,6 +12,7 @@ global:
 vreapi:
   secret_key: "dev_secret_key_vreapi"
   auth:
+    superuser_email: "admin@paas.minikube.test"
     superuser_username: "admin"
     superuser_password: "admin"
 

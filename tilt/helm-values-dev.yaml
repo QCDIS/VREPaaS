@@ -1,0 +1,19 @@
+global:
+  environment: test
+
+  ingress:
+    host: "paas.minikube.test"
+
+  base_paths:
+    development:
+      vreapi: "/vre-api"
+      vreapp: "/vreapp"
+
+vreapi:
+  secret_key: "dev_secret_key_vreapi"
+  auth:
+    superuser_username: "admin"
+    superuser_password: "admin"
+
+vreapp:
+  secret_key: "dev_secret_key_vreapp"

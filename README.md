@@ -22,13 +22,41 @@ Install [tilt](https://docs.tilt.dev/install.html) via conda
 
 ```shell
 conda install -c conda-forge tilt 
+```
+
+#### Install minikube
+
+```shell
 conda install -c conda-forge minikube 
+```
+
+Follow step 3 of the [minikube ingress-dns setup guide](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/).
+
+#### Add secrets
+
+Create `tilt/helm-values-secrets.yaml` and fill-in the following:
+
+```yaml
+global:
+  keycloak:
+    url:
+    realm:
+    client_id:
+    client_secret_key:
+
+  argo:
+    namespace:
+    url:
+    token:
 ```
 
 #### Start Cluster
 
 ```shell
 minikube start
+minikube addons enable ingress
+minikube addons enable ingress-dns
+minikube dashboard  # optional
 ```
 
 #### Run tilt
@@ -36,6 +64,12 @@ minikube start
 ```shell
 tilt up
 ```
+
+Access resources at:
+
+- https://paas.minikube.test/vreapp/
+- https://paas.minikube.test/vre-api/api/
+- https://paas.minikube.test/vre-api/admin/
 
 # Encrypt secrets 
 

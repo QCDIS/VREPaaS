@@ -5,7 +5,7 @@
     title: Sample data product
     description: Sample data product
     vlab: 3
-    workflow: n-a-a-vre-dev-skoulouzis-gcjcn
+    workflow: null
     data_url: https://example.org
 - model: data_products.DataProduct
   pk: 68bcef94-56f1-4697-8eb7-dd309cb175a1
@@ -14,7 +14,7 @@
     title: Sample geo data product
     description: Sample geo data product
     vlab: 3
-    workflow: n-a-a-vre-dev-skoulouzis-6zvkb
+    workflow: null
     data_url: https://example.org
 - model: data_products.GeoDataProduct
   pk: 68bcef94-56f1-4697-8eb7-dd309cb175a1

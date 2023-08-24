@@ -1,11 +1,18 @@
 version_settings(constraint='>=0.22.2')
 secret_settings (disable_scrub=True)
-load('ext://namespace', 'namespace_create', 'namespace_inject')
+load('ext://helm_remote', 'helm_remote')
 
-# API
+helm_remote(
+    'vrepaas',
+    repo_name='oci://ghcr.io/qcdis/charts',
+    values=[
+        './tilt/helm-values-dev.yaml',
+        './tilt/helm-values-secrets.yaml',
+    ],
+)
 
 docker_build(
-    'vreapi-local',
+    'qcdis/vreapi',
     context='.',
     dockerfile='tilt/vreapis/Dockerfile',
     only=['./vreapis/'],
@@ -14,23 +21,8 @@ docker_build(
         run('cd /app && /opt/venv/bin/python manage.py makemigrations'),
         run('cd /app && /opt/venv/bin/python manage.py migrate'),
         run('cd /app && /opt/venv/bin/pip install -r requirements.txt', trigger='./vreapis/requirements.txt'),
-    ]
-)
-
-k8s_yaml(['tilt/vreapis.yaml','tilt/django-secrets.yaml','tilt/vre-api-config.yaml'])
-
-k8s_resource(
-    'vreapi-deployment',
-    port_forwards='8000:8000',
-    labels=['vreapi'],
-    links=[
-        'http://localhost:8000/paas/api/api/',
-        'http://localhost:8000/paas/api/admin/',
     ],
-    resource_deps=['db-deployment']
 )
-
-# Panel
 
 docker_build(
     'qcdis/vreapp',
@@ -40,31 +32,20 @@ docker_build(
     live_update=[
         sync('./vre-panel', '/app'),
         run('cd /app && npm install', trigger=['./vre-panel/package.json'])
-    ]
-)
-
-k8s_yaml(['tilt/vre-panel.yaml','tilt/vre-panel-secrets.yaml'])
-
-k8s_resource(
-    'vreapp-deployment',
-    port_forwards='3000:3000',
-    labels=['vreapp'],
-    links=[
-        'http://localhost:3000/paas/app/',
     ],
-    resource_deps=['vreapi-deployment']
 )
-
-# DB
-
-k8s_yaml([ 'tilt/vre-depts-db.yaml'])
 
 k8s_resource(
-    'db-deployment',
-    labels=['db'],
+    'vrepaas-vreapi',
+    links=[
+        'https://paas.minikube.test/vre-api-test/api/',
+        'https://paas.minikube.test/vre-api-test/admin/',
+    ],
 )
 
-
-# Ingress
-
-k8s_yaml(['tilt/ingress.yaml'])
+k8s_resource(
+    'vrepaas-vreapp',
+    links=[
+        'https://paas.minikube.test/vreapp/',
+    ],
+)

@@ -25,6 +25,8 @@ from vreapis.settings.base import BASE_PATH
 
 
 
+from vreapis.settings.base import BASE_PATH
+
 admin.site.site_header = 'Virtual Labs Administration'
 
 router = routers.DefaultRouter()

@@ -65,12 +65,6 @@ minikube dashboard  # optional
 tilt up
 ```
 
-Access resources at:
-
-- https://paas.minikube.test/vreapp/
-- https://paas.minikube.test/vre-api/api/
-- https://paas.minikube.test/vre-api/admin/
-
 # Encrypt secrets 
 
 

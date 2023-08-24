@@ -34,3 +34,18 @@ docker_build(
         run('cd /app && npm install', trigger=['./vre-panel/package.json'])
     ],
 )
+
+k8s_resource(
+    'vrepaas-vreapi',
+    links=[
+        'https://paas.minikube.test/vre-api-test/api/',
+        'https://paas.minikube.test/vre-api-test/admin/',
+    ],
+)
+
+k8s_resource(
+    'vrepaas-vreapp',
+    links=[
+        'https://paas.minikube.test/vreapp/',
+    ],
+)

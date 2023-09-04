@@ -199,3 +199,6 @@ echo -n $ARGO_TOKEN | base64 -w 0
         }
     )
 ```
+
+# Releses
+If we want to add a new release environment we need to add a new .env.{ENV_NAME} together with a new line in the matrix on the .workflows/make.yaml and .workflows/make-release.yaml  

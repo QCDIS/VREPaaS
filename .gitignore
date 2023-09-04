@@ -199,3 +199,5 @@ vre-panel/.env
 tilt/django-secrets.yaml
 tilt/vre-panel-secrets.yaml
 vre-panel/.env
+*.yaml
+tilt/vre-panel-secrets.yaml

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { NewVREDialog } from '../components/NewVREDialog';
 import { Nav } from '../templates/Nav';
-// import useAuth from './auth/useAuth';
+import useAuth from './auth/useAuth';
 
 const { publicRuntimeConfig } = getConfig()
 
@@ -19,7 +19,7 @@ const getSlug = (title: string) => {
 
 const VLabs = () => {
 
-    // const isAuthenticated = useAuth(true);
+    //const isAuthenticated = useAuth(true);
     const [isOpen, setIsOpen] = useState(false);
     const [vlabs, setVlabs] = useState([]);
 
@@ -39,7 +39,7 @@ const VLabs = () => {
             const url2 = new URL("http://localhost:8000/api/assignments");
             console.log(url);
             
-            fetch(url)
+            fetch(url2)
                 .then((res) => res.json())
                 .then((data) => {
                     setVlabs(data);
@@ -48,17 +48,7 @@ const VLabs = () => {
                     console.log('Featching error:'+error)
                 });
 
-                try {
-                    fetch(url2)
-                    .then((res) => console.log('Got back:'+res))
-                    .catch((error) => {
-                        console.log('Featching error:'+error)
-                    });
-                  } catch (error) {
-                    console.error(error);
-                    // Expected output: ReferenceError: nonExistentFunction is not defined
-                    // (Note: the exact output may be browser-dependent)
-                  }
+                
                   
         // }
     }, []);
@@ -73,7 +63,7 @@ const VLabs = () => {
     // if (status === "loading") {
     //     return "Loading or not authenticated..."
     // }
-
+    
     return (
         <div>
             <Nav />
@@ -84,10 +74,10 @@ const VLabs = () => {
                             <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10">
                                 <Link
                                     href={{
-                                        pathname: '/vlabs/[slug]',
+                                        pathname: '/assignments/[slug]',
                                         query: { slug: vlab.slug }
                                     }}
-                                    as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
+                                    as={`${publicRuntimeConfig.basePath}/assignments/${vlab.slug}`}
                                 >
                                     <div>
                                         <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`} />
@@ -103,10 +93,59 @@ const VLabs = () => {
                         );
                     })}
                 </div>
+                {/* <div key="Kev" className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10">
+                                <Link
+                                    href={{
+                                        pathname: '/new_assignment',
+                                    }}
+                                    as={`${publicRuntimeConfig.basePath}/new_assignment`}
+                                   >
+                                    <div>
+                                        <div className="px-3 py-2">
+                                        <p>Create new assignments</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            
+                        
+                </div> */}
                 <NewVREDialog isOpen={isOpen} setIsOpen={setIsOpen} />
             </div>
         </div >
     )
+    // return (
+    //     <div>
+    //         <Nav />
+    //         <div className='min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300'>
+    //             <div className='grid grid-cols-3'>
+    //                 {vlabs.map((vlab: any) => {
+    //                     return (
+    //                         <div key={getSlug(vlab.title)} className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10">
+    //                             <Link
+    //                                 href={{
+    //                                     pathname: '/vlabs/[slug]',
+    //                                     query: { slug: vlab.slug }
+    //                                 }}
+    //                                 as={`${publicRuntimeConfig.basePath}/vlabs/${vlab.slug}`}
+    //                             >
+    //                                 <div>
+    //                                     <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`} />
+    //                                     <div className="font-bold text-l mb-2 bg-blue-500 text-white p-5">{vlab.title}</div>
+    //                                     <div className="px-3 py-2">
+    //                                         <p className="text-gray-700 text-base truncate ...">
+    //                                             {vlab.description}
+    //                                         </p>
+    //                                     </div>
+    //                                 </div>
+    //                             </Link>
+    //                         </div>
+    //                     );
+    //                 })}
+    //             </div>
+    //             <NewVREDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+    //         </div>
+    //     </div >
+    // )
 };
 
 export async function getServerSideProps(context:any) {

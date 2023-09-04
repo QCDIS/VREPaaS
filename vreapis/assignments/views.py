@@ -15,7 +15,7 @@ class AssignmentViewSet(GetSerializerMixin, viewsets.ModelViewSet):
     queryset = models.Assignment.objects.all()
     serializer_class = serializers.AssignmentDetailSerializer
     serializer_action_classes = {
-        'list': serializers.AsgProfileSerializer
+        'list': serializers.AssignmentSerializer
     }
 
 

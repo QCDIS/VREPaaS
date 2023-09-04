@@ -19,6 +19,7 @@ from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
 from assignments.views import AssignmentViewSet
 from cells.views import CellsViewSet
+from students.views import StudentViewSet
 from workflows.views import WorkflowViewSet
 
 admin.site.site_header = 'Virtual Labs Administration'
@@ -28,6 +29,7 @@ router.register(r'vlabs', VirtualLabViewSet)
 router.register(r'assignments', AssignmentViewSet)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'cells', CellsViewSet)
+router.register(r'students', StudentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

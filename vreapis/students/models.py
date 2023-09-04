@@ -3,39 +3,20 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class AsgProfile(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    display_name = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
 
 
-    def __str__(self):
-        return self.display_name
-
-    class Meta:
-        verbose_name = "Asg Profile"
-        verbose_name_plural = "Asg Profiles"
-
-
-
-class Assignment(models.Model):
+class Student(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
-    title = models.CharField(max_length=100)
+    keycloak_ID = models.CharField(max_length=100)
     slug = models.SlugField(null=True, unique=True)
-    description = models.CharField(max_length=1000)
-    base_url = models.CharField(max_length=100, null=True)
-    fqdn = models.CharField(max_length=100, null=True)
-    ingress_ssl_port = models.CharField(max_length=5, null=True)
-    display_name = models.CharField(max_length=100, null=True)
-    vlab_slug = models.CharField(max_length=100, null=True)
-    long_description = models.CharField(max_length=10000, null=True)
-    
+    name = models.CharField(null=True, max_length=100)
+    assignments_enrolled = models.CharField(null=True,max_length=10000)
 
     def __str__(self):
-        return self.title
+        return self.keycloak_ID
 
     class Meta:
-        verbose_name = "Assignment"
+        verbose_name = "Student"
 
 
 class TokenCredentials(models.Model):
@@ -49,8 +30,7 @@ class TokenCredentials(models.Model):
     type = models.CharField(max_length=2, choices=CHOICES_CREDENTIALS_TYPE, null=True)
     url = models.URLField(null=True)
     token = models.CharField(max_length=100, null=True)
-    Asgab = models.ForeignKey(Assignment, on_delete=models.DO_NOTHING, null=True)
-
+ 
 
 class KeyCloakAuth(models.Model):
     created = models.DateTimeField(auto_now_add=True)

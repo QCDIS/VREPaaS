@@ -151,3 +151,29 @@ ARGO_TOKEN="Bearer $(kubectl get secret vre-api.service-account-token -n argo -o
 echo -n $ARGO_TOKEN | base64 -w 0
 ```
 
+# Authorization 
+
+## Token 
+
+1. Create a user in the Django admin panel
+2. Create a token for the user in the Django admin panel
+3. Use the token in the header of the request
+
+```python
+    resp = requests.get(
+        f"{api_endpoint}/api/workflows/",
+        headers={
+            'Authorization': 'Token '+ naavre_api_token
+        }
+    )
+```
+
+
+# Install GitGuardian pre-commit hook
+
+```
+pip install pre-commit
+pre-commit install
+pip install ggshield
+ggshield auth login
+```

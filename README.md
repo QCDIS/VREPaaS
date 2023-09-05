@@ -167,6 +167,18 @@ echo -n $ARGO_TOKEN | base64 -w 0
         }
     )
 ```
+1. Create a user in the Django admin panel
+2. Create a token for the user in the Django admin panel
+3. Use the token in the header of the request
+
+```python
+    resp = requests.get(
+        f"{api_endpoint}/api/workflows/",
+        headers={
+            'Authorization': 'Token '+ naavre_api_token
+        }
+    )
+```
 
 
 # Install GitGuardian pre-commit hook

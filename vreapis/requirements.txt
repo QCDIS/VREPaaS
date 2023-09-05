@@ -4,6 +4,7 @@ djangorestframework-gis~=1.0.0
 django-filter~=22.1.0
 whitenoise
 django-keycloak-auth
+python-keycloak
 gunicorn
 pyyaml
 requests

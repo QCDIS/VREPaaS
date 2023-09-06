@@ -35,7 +35,7 @@ export async function getServerSideProps(context: { req: any; }) {
             redirect: { destination: '/' },
         };
     }
-    console.log("providers", providers)
+    console.log("providers: ", providers)
     return {
         props: { providers },
     }

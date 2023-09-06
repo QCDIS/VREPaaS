@@ -100,6 +100,12 @@ spec:
                   name: vre-api-config
                   key: ALLOWED_HOST
 
+            - name: URL_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: URL_PATH
+
             - name: ARGO_NAMESPACE
               valueFrom:
                 configMapKeyRef:
@@ -135,3 +141,9 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: DB_NAME
+
+            - name: BASE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: BASE_PATH

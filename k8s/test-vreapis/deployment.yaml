@@ -23,6 +23,18 @@ spec:
           ports:
           - containerPort: 8000
             protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: "/vre-api-test/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/vre-api-test/api/"
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 10
           env:
             - name: KEYCLOAK_CLIENT_ID
               valueFrom:
@@ -137,3 +149,9 @@ spec:
                 configMapKeyRef:
                   name: vre-api-config
                   key: DB_NAME
+
+            - name: BASE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: vre-api-config
+                  key: BASE_PATH

@@ -1,0 +1,22 @@
+name: paas
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.9
+  - djangorestframework
+  - tilt
+  - django>=4.0.0,<4.1.0
+  - minikube
+  - requests
+  - whitenoise
+  - django-keycloak-auth
+  - gunicorn
+  - pyyaml
+  - python-dotenv
+  - django-cors-headers
+  - django-extensions
+
+
+
+
+

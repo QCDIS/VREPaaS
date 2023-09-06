@@ -14,8 +14,7 @@ Close the terminal and start a new one to activate conda.
 
 Create and activate conda environment:
 ```shell
-conda create -n paas  python=3.9 
-conda activate paas
+conda env update --file environment.yaml
 ```
 
 #### Install tilt
@@ -23,13 +22,41 @@ Install [tilt](https://docs.tilt.dev/install.html) via conda
 
 ```shell
 conda install -c conda-forge tilt 
+```
+
+#### Install minikube
+
+```shell
 conda install -c conda-forge minikube 
+```
+
+Follow step 3 of the [minikube ingress-dns setup guide](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/).
+
+#### Add secrets
+
+Create `tilt/helm-values-secrets.yaml` and fill-in the following:
+
+```yaml
+global:
+  keycloak:
+    url:
+    realm:
+    client_id:
+    client_secret_key:
+
+  argo:
+    namespace:
+    url:
+    token:
 ```
 
 #### Start Cluster
 
 ```shell
 minikube start
+minikube addons enable ingress
+minikube addons enable ingress-dns
+minikube dashboard  # optional
 ```
 
 #### Run tilt
@@ -80,6 +107,7 @@ rules:
       - get
       - watch
       - patch
+      - delete
     apiGroups:
       - ''
     resources:
@@ -87,6 +115,7 @@ rules:
   - verbs:
       - get
       - watch
+      - patch
     apiGroups:
       - ''
     resources:
@@ -111,6 +140,7 @@ rules:
       - workflowartifactgctasks
       - workflowtemplates
       - workflows
+      - cronworkflows
   - verbs:
       - patch
     apiGroups:
@@ -179,6 +209,27 @@ echo -n $ARGO_TOKEN | base64 -w 0
         }
     )
 ```
+
+
+# Authorization 
+
+## Token 
+
+1. Create a user in the Django admin panel
+2. Create a token for the user in the Django admin panel
+3. Use the token in the header of the request
+
+```python
+    resp = requests.get(
+        f"{api_endpoint}/api/workflows/",
+        headers={
+            'Authorization': 'Token '+ naavre_api_token
+        }
+    )
+```
+
+# Releases
+If we want to add a new release environment we need to add a new .env.{ENV_NAME} together with a new line in the matrix on the .workflows/make.yaml and .workflows/make-release.yaml  
 
 
 # Install GitGuardian pre-commit hook

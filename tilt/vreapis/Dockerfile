@@ -1,15 +1,17 @@
-FROM python:3.11.3-slim
+FROM python:3.11.4-slim
 
-COPY ./vreapis /app
 WORKDIR /app
 
-RUN python3 -m venv /opt/venv
-
 RUN apt update && \
-    apt install -y libpq-dev gcc gdal-bin
+    apt install -y libpq-dev gcc gdal-bin curl net-tools iputils-ping
 
-RUN /opt/venv/bin/pip install pip --upgrade && \
-    /opt/venv/bin/pip install -r requirements.txt && \
-    chmod +x entrypoint.dev.sh
+RUN python3 -m venv /opt/venv
+RUN /opt/venv/bin/pip install pip --upgrade
+
+COPY ./vreapis/requirements.txt /app
+RUN /opt/venv/bin/pip install -r requirements.txt
+
+COPY ./vreapis /app
+RUN chmod +x entrypoint.dev.sh
 
 CMD ["/app/entrypoint.dev.sh"]

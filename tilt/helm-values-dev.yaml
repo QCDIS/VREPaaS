@@ -6,7 +6,7 @@ global:
 
   base_paths:
     development:
-      vreapi: "/vre-api"
+      vreapi: "/vre-api-test"
       vreapp: "/vreapp"
 
 vreapi:

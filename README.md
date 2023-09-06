@@ -32,6 +32,13 @@ conda install -c conda-forge minikube
 
 Follow step 3 of the [minikube ingress-dns setup guide](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/).
 
+For Ubuntu 20.04, before step 3, you need to install resolvconf:
+
+```shell
+sudo apt install resolvconf
+```
+
+
 #### Add secrets
 
 Create `tilt/helm-values-secrets.yaml` and fill-in the following:
@@ -229,7 +236,8 @@ echo -n $ARGO_TOKEN | base64 -w 0
 ```
 
 # Releases
-If we want to add a new release environment we need to add a new .env.{ENV_NAME} together with a new line in the matrix on the .workflows/make.yaml and .workflows/make-release.yaml  
+If we want to add a new release environment we need to add a new .env.{ENV_NAME} together with a new line in the matrix 
+on the .workflows/make.yaml and .workflows/make-release.yaml  
 
 
 # Install GitGuardian pre-commit hook

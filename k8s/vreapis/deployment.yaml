@@ -52,6 +52,12 @@ spec:
                   name: django-secrets
                   key: superuser-password
 
+            - name: DJANGO_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: user-password
+
             - name: ARGO_API_TOKEN
               valueFrom:
                 secretKeyRef:

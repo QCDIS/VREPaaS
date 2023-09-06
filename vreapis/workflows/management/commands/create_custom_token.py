@@ -11,13 +11,17 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('username', type=str, help='Username of the user')
+        parser.add_argument('--token', type=str, help='token')
+        parser.add_argument('--password', type=str, help='password')
     def handle(self, *args, **options):
 
         self.stdout.write(self.style.ERROR('------------------------------Create Custom Token------------------------------'))
         username = options['username']
-        password = os.environ.get("DJANGO_USER_PASSWORD")
+        if not username:
+            self.stdout.write(self.style.ERROR('username argument not found.'))
+        password = options['password']
         if not password:
-            self.stdout.write(self.style.ERROR('DJANGO_USER_PASSWORD environment variable not found.'))
+            self.stdout.write(self.style.ERROR('password argument not found.'))
 
         User = get_user_model()
         if not User.objects.filter(username=options['username']).exists():
@@ -26,14 +30,15 @@ class Command(BaseCommand):
             user.set_password(password)
             user.save()
             self.stdout.write(f"user {options['username']} created!")
-
-        token_key = os.environ.get('VRE_API_TOKEN')
+        else:
+            user = User.objects.get(username=username)
+        token_key = options['token']
         if token_key:
             token, created = Token.objects.get_or_create(user=user, key=token_key)
             self.stdout.write(self.style.SUCCESS(f'Token created for user: {username}'))
             self.stdout.write(self.style.SUCCESS(f'Token key: {token.key}'))
         else:
-            self.stdout.write(self.style.ERROR('Token environment variable not found.'))
+            self.stdout.write(self.style.ERROR('Token argument not found.'))
 
 
 

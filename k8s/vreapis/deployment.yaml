@@ -58,6 +58,12 @@ spec:
                   name: django-secrets
                   key: user-password
 
+            - name: VRE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: django-secrets
+                  key: vre_api_token
+
             - name: ARGO_API_TOKEN
               valueFrom:
                 secretKeyRef:

@@ -34,7 +34,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build docker
       run: |
-          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG
+          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}"
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

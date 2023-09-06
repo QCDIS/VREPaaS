@@ -17,9 +17,11 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.ERROR('------------------------------Create Custom Token------------------------------'))
         username = options['username']
+        self.stdout.write('Will create user: '+username)
         if not username:
             self.stdout.write(self.style.ERROR('username argument not found.'))
         password = options['password']
+        self.stdout.write('Will create password: '+password)
         if not password:
             self.stdout.write(self.style.ERROR('password argument not found.'))
 
@@ -32,6 +34,9 @@ class Command(BaseCommand):
             self.stdout.write(f"user {options['username']} created!")
         else:
             user = User.objects.get(username=username)
+            self.stdout.write(str(user))
+            self.stdout.write(f"Got user {options['username']}")
+
         token_key = options['token']
         if token_key:
             token, created = Token.objects.get_or_create(user=user, key=token_key)

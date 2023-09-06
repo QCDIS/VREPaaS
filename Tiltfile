@@ -5,6 +5,7 @@ load('ext://helm_remote', 'helm_remote')
 helm_remote(
     'vrepaas',
     repo_name='oci://ghcr.io/qcdis/charts',
+    version='0.5.1',
     values=[
         './tilt/helm-values-dev.yaml',
         './tilt/helm-values-secrets.yaml',

@@ -9,16 +9,6 @@ global:
       vreapi: "/vre-api-test"
       vreapp: "/vreapp"
 
-vreapi:
-  secret_key: "dev_secret_key_vreapi"
-  auth:
-    superuser_email: "admin@paas.minikube.test"
-    superuser_username: "admin"
-    superuser_password: "admin"
-    username: "user"
-    user_password: "user"
-    token: "TOKEN"
 
 
-vreapp:
-  secret_key: "dev_secret_key_vreapp"
+

@@ -9,12 +9,12 @@ dependencies:
   - minikube
   - requests
   - whitenoise
-  - django-keycloak-auth
   - gunicorn
   - pyyaml
   - python-dotenv
   - django-cors-headers
   - django-extensions
+  - pre_commit
 
 
 

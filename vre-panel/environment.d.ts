@@ -5,6 +5,7 @@ declare namespace NodeJS {
         KEYCLOAK_CLIENT_SECRET: string,
         KEYCLOAK_ISSUER: string,
         AUTH0_ID: string,
+        VRE_API_TOKEN: string,
         AUTH0_SECRET: string,
         AUTH0_ISSUER: string,
         API_BASE_PATH: string,

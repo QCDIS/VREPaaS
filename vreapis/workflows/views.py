@@ -29,8 +29,8 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
-    authentication_classes = [TokenAuthentication]  # Add Token Authentication
-    permission_classes = [IsAuthenticated]          # Add permission for authenticated users
+    # authentication_classes = [TokenAuthentication]  # Add Token Authentication
+    # permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
@@ -106,6 +106,8 @@ class WorkflowViewSet(GetSerializerMixin,
 
         return super().list(self, request, *args, **kwargs)
 
+    @authentication_classes([TokenAuthentication])
+    @permission_classes([IsAuthenticated])
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
         logger.debug('----------------submit-------------------------')

@@ -37,6 +37,16 @@ class WorkflowViewSet(GetSerializerMixin,
         'list': serializers.WorkflowSerializer
     }
 
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'submit':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
         logger.debug('----------------get_queryset-------------------------')
         query_params = self.request.query_params
@@ -106,8 +116,6 @@ class WorkflowViewSet(GetSerializerMixin,
 
         return super().list(self, request, *args, **kwargs)
 
-    @authentication_classes([TokenAuthentication])
-    @permission_classes([IsAuthenticated])
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
         logger.debug('----------------submit-------------------------')

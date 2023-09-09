@@ -26,8 +26,7 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
         title: "Loading ..",
         slug: "",
         description: "Loading ..",
-        endpoint: "",
-        vlab_slug: "",
+        vlab : 0,
         long_description: ""
     }
     const StudentPlaceholder = {
@@ -35,12 +34,19 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
         name: "",
         assignments_enrolled: "",
     }
+    const vlabPlaceholder = {
+        title: "Loading ..",
+        slug: "",
+        description: "Loading ..",
+        endpoint: ""
+    }
     
     // const isAuthenticated = useAuth(true);
     const router = useRouter();
     const { slug } = router.query;
     const [Ass, setAss] = useState(AssPlaceholder)
     const [Stud, setStud] = useState(StudentPlaceholder)
+    const [vlab, setVlab] = useState(vlabPlaceholder)
     var [isEnrolled, setEnrolled] = useState(false)
     const session = useSession();
     var userName = "none";
@@ -58,7 +64,17 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
             .then((res) => res.json())
             .then((data) => {
                 setAss(data)
-            })
+                const url = new URL("http://localhost:8000/api/vlabs/");
+                fetch(`${url}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log(data[Ass.vlab])
+                    setVlab(data[Ass.vlab])
+                })
+                .catch((error) => {
+                    console.log('Featching error:'+error)
+                });
+                })
             .catch((error) => {
                 console.log('Featching error:'+error)
             });
@@ -151,7 +167,7 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
             <div className="grid grid-flow-row-dense grid-cols-1 grid-rows-1 gap-4 p-5 min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300">
                 <div className="row-span-4 col-span-2 shadow-lg bg-white p-10">
                     <p className="text-4xl font-sans">{Ass.title}</p>
-                    <a target="blank" href= {'../vlabs/' + Ass.vlab_slug}>
+                    <a target="blank" href= {'../vlabs/' + vlab.slug}>
                         <button  className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-5">
                             Go to Vlab
                         </button>

@@ -29,39 +29,28 @@ class UserSerializer(serializers.ModelSerializer):
 
 class AssignmentSerializer(serializers.ModelSerializer):
 
-    endpoint = serializers.SerializerMethodField()
-
-    def get_endpoint(self, vlab):
-        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}/"
 
     class Meta:
         model = Assignment
         fields = (
             'title',
             'slug',
-            'description',
-            'endpoint',
-            'vlab_slug',
+            'short_description',
+            'vlab'
             
         )
 
 
 class AssignmentDetailSerializer(serializers.ModelSerializer):
 
-    endpoint = serializers.SerializerMethodField()
-
-    def get_endpoint(self, vlab):
-        return f"https://{vlab.fqdn}:{vlab.ingress_ssl_port}/{vlab.base_url}/"
-
     class Meta:
         model = Assignment
         fields = (
             'title',
             'slug',
-            'description',
-            'endpoint',
-            'vlab_slug',
+            'short_description',
             'long_description',
+            'vlab'
         )
 
 

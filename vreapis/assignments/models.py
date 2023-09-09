@@ -22,13 +22,10 @@ class Assignment(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     title = models.CharField(max_length=100)
     slug = models.SlugField(null=True, unique=True)
-    description = models.CharField(max_length=1000)
-    base_url = models.CharField(max_length=100, null=True)
-    fqdn = models.CharField(max_length=100, null=True)
-    ingress_ssl_port = models.CharField(max_length=5, null=True)
-    display_name = models.CharField(max_length=100, null=True)
-    vlab_slug = models.CharField(max_length=100, null=True)
+    short_description = models.CharField(max_length=1000)
     long_description = models.CharField(max_length=10000, null=True)
+    vlab = models.ForeignKey('virtual_labs.VirtualLab', on_delete=models.CASCADE, null=True)
+
     
 
     def __str__(self):

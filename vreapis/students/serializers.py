@@ -26,6 +26,7 @@ class StudentSerializer(serializers.ModelSerializer):
             'created',
             'keycloak_ID',
             'name',
+            'slug',
             'assignments_enrolled',
             
         )

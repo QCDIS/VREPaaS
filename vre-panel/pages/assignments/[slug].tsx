@@ -35,102 +35,116 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
         name: "",
         assignments_enrolled: "",
     }
+    
     // const isAuthenticated = useAuth(true);
     const router = useRouter();
     const { slug } = router.query;
     const [Ass, setAss] = useState(AssPlaceholder)
     const [Stud, setStud] = useState(StudentPlaceholder)
-    const keycloak_ID = "vre-paas-latife-dag"
-      
+    var [isEnrolled, setEnrolled] = useState(false)
+    const session = useSession();
+    var userName = "none";
+ 
+    
+    try {
+        userName = session.data.user.name;
+    }
+    catch{
+        console.log("session trouble")
+    }
     const url = new URL("http://localhost:8000/api/assignments/");
-        
-    fetch(`${url}${slug}`)
-        .then((res) => res.json())
-        .then((data) => {
-            setAss(data)
-        })
-        .catch((error) => {
-            console.log('Featching error:'+error)
-        });
+    useEffect(() => {
+        fetch(`${url}${slug}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setAss(data)
+            })
+            .catch((error) => {
+                console.log('Featching error:'+error)
+            });
 
-    const url2 = new URL("http://localhost:8000/api/students/");
+        const url2 = new URL("http://localhost:8000/api/students/");
+        if (userName != "none"){
+            console.log("session trouble resolved")
+            fetch(`${url2}${userName}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setStud(data)
+                })
+                .catch((error) => {
+                    console.log('Featching error:'+error)
+                });
+                if (Stud.assignments_enrolled === null){
+                    setEnrolled(false)
+                    Stud.assignments_enrolled = "";
+                    
+                }
+                else{
+                    if(Stud.assignments_enrolled.includes(`${slug}`)){
+                        setEnrolled(true)
+                    }
+                }
+            }
+    }, []);
+       
+
     
-    fetch(`${url2}${keycloak_ID}`)
-        .then((res) => res.json())
-        .then((data) => {
-            setStud(data)
-        })
-        .catch((error) => {
-            console.log('Featching error:'+error)
-        });
     
-    var isEnrolled = false;
-    if (Stud.assignments_enrolled === null){
-        isEnrolled = false;
-        Stud.assignments_enrolled = "";
-    }
-    else{
-        if(Stud.assignments_enrolled.includes(`${slug}`)){
-            isEnrolled=true;
-        }
-    }
     function enrollButton() {
-        isEnrolled = true;
-        let name = prompt("Please enter your name:", "Harry Potter");
-        if (name == null || name == "") {
-            console.log("User cancelled the prompt.");
-          } else {
-            console.log("Name: " + name);
-          }
-    const url = 'http://localhost:8000/api/students/'
-    const data = {
-        assignments_enrolled:`${Stud.assignments_enrolled};${slug}` ,
-        keycloak_ID: keycloak_ID,
-        name: name,
-    };
-    console.log(JSON.stringify(data));
-    fetch(`${url}${keycloak_ID}/`, {
-        method: "PUT",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-    });
+        setEnrolled(true)
+        if (userName != "none"){
+            const url = 'http://localhost:8000/api/students/'
+            const data = {
+                assignments_enrolled:`${Stud.assignments_enrolled};${slug}` ,
+                keycloak_ID: userName,
+                name: userName,
+            };
+            console.log(JSON.stringify(data));
+            fetch(`${url}${userName}/`, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            });
+        }
+        Stud.assignments_enrolled =`${Stud.assignments_enrolled};${slug}`
     }
 
     function unEnrollButton() {
-        isEnrolled = false;
-        const url = 'http://localhost:8000/api/students/'
-        Stud.assignments_enrolled = Stud.assignments_enrolled.replace(`;${slug}`,"")
-        var assignments_enrolled = Stud.assignments_enrolled;
-        if (Stud.assignments_enrolled ==="") assignments_enrolled = ".";
-        const data = {
-            assignments_enrolled:`${assignments_enrolled}` ,
-            keycloak_ID: keycloak_ID,
-        };
-        console.log(JSON.stringify(data));
-        fetch(`${url}${keycloak_ID}/`, {
-            method: "PUT",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-        });
+        setEnrolled(false)
+        if (userName != "none"){
+            const url = 'http://localhost:8000/api/students/'
+            Stud.assignments_enrolled = Stud.assignments_enrolled.replace(`;${slug}`,"")
+            var assignments_enrolled = Stud.assignments_enrolled;
+            if (Stud.assignments_enrolled ==="") assignments_enrolled = ".";
+            const data = {
+                assignments_enrolled:`${assignments_enrolled}` ,
+                keycloak_ID: userName,
+            };
+            Stud.assignments_enrolled =assignments_enrolled;
+            console.log(JSON.stringify(data));
+            fetch(`${url}${userName}/`, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            });
+        }
     }
 
     
-
-
     return (
         <div>
             <Nav />

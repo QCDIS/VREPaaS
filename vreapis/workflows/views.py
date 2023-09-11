@@ -130,7 +130,11 @@ class WorkflowViewSet(GetSerializerMixin,
             call_url = argo_api_wf_url + '/' + namespace
 
         workflow = request.data['workflow_payload']
+        if not workflow:
+            return Response({'message': 'Workflow payload not set'}, status=400)
         vlab_slug = request.data['vlab']
+        if not vlab_slug:
+            return Response({'message': 'Virtual Lab not set'}, status=400)
 
         if not argo_api_token:
             return Response({'message': 'Argo API token not set'}, status=500)

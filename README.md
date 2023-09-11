@@ -30,13 +30,7 @@ conda install -c conda-forge tilt
 conda install -c conda-forge minikube 
 ```
 
-Follow step 3 of the [minikube ingress-dns setup guide](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/).
-
-For Ubuntu 20.04, before step 3, you need to install resolvconf:
-
-```shell
-sudo apt install resolvconf
-```
+Follow step 3 section 'Linux OS with Network Manager' of the [minikube ingress-dns setup guide](https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/).
 
 
 #### Add secrets
@@ -215,6 +209,12 @@ echo -n $ARGO_TOKEN | base64 -w 0
             'Authorization': 'Token '+ naavre_api_token
         }
     )
+```
+
+## Test Submit Workflow
+
+```shell
+curl -X POST "http://paas.minikube.test/vre-api-test/api/workflows/submit/" -H "Authorization: Token ${accessToken}" -H "Content-Type: application/json" -d "@vreapis/tests/resources/workflows/submit_workflow_req_body.json"
 ```
 
 

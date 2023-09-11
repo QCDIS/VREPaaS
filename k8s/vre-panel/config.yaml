@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env
+  labels:
+    app: vreapp-svc
+
+data:
+  .env: |-
+    API_BASE_PATH=/vre-api/api
+    FRONTEND_BASE_PATH=/vreapp

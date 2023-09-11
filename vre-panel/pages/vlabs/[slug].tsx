@@ -37,7 +37,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
         var requestOptions: RequestInit = {
             method: "GET",
             headers: {
-                "Authorization": "Token " + token.accessToken
+                "Authorization": "Bearer: " + token.accessToken
             },
         };
 
@@ -52,9 +52,9 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
 
         var requestOptions: RequestInit = {
             method: "GET",
-//             headers: {
-//                 "Authorization": "Token " + token.accessToken
-//             },
+            headers: {
+                "Authorization": "Bearer: " + token.accessToken
+            },
         };
 
         const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
@@ -70,10 +70,9 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
 
         var requestOptions: RequestInit = {
             method: "GET",
-//             headers: {
-//                 "Authorization": "Token " + token.accessToken
-//
-//             },
+            headers: {
+                "Authorization": "Bearer: " + token.accessToken
+            },
         };
 
         const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`

@@ -139,6 +139,9 @@ class WorkflowViewSet(GetSerializerMixin,
         if not argo_api_token:
             return Response({'message': 'Argo API token not set'}, status=500)
 
+        if not argo_api_token:
+            return Response({'message': 'Argo API token not set'}, status=500)
+
         resp_submit = requests.post(
             call_url,
             json=workflow,

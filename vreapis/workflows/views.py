@@ -29,13 +29,23 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
-    authentication_classes = [TokenAuthentication]  # Add Token Authentication
-    permission_classes = [IsAuthenticated]          # Add permission for authenticated users
+    # authentication_classes = [TokenAuthentication]  # Add Token Authentication
+    # permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
         'list': serializers.WorkflowSerializer
     }
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'submit':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         logger.debug('----------------get_queryset-------------------------')
@@ -120,7 +130,14 @@ class WorkflowViewSet(GetSerializerMixin,
             call_url = argo_api_wf_url + '/' + namespace
 
         workflow = request.data['workflow_payload']
+        if not workflow:
+            return Response({'message': 'Workflow payload not set'}, status=400)
         vlab_slug = request.data['vlab']
+        if not vlab_slug:
+            return Response({'message': 'Virtual Lab not set'}, status=400)
+
+        if not argo_api_token:
+            return Response({'message': 'Argo API token not set'}, status=500)
 
         if not argo_api_token:
             return Response({'message': 'Argo API token not set'}, status=500)

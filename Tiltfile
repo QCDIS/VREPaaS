@@ -5,11 +5,24 @@ load('ext://helm_remote', 'helm_remote')
 helm_remote(
     'vrepaas',
     repo_name='oci://ghcr.io/qcdis/charts',
+    version='0.5.2',
     values=[
         './tilt/helm-values-dev.yaml',
         './tilt/helm-values-secrets.yaml',
     ],
 )
+
+
+
+helm_remote(
+    'jupyterhub',
+    repo_url='https://jupyterhub.github.io/helm-chart/',
+    values=[
+        './tilt/helm-n-a-a-vre-secrets.yaml',
+    ],
+)
+
+
 
 docker_build(
     'qcdis/vreapi',

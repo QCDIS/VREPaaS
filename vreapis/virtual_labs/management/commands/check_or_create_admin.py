@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 import os
 
 
+# Perhaps this is not called at all
 class Command(BaseCommand):
     help = "Creates an admin user non-interactively if it doesn't exist"
 

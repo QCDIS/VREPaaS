@@ -6,7 +6,7 @@ global:
 
   base_paths:
     development:
-      vreapi: "/vre-api"
+      vreapi: "/vre-api-test"
       vreapp: "/vreapp"
 
 vreapi:
@@ -15,6 +15,9 @@ vreapi:
     superuser_email: "admin@paas.minikube.test"
     superuser_username: "admin"
     superuser_password: "admin"
+    username: "user"
+    password: "user"
+    token: "secrettoken"
 
 vreapp:
   secret_key: "dev_secret_key_vreapp"

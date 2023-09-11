@@ -7,7 +7,7 @@ from workflows.models import Workflow
 from workflows.serializers import WorkflowSerializer
 import requests
 from vreapis.views import GetSerializerMixin
-
+from rest_framework.response import Response
 
 class AssignmentViewSet(GetSerializerMixin, viewsets.ModelViewSet):
 
@@ -18,4 +18,8 @@ class AssignmentViewSet(GetSerializerMixin, viewsets.ModelViewSet):
         'list': serializers.AssignmentSerializer
     }
 
+class UploadViewSet(GetSerializerMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.FileSerializer
+    queryset = models.File.objects.all()
+    serializer_class = serializers.FileSerializer
 

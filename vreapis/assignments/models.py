@@ -16,7 +16,8 @@ class AsgProfile(models.Model):
         verbose_name = "Asg Profile"
         verbose_name_plural = "Asg Profiles"
 
-
+class File(models.Model):
+    file = models.FileField(upload_to="files")
 
 class Assignment(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
@@ -25,8 +26,8 @@ class Assignment(models.Model):
     short_description = models.CharField(max_length=1000)
     long_description = models.CharField(max_length=10000, null=True)
     vlab = models.ForeignKey('virtual_labs.VirtualLab', on_delete=models.CASCADE, null=True)
-
-    
+    enrolled_students = models.ManyToManyField('students.Student',null=True,blank=True)
+    files=models.ManyToManyField(File,null=True,blank=True)
 
     def __str__(self):
         return self.title

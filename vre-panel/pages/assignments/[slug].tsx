@@ -64,20 +64,15 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
             .then((res) => res.json())
             .then((data) => {
                 setAss(data)
-                const url = new URL("http://localhost:8000/api/vlabs/");
-                fetch(`${url}`)
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data[Ass.vlab])
-                    setVlab(data[Ass.vlab])
+                console.log(data);
+                setVlab(data.vlab);
+                })
+                .catch((error) => {
+                    console.log('Featching error:'+error)
                 })
                 .catch((error) => {
                     console.log('Featching error:'+error)
                 });
-                })
-            .catch((error) => {
-                console.log('Featching error:'+error)
-            });
 
         const url2 = new URL("http://localhost:8000/api/students/");
         if (userName != "none"){

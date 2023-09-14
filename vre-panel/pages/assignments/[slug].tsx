@@ -112,7 +112,7 @@ const AssDetails: React.FC<AssDetailsProps> = ({ token  }) => {
             };
             console.log(JSON.stringify(data));
             fetch(`${url}${userName}/`, {
-                method: "PUT",
+                method: "PUT", 
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

@@ -87,6 +87,17 @@ minikube dashboard  # optional
 tilt up
 ```
 
+#### Troubleshooting
+
+##### Context deadline exceeded when pulling NaaVRE image
+
+If you get `Failed to pull image "qcdis/n-a-a-vre-laserfarm:v2.0-beta": rpc error: code = Unknown desc = context deadline exceeded` in the `continuous-image-puller` logs:
+
+- Reset the cluster (`minikube delete` and re-run the startup commands)
+- Run `minikube image load qcdis/n-a-a-vre-laserfarm:v2.0-beta` in your terminal
+- Run tilt
+
+
 # Encrypt secrets 
 
 

@@ -1,9 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import getConfig from 'next/config';
 import Link from 'next/link';
 
 import {NewVREDialog} from '../components/NewVREDialog';
 import {Nav} from '../templates/Nav';
+import {PaasConfigContext} from '../context/PaasConfig';
 
 const getSlug = (title: string) => {
 
@@ -13,19 +14,15 @@ const getSlug = (title: string) => {
     .replace(/[^\w-]+/g, '');
 }
 
-const VLabs = () => {
+const VLabs = ({}) => {
 
   const {publicRuntimeConfig} = getConfig()
+
+  const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
 
   const [isOpen, setIsOpen] = useState(false);
   const [vlabs, setVlabs] = useState([]);
   const [vlabsLoading, setVlabsLoading] = useState(true);
-
-  const [paasConfig, setPaasConfig] = useState({
-    title: "Virtual Lab environments",
-    description: "A collection of virtual lab environments",
-  })
-  const [paasConfigLoading, setPaasConfigLoading] = useState(true)
 
   useEffect(() => {
 
@@ -39,22 +36,6 @@ const VLabs = () => {
       .catch((error) => {
         console.log(error)
         setVlabsLoading(false)
-      });
-  }, []);
-
-  useEffect(() => {
-    const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
-    fetch(`${apiUrl}/paas_configuration`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          setPaasConfig(data[0]);
-        }
-        setPaasConfigLoading(false)
-      })
-      .catch((error) => {
-        console.log(error)
-        setPaasConfigLoading(false)
       });
   }, []);
 

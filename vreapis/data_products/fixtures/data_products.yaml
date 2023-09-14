@@ -8,7 +8,7 @@
     workflow: n-a-a-vre-dev-skoulouzis-gcjcn
     data_url: https://example.org
 - model: data_products.GeoDataProduct
-  pk: 68bcef94-56f1-4697-8eb7-dd309cb175a1
+  pk: 94b8ebde-3e3c-485d-9952-34ab74e386a7
   fields:
     spatial_coverage: SRID=4326;MULTIPOLYGON (((3.27392578125 51.31688050404584, 3.93310546875
       51.22064743038329, 4.746093749999999 51.46769695622334, 5.77880859375 51.1862296263868,

@@ -55,6 +55,7 @@ k8s_resource(
         'https://paas.minikube.test/vre-api-test/api/',
         'https://paas.minikube.test/vre-api-test/admin/',
     ],
+    labels=['paas']
 )
 
 k8s_resource(
@@ -62,4 +63,22 @@ k8s_resource(
     links=[
         'https://paas.minikube.test/vreapp/',
     ],
+    labels=['paas']
 )
+
+k8s_resource('vrepaas-postgresql', labels=['paas'])
+
+k8s_resource(
+    'hub',
+    links=[
+        'https://paas.minikube.test/n-a-a-vre/',
+    ],
+    labels=['n-a-a-vre']
+)
+
+k8s_resource('user-scheduler', labels=['n-a-a-vre'])
+k8s_resource('proxy', labels=['n-a-a-vre'])
+k8s_resource('hook-image-puller', labels=['n-a-a-vre'])
+k8s_resource('hook-image-awaiter', labels=['n-a-a-vre'])
+k8s_resource('user-placeholder', labels=['n-a-a-vre'])
+k8s_resource('continuous-image-puller', labels=['n-a-a-vre'])

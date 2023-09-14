@@ -10,4 +10,5 @@ class PaasConfigurationSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'documentation_url',
+            'site_icon',
             )

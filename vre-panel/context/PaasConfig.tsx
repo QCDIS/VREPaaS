@@ -6,7 +6,8 @@ export const PaasConfigContext = createContext({
   paasConfig: {
     title: "",
     description: "",
-    documentation_url: null,
+    documentation_url: "",
+    site_icon: "",
   },
   paasConfigLoading: true,
 });
@@ -17,6 +18,8 @@ export function PaasConfigProvider({children,}: { children: ReactNode }) {
   const [paasConfig, setPaasConfig] = useState({
     title: "Virtual Lab environments",
     description: "A collection of virtual lab environments",
+    documentation_url: "https://github.com/QCDIS/NaaVRE/blob/main/README.md",
+    site_icon: `${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`,
   })
   const [paasConfigLoading, setPaasConfigLoading] = useState(true)
 

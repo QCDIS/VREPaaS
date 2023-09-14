@@ -30,6 +30,7 @@ docker_build(
     context='.',
     dockerfile='tilt/vreapis/Dockerfile',
     only=['./vreapis/'],
+    entrypoint="/app/entrypoint.dev.sh",
     live_update=[
         sync('./vreapis', '/app'),
         run('cd /app && /opt/venv/bin/python manage.py makemigrations'),

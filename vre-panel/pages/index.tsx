@@ -76,9 +76,9 @@ const VLabs = ({}) => {
               )
             )}
           </div>
-          <div className='flex flex-row space-x-10'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10'>
             {vlabsLoading ? (
-              <div className="w-1/3 rounded overflow-hidden shadow-lg bg-white animate">
+              <div className="rounded overflow-hidden shadow-lg bg-white animate">
                 <div>
                   <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`}/>
                   <div className="font-bold text-l mb-2 bg-gray-300 text-white p-5">
@@ -97,7 +97,7 @@ const VLabs = ({}) => {
                 vlabs.length > 0 ? (
                   vlabs.map((vlab: any) => {
                     return (
-                      <div key={getSlug(vlab.title)} className="w-1/3 rounded overflow-hidden shadow-lg bg-white">
+                      <div key={getSlug(vlab.title)} className="rounded overflow-hidden shadow-lg bg-white">
                         <Link
                           href={{
                             pathname: '/vlabs/[slug]',
@@ -108,7 +108,7 @@ const VLabs = ({}) => {
                             <img className="w-35 h-30 object-cover" src={`${publicRuntimeConfig.staticFolder}/HP-VRES.png`}/>
                             <div className="font-bold text-l mb-2 bg-blue-500 text-white p-5">{vlab.title}</div>
                             <div className="px-3 py-2">
-                              <p className="text-gray-700 text-base truncate ...">
+                              <p className="text-gray-700 line-clamp-2">
                                 {vlab.description}
                               </p>
                             </div>
@@ -118,7 +118,7 @@ const VLabs = ({}) => {
                     );
                   })
                 ) : (
-                  <div className="w-1/3 rounded overflow-hidden shadow-lg bg-white">
+                  <div className="rounded overflow-hidden shadow-lg bg-white">
                     No virtual labs found
                   </div>
                 )

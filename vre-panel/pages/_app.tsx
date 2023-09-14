@@ -5,6 +5,8 @@ import { useState } from 'react';
 // import RefreshTokenHandler from './auth/refreshTokenHandler';
 import getConfig from 'next/config'
 
+import {PaasConfigProvider} from '../context/PaasConfig';
+
 export default function App({ Component, pageProps: { session, ...pageProps }} : AppProps): JSX.Element {
 
   const { publicRuntimeConfig } = getConfig()
@@ -13,7 +15,9 @@ export default function App({ Component, pageProps: { session, ...pageProps }} :
 
   return (
     <SessionProvider session={session} refetchInterval={interval} basePath={`${publicRuntimeConfig.basePath}/api/auth`}>
-      <Component {...pageProps} />
+      <PaasConfigProvider>
+        <Component {...pageProps} />
+      </PaasConfigProvider>
     </SessionProvider>
   )
 }

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'workflows',
     'virtual_labs',
     'data_products',
+    'paas_configuration',
     'rest_framework',
     'rest_framework_gis',
     'rest_framework.authtoken',

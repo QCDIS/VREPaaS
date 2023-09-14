@@ -2,7 +2,7 @@ import os
 
 import requests
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -11,6 +11,8 @@ from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
 from . import models, serializers
 import logging
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
@@ -27,13 +29,23 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
-    authentication_classes = [TokenAuthentication]  # Add Token Authentication
-    permission_classes = [IsAuthenticated]          # Add permission for authenticated users
+    # authentication_classes = [TokenAuthentication]  # Add Token Authentication
+    # permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
         'list': serializers.WorkflowSerializer
     }
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'submit':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = []
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         logger.debug('----------------get_queryset-------------------------')
@@ -77,7 +89,8 @@ class WorkflowViewSet(GetSerializerMixin,
         logger.debug('------------------------------------------------------------------------')
         logger.debug('resp_list: ' + str(resp_list))
         if resp_list.status_code != 200:
-            logger.warning('Error getting workflows. Status_code: ' + str(resp_list.status_code)+' - ' + str(resp_list.text))
+            logger.warning(
+                'Error getting workflows. Status_code: ' + str(resp_list.status_code) + ' - ' + str(resp_list.text))
             return Response(resp_list.text, status=resp_list.status_code)
 
         resp_list_data = resp_list.json()
@@ -117,7 +130,14 @@ class WorkflowViewSet(GetSerializerMixin,
             call_url = argo_api_wf_url + '/' + namespace
 
         workflow = request.data['workflow_payload']
+        if not workflow:
+            return Response({'message': 'Workflow payload not set'}, status=400)
         vlab_slug = request.data['vlab']
+        if not vlab_slug:
+            return Response({'message': 'Virtual Lab not set'}, status=400)
+
+        if not argo_api_token:
+            return Response({'message': 'Argo API token not set'}, status=500)
 
         if not argo_api_token:
             return Response({'message': 'Argo API token not set'}, status=500)
@@ -148,7 +168,7 @@ class WorkflowViewSet(GetSerializerMixin,
         try:
             vlab = VirtualLab.objects.get(slug=vlab_slug)
         except VirtualLab.DoesNotExist:
-            return Response({'message': 'Virtual Lab: '+vlab_slug+' not found'}, status=404)
+            return Response({'message': 'Virtual Lab: ' + vlab_slug + ' not found'}, status=404)
         if not argo_url:
             return Response({'message': 'Argo URL not set'}, status=500)
         argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"

@@ -19,6 +19,11 @@ from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
 from cells.views import CellsViewSet
 from workflows.views import WorkflowViewSet
+from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
+
+from vreapis.settings.base import BASE_PATH
+
+
 
 from vreapis.settings.base import BASE_PATH
 
@@ -28,6 +33,8 @@ router = routers.DefaultRouter()
 router.register(r'vlabs', VirtualLabViewSet)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'cells', CellsViewSet)
+router.register(r'dataprods', DataProductsViewSet)
+router.register(r'geodataprods', GeoDataProductsViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,0 +1,58 @@
+{
+  "vlab": "laserfarm",
+  "workflow_payload": {
+    "workflow": {
+      "apiVersion": "argoproj.io/v1alpha1",
+      "kind": "Workflow",
+      "metadata": {
+        "generateName": "n-a-a-vre-dev-user-name-at-domain-com-",
+        "labels": {
+          "vlab_slug": "laserfarm"
+        }
+      },
+      "spec": {
+        "entrypoint": "n-a-a-vre-dev-user-name-at-domain-com",
+        "arguments": {
+          "parameters": null
+        },
+        "templates": [
+          {
+            "name": "n-a-a-vre-dev-user-name-at-domain-com",
+            "dag": {
+              "tasks": [
+                {
+                  "name": "process-a-list-dev-user-name-at-domain-com-0942899",
+                  "template": "process-a-list-dev-user-name-at-domain-com-0942899-tmp"
+                }
+              ]
+            }
+          },
+          {
+            "name": "process-a-list-dev-user-name-at-domain-com-0942899-tmp",
+            "outputs": {
+              "parameters": [
+                {
+                  "name": "b_list_886fb14",
+                  "valueFrom": {
+                    "path": "/tmp/b_list_886fb14.json"
+                  }
+                }
+              ]
+            },
+            "container": {
+              "image": "qcdis/process-a-list-dev-user-name-at-domain-com",
+              "imagePullPolicy": "Always",
+              "command": [
+                "/bin/bash",
+                "-c"
+              ],
+              "args": [
+                "source /venv/bin/activate; python process-a-list-dev-user-name-at-domain-com.py --id \"886fb14\";"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

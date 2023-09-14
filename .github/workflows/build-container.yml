@@ -9,6 +9,10 @@ on:
       tag:
         required: true
         type: string
+      environment:
+        required: false
+        type: string
+        default: ''
       push:
         required: true
         type: boolean
@@ -25,11 +29,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
     - uses: actions/checkout@v3
     - name: Build docker
       run: |
-          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG
+          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}"
 
     - name: Login to github Registry
       if: ${{ inputs.push }}
@@ -46,11 +51,17 @@ jobs:
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         # Strip git ref prefix from version
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        # Add environment suffix to version
+        ENV_SUFFIX=''
+        if [ "${{ inputs.environment }}" != '' ]; then
+          ENV_SUFFIX="-${{ inputs.environment }}"
+        fi
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
-        docker tag $TAG $IMAGE_ID:$VERSION        
+        echo ENV_SUFFIX=$ENV_SUFFIX
+        docker tag $TAG $IMAGE_ID:$VERSION$ENV_SUFFIX
         if [ "${{ secrets.docker_password }}" != '' ]; then
-          docker push $IMAGE_ID:$VERSION
-          docker tag $TAG $IMAGE_ID:latest
-          docker push $IMAGE_ID:latest
+          docker push $IMAGE_ID:$VERSION$ENV_SUFFIX
+          docker tag $TAG $IMAGE_ID:latest$ENV_SUFFIX
+          docker push $IMAGE_ID:latest$ENV_SUFFIX
         fi

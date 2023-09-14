@@ -30,12 +30,12 @@ export async function getServerSideProps(context: { req: any; }) {
     const providers = await getProviders()
     const session = await getSession({ req })
     if (session) {
-        console.log("Session exists, redirecting to", `${publicRuntimeConfig.basePath}/`)
+        console.log("Session exists, redirecting to", '/')
         return {
-            redirect: { destination: `${publicRuntimeConfig.basePath}/` },
+            redirect: { destination: '/' },
         };
     }
-    console.log("providers", providers)
+    console.log("providers: ", providers)
     return {
         props: { providers },
     }

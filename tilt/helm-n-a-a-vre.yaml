@@ -1,0 +1,72 @@
+hub:
+  image:
+    tag: "2.0.0"
+  concurrentSpawnLimit: 20
+  consecutiveFailureLimit: 20
+  activeServerLimit: 20
+  namedServerLimitPerUser: 1
+  shutdownOnLogout: true
+  extraEnv:
+    OAUTH2_TLS_VERIFY: 'false'
+  baseUrl: /n-a-a-vre
+  config:
+    GenericOAuthenticator:
+      client_id: vre-paas
+      client_secret:
+      oauth_callback_url: https://paas.minikube.test/n-a-a-vre/hub/oauth_callback
+      authorize_url:
+      token_url:
+      userdata_url:
+      login_service: keycloak
+      username_key: preferred_username
+      userdata_params:
+        state: state
+    JupyterHub:
+      authenticator_class: generic-oauth
+      tls_verify: false
+ingress:
+  enabled: true
+  hosts:
+    - paas.minikube.test
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "600m"
+    nginx.org/client-max-body-size: "600m"
+proxy:
+  service:
+    type: ClusterIP
+singleuser:
+  cmd: ['/usr/local/bin/start-jupyter-venv.sh']
+  extraFiles:
+    jupyter_notebook_config.json:
+      mountPath: /etc/jupyter/jupyter_notebook_config.json
+      data:
+        ServerApp:
+          iopub_data_rate_limit: 1.0e10
+          iopub_msg_rate_limitFloat: 3000
+  lifecycleHooks:
+    postStart:
+      exec:
+        command: ["sh", "-c", "/tmp/init_script.sh"]
+  defaultUrl: "/lab"
+  extraEnv:
+    JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
+    MODULE_MAPPING_URL: https://raw.githubusercontent.com/QCDIS/NaaVRE-conf/main/module_mapping.json
+    NAAVRE_API_TOKEN:
+    SEARCH_API_ENDPOINT:
+    SEARCH_API_TOKEN:
+    VLAB_SLUG: n-a-a-vre
+    API_ENDPOINT: https://paas.minikube.test/vre-api-test/
+    MULTIPLY_CONF_URL: https://github.com/QCDIS/data-access/raw/master/multiply.zip
+    CELL_GITHUB: https://github.com/QCDIS/NaaVRE-cells-test
+    CELL_GITHUB_TOKEN:
+    REGISTRY_URL: https://hub.docker.com/u/qcdis
+    PROJ_LIB: /venv/share/proj
+  profileList:
+  - display_name: "Laserfarm VL environment"
+    description: "Vitual lab with Laserfarm dependencies installed"
+    kubespawner_override:
+      image: qcdis/n-a-a-vre-laserfarm:v2.0-beta
+      pullPolicy: Always

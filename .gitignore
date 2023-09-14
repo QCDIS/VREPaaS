@@ -138,6 +138,9 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 
+# Pycharm
+.idea/
+
 # Logs
 logs
 *.log
@@ -178,4 +181,5 @@ jspm_packages
 .next
 /package-lock.json
 
-tilt/secrets.yaml
+tilt/helm-values-secrets.yaml
+tilt/helm-n-a-a-vre-secrets.yaml

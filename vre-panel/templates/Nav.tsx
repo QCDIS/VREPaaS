@@ -18,15 +18,13 @@ const Nav = () => {
             <nav className="bg-white border-gray-200 px-2 sm:px-4 rounded dark:bg-gray-800">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link href='/' className="flex items-center">
-                        {
-                            paasConfigLoading || (
+                        {paasConfigLoading || (
                             <img
                                 src={paasConfig.site_icon}
-                                alt="Site Logo"
+                                alt="Site icon"
                                 className="mr-3 h-16"
                             />
-                          )
-                        }
+                          )}
                     </Link>
                     <div className="flex items-center md:order-2">
                         <div className="relative inline-block text-left">

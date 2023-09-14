@@ -1,14 +1,25 @@
 import { getProviders, getSession, signIn } from "next-auth/react"
 import getConfig from 'next/config'
+import {useContext} from "react";
+import {PaasConfigContext} from "../../context/PaasConfig";
 
 const { publicRuntimeConfig } = getConfig()
 
 export default function SignIn({ providers }: { providers: any }) {
+
+    const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
+
     return (
         <div className="mx-auto flex flex-col items-center justify-center h-screen">
             <img className="w-fit h-fit object-cover" src={`${publicRuntimeConfig.staticFolder}/LW_VLICVRE_logo.png`} />
             <div className="flex flex-col justify-center rounded-md overflow-hidden shadow-lg bg-white p-10 mt-10 w-screen">
-                <img src={`${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`} className="w-36 self-center" alt="LifeWatch Logo" />
+                {paasConfigLoading || (
+                    <img
+                        src={paasConfig.site_icon}
+                        alt="Site icon"
+                        className="h-16 self-center"
+                    />
+                )}
                 <>
                     {Object.values(providers).map((provider: any) => (
                         <div className="self-center" key={provider.name}>

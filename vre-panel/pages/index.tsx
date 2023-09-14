@@ -117,8 +117,8 @@ const VLabs = ({}) => {
                   );
                 })
               ) : (
-                <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-10 p-5 text-gray-700">
-                  Could not load virtual found
+                <div className="w-1/3 rounded overflow-hidden shadow-lg bg-white">
+                  No virtual labs found
                 </div>
               )
             )

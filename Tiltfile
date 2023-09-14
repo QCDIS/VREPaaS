@@ -18,6 +18,7 @@ helm_remote(
     'jupyterhub',
     repo_url='https://jupyterhub.github.io/helm-chart/',
     values=[
+        './tilt/helm-n-a-a-vre.yaml',
         './tilt/helm-n-a-a-vre-secrets.yaml',
     ],
 )

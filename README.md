@@ -51,6 +51,27 @@ global:
     token:
 ```
 
+Create `tilt/helm-n-a-a-vre-secrets.yaml` and fill:
+
+```yaml
+hub:
+  config:
+    GenericOAuthenticator:
+      client_id:
+      client_secret:
+      authorize_url:
+      token_url:
+      userdata_url:
+
+singleuser:
+  extraEnv:
+    NAAVRE_API_TOKEN:
+    SEARCH_API_ENDPOINT:
+    SEARCH_API_TOKEN:
+    CELL_GITHUB_TOKEN:
+```
+
+
 #### Start Cluster
 
 ```shell

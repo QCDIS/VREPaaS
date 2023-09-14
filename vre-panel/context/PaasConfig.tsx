@@ -6,6 +6,7 @@ export const PaasConfigContext = createContext({
   paasConfig: {
     title: "",
     description: "",
+    documentation_url: null,
   },
   paasConfigLoading: true,
 });

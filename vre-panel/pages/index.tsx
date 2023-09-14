@@ -62,6 +62,18 @@ const VLabs = ({}) => {
               paasConfig.description
             )}
           </p>
+          {paasConfigLoading || (
+            paasConfig.documentation_url && (
+              <p className="mt-4">
+                <a
+                  href={paasConfig.documentation_url}
+                  className="text-blue-800 hover:underline"
+                >
+                  Documentation
+                </a>
+              </p>
+            )
+          )}
         </div>
         <div className='flex flex-row space-x-10'>
           {vlabsLoading ? (

@@ -9,4 +9,5 @@ class PaasConfigurationSerializer(serializers.ModelSerializer):
         fields = (
             'title',
             'description',
+            'documentation_url',
             )

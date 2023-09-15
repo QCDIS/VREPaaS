@@ -14,15 +14,15 @@ const Nav = () => {
     const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
 
     return (
-        <header className="sticky top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-xl">
-            <nav className="bg-white border-gray-200 px-2 sm:px-4 rounded dark:bg-gray-800">
+        <header className="top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-lg">
+            <nav className="bg-white border-gray-200 h-10 px-2 sm:px-4 rounded dark:bg-gray-800">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link href='/' className="flex items-center">
                         {paasConfigLoading || (
                             <img
                                 src={paasConfig.site_icon}
                                 alt="Site icon"
-                                className="mr-3 h-16"
+                                className="object-contain h-10 w-20"
                             />
                           )}
                     </Link>

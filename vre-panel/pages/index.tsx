@@ -40,11 +40,11 @@ const VLabs = ({}) => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
       <Nav/>
-      <div className="min-h-screen mx-auto bg-gradient-to-b from-sky-100 to-orange-300">
+      <div>
         <div className="container mx-auto space-y-10 py-10">
-          <div className="max-w-full rounded bg-white p-8">
+          <div className="max-w-full rounded shadow-lg bg-white p-8">
             <h1 className="text-2xl text-gray-800 mb-8">
               {paasConfigLoading ? (
                 <span className="animate-pulse">

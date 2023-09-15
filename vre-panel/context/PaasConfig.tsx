@@ -19,7 +19,7 @@ export function PaasConfigProvider({children,}: { children: ReactNode }) {
     title: "Virtual Lab environments",
     description: "A collection of virtual lab environments",
     documentation_url: "https://github.com/QCDIS/NaaVRE/blob/main/README.md",
-    site_icon: `${publicRuntimeConfig.staticFolder}/LW_ERIC_Logo.png`,
+    site_icon: `${publicRuntimeConfig.staticFolder}/logo-lifewatch-eric-small.png`,
   })
   const [paasConfigLoading, setPaasConfigLoading] = useState(true)
 

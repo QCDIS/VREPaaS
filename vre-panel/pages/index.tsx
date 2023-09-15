@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import {NewVREDialog} from '../components/NewVREDialog';
 import {Nav} from '../templates/Nav';
+import Footer from '../components/Footer';
 import {PaasConfigContext} from '../context/PaasConfig';
 
 const getSlug = (title: string) => {
@@ -40,9 +41,9 @@ const VLabs = ({}) => {
   }, []);
 
   return (
-    <div className="min-h-screen mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
+    <div className="min-h-screen flex flex-col mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
       <Nav/>
-      <div>
+      <div className="grow">
         <div className="container mx-auto space-y-10 py-10">
           <div className="max-w-full rounded shadow-lg bg-white p-8">
             <h1 className="text-2xl text-gray-800 mb-8">
@@ -128,6 +129,7 @@ const VLabs = ({}) => {
           <NewVREDialog isOpen={isOpen} setIsOpen={setIsOpen}/>
         </div>
       </div>
+      <Footer/>
     </div>
   )
 };

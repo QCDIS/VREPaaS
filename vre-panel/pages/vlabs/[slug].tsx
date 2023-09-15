@@ -5,6 +5,7 @@ import { Nav } from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
 import dynamic from "next/dynamic";
 import getConfig from 'next/config';
+import Footer from "../../components/Footer";
 
 const CatalogMapView = dynamic(() => import("../../components/catalog_map"), { ssr:false })
 
@@ -101,9 +102,9 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
     }
 
     return (
-        <div className="min-h-screen mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
+        <div className="min-h-screen flex flex-col mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
             <Nav />
-            <div>
+            <div className="grow">
                 <div className="container mx-auto py-10 grid grid-flow-row-dense grid-cols-4 grid-rows-5 gap-4">
                     <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
                         <p className="text-4xl font-sans">{vlab.title}</p>
@@ -199,6 +200,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({ token  }) => {
 
                 </div>
             </div>
+            <Footer/>
         </div>
     )
 

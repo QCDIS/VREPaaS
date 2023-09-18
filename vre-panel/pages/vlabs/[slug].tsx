@@ -2,13 +2,11 @@ import {getToken} from "next-auth/jwt";
 import {useRouter} from "next/router";
 import {Nav} from "../../templates/Nav";
 import useAuth from "../auth/useAuth";
-import dynamic from "next/dynamic";
 import Footer from "../../components/Footer";
 import VLabDescription from "../../components/VLabDescription";
-import VLabWorkflowRuns from "../../components/VLabWorkflowRuns";
-import VLabDataProducts from "../../components/VLabDataProducts";
+import React from "react";
+import VLAbAssets from "../../components/VLAbAssets";
 
-const CatalogMapView = dynamic(() => import("../../components/catalog_map"), {ssr: false})
 
 interface VLabDetailsProps {
   token?: any;
@@ -24,20 +22,13 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
     <div className="min-h-screen flex flex-col mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
       <Nav/>
       <div className="grow">
-        <div className="container mx-auto py-10 grid grid-flow-row-dense grid-cols-4 grid-rows-5 gap-4">
-          <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
+        <div className="container mx-auto py-10 space-y-4 gap-4">
+          <div className="rounded shadow-lg bg-white p-8">
             <VLabDescription slug={slug} isAuthenticated={isAuthenticated} token={token}/>
           </div>
-          <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
-            <VLabWorkflowRuns slug={slug} isAuthenticated={isAuthenticated} token={token}/>
+          <div className="rounded shadow-lg bg-white p-8">
+            <VLAbAssets slug={slug} isAuthenticated={isAuthenticated} token={token}/>
           </div>
-          <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
-            <VLabDataProducts slug={slug} isAuthenticated={isAuthenticated} token={token}/>
-          </div>
-          <div className="row-span-2 col-span-2 shadow-lg bg-white p-10">
-            <CatalogMapView vlab_slug={slug}/>
-          </div>
-
         </div>
       </div>
       <Footer/>

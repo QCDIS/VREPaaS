@@ -51,7 +51,7 @@ const VLabDescription: React.FC<Props> = ({slug, isAuthenticated, token}) => {
           Launch
         </button>
       </a>
-      <p className="h-64 mt-5 text-justify">{vlab.description}</p>
+      <p className="mt-5 text-justify">{vlab.description}</p>
     </div>
   )
 }

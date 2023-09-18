@@ -57,7 +57,8 @@ const WorkflowRuns: React.FC<Props> = ({slug, isAuthenticated, token}) => {
                 clipRule="evenodd"/>
         </svg>
       </button>
-      {assets.length > 0 ? (
+      <p className="my-5">{assets.length > 0 ? assets.length : "No"} workflow run{assets.length != 1 && "s"}</p>
+      {assets.length > 0 && (
         <table className="table-auto bg-white mt-5">
           <thead>
           <tr>
@@ -90,8 +91,6 @@ const WorkflowRuns: React.FC<Props> = ({slug, isAuthenticated, token}) => {
             </tbody>
           )}
         </table>
-      ) : (
-        <p className="mt-5">There is nothing to display</p>
       )}
     </div>
   )

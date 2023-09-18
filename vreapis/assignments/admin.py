@@ -1,5 +1,5 @@
 from django.contrib import admin
-from assignments.models import Assignment, File
+from assignments.models import Assignment
 from django.forms import TextInput, Textarea
 from django.db import models
 
@@ -11,4 +11,3 @@ class MyAssignmentAdmin(admin.ModelAdmin):
         return form
 
 admin.site.register(Assignment,MyAssignmentAdmin)
-admin.site.register(File)

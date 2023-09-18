@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet
-from assignments.views import AssignmentViewSet, UploadViewSet
+from assignments.views import AssignmentViewSet
 from cells.views import CellsViewSet
 from students.views import StudentViewSet
 from workflows.views import WorkflowViewSet
@@ -30,7 +30,6 @@ router.register(r'assignments', AssignmentViewSet)
 router.register(r'workflows', WorkflowViewSet)
 router.register(r'cells', CellsViewSet)
 router.register(r'students', StudentViewSet)
-router.register(r'files', UploadViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

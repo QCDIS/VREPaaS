@@ -10,7 +10,9 @@ class Student(models.Model):
     keycloak_ID = models.CharField(max_length=100)
     slug = models.SlugField(null=True, unique=True)
     name = models.CharField(null=True, max_length=100)
-    # assignments_enrolled = models.CharField(null=True,max_length=10000)
+    assignments_enrolled = models.CharField(null=True,max_length=10000)
+
+    assignments: models.QuerySet
 
     def __str__(self):
         return self.keycloak_ID

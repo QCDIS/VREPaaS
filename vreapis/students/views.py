@@ -18,8 +18,3 @@ class StudentViewSet(GetSerializerMixin, viewsets.ModelViewSet):
     serializer_action_classes = {
         'list': serializers.StudentSerializer
     }
-
-    # def create(self, request, *args, **kwargs):
-    #     print("fields on request: ", dir(request))
-    #     logger.info(f"fields on request: {dir(request)}")
-    #     return super().create(request, *args, **kwargs)

@@ -119,7 +119,7 @@ const VLabs = ({}) => {
                     );
                   })
                 ) : (
-                  <div className="rounded overflow-hidden shadow-lg bg-white">
+                  <div className="rounded overflow-hidden shadow-lg bg-white p-5">
                     No virtual labs found
                   </div>
                 )

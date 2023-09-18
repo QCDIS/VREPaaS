@@ -52,7 +52,8 @@ const DataProducts: FC<DataProductsProps> = ({map, vlab_slug}) => {
             }
         };
         fetch(url, requestOptions).then((res) => {
-            res.json().then(setData);
+            res.json().then(setData)
+              .catch((e) => {console.log(e)});
         });
     }, [map, vlab_slug])
 

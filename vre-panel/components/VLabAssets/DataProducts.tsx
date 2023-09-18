@@ -16,6 +16,7 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
 
   const [assets, setAssets] = useState([])
   const [loadingAssets, setLoadingAssets] = useState(false)
+  const [backendError, setBackendError] = useState(false)
 
   const fetchAssets = async () => {
 
@@ -32,14 +33,18 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
     const res = await fetch(`${apiUrl}/dataprods?vlab_slug=${slug}`, requestOptions);
     setLoadingAssets(false);
 
-    return res.json();
+    try {
+      const dat = await res.json()
+      setAssets(dat)
+    } catch (e) {
+      console.log(e)
+      setBackendError(true)
+    }
   }
 
   useEffect(() => {
     if (isAuthenticated) {
-      Promise.all([
-        fetchAssets().then(setAssets),
-      ])
+      Promise.all([fetchAssets()])
     }
   }, [isAuthenticated]);
 
@@ -47,9 +52,7 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
     <div>
       <button type="button"
               className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer"
-              onClick={() => {
-                fetchAssets().then(setAssets)
-              }}>
+              onClick={() => Promise.all([fetchAssets()])}>
         <svg xmlns="http://www.w3.org/2000/svg" className={clsx("h-5", "w-5", loadingAssets && "animate-spin")}
              viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd"
@@ -57,8 +60,13 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
                 clipRule="evenodd"/>
         </svg>
       </button>
-      <p className="my-5">{assets.length > 0 ? assets.length : "No"} data product{assets.length != 1 && "s"}</p>
-      {assets.length > 0 && (
+      <p className="my-5">
+        {backendError ? (
+          "Could not fetch data products"
+        ) : (
+          `${assets.length} data product${assets.length != 1 ? "s": ""}`
+        )}
+      </p>      {assets.length > 0 && (
         <table className="table-auto bg-white mt-5">
           <thead>
           <tr>

@@ -8,7 +8,7 @@ const About = ({}) => {
   const { publicRuntimeConfig } = getConfig()
 
   return (
-    <div className="min-h-screen flex flex-col mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
+    <div className="min-h-screen flex flex-col mx-auto">
       <Nav/>
       <div className="grow container mx-auto space-y-5 py-10">
 

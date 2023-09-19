@@ -37,7 +37,7 @@ const VLabAssets: React.FC<Props> = ({slug, isAuthenticated, token}) => {
         <Tab.List className="mb-5 flex list-none flex-col pl-0 sm:flex-row">
           {tabs.map((tab) => {
             return (
-              <Tab as={Fragment}>
+              <Tab as={Fragment} key={tab.title}>
                 {({selected}) => (
                   /* Use the `selected` state to conditionally style the selected tab. */
                   <button
@@ -54,15 +54,13 @@ const VLabAssets: React.FC<Props> = ({slug, isAuthenticated, token}) => {
           })}
         </Tab.List>
         <Tab.Panels>
-          <Tab.Panel>
-            <WorkflowRuns slug={slug} isAuthenticated={isAuthenticated} token={token}/>
-          </Tab.Panel>
-          <Tab.Panel>
-            <DataProducts slug={slug} isAuthenticated={isAuthenticated} token={token}/>
-          </Tab.Panel>
-          <Tab.Panel>
-            <GeoDataProducts slug={slug} isAuthenticated={isAuthenticated} token={token}/>
-          </Tab.Panel>
+          {tabs.map((tab) => {
+            return (
+              <Tab.Panel as={Fragment} key={tab.title}>
+                <tab.panelComponent slug={slug} isAuthenticated={isAuthenticated} token={token}/>
+              </Tab.Panel>
+            )
+          })}
         </Tab.Panels>
       </Tab.Group>
     </div>

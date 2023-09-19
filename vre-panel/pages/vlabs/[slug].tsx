@@ -19,14 +19,14 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
   const {slug} = router.query;
 
   return (
-    <div className="min-h-screen flex flex-col mx-auto bg-gradient-to-b from-sky-200 to-orange-300">
+    <div className="min-h-screen flex flex-col mx-auto bg-surfaceContainer">
       <Nav/>
       <div className="grow">
         <div className="container mx-auto py-10 space-y-4 gap-4">
-          <div className="rounded shadow-lg bg-white p-8">
+          <div className="rounded shadow-lg bg-surface p-8">
             <VLabDescription slug={slug} isAuthenticated={isAuthenticated} token={token}/>
           </div>
-          <div className="rounded shadow-lg bg-white p-8">
+          <div className="rounded shadow-lg bg-surface p-8">
             <VLAbAssets slug={slug} isAuthenticated={isAuthenticated} token={token}/>
           </div>
         </div>

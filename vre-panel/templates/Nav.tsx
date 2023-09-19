@@ -14,8 +14,8 @@ const Nav = () => {
     const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
 
     return (
-        <header className="top-0 z-30 w-full px-2 py-4 bg-white sm:px-4 shadow-lg">
-            <nav className="bg-white border-gray-200 h-10 px-2 sm:px-4 rounded dark:bg-gray-800">
+        <header className="top-0 z-30 w-full px-2 py-4 bg-surface sm:px-4 shadow-lg">
+            <nav className="bg-surface border-gray-200 h-10 px-2 sm:px-4 rounded">
                 <div className="container flex flex-wrap justify-between items-center mx-auto">
                     <Link href='/' className="flex items-center">
                         {paasConfigLoading || (
@@ -47,10 +47,10 @@ const Nav = () => {
                                             >
                                                 <Menu.Items
                                                     static
-                                                    className="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                                                    className="absolute right-0 w-56 mt-2 origin-top-right bg-surface border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
                                                 >
-                                                    <div className="px-4 py-3 bg-orange-100">
-                                                        <p className="text-sm font-medium leading-5 text-gray-900 truncate">
+                                                    <div className="px-4 py-3 bg-primary text-onPrimary">
+                                                        <p className="text-sm font-medium leading-5 truncate">
                                                             {session?.user?.name}
                                                         </p>
                                                     </div>
@@ -76,7 +76,7 @@ const Nav = () => {
                                 </Menu>
                             ) : (
                                 <div>
-                                    <button onClick={() => signIn()} className="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
+                                    <button onClick={() => signIn()} className="bg-primary hover:bg-primaryDark text-onPrimary font-bold py-2 px-4 rounded">
                                         Sign In
                                     </button>
                                 </div>

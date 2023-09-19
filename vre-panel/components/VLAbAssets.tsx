@@ -43,7 +43,7 @@ const VLabAssets: React.FC<Props> = ({slug, isAuthenticated, token}) => {
                   <button
                     className={clsx(
                       "py-1 px-8 max-h-16",
-                      selected ? "bg-gray-500 text-white" : "text-gray-500 hover:text-black",
+                      selected ? "bg-secondary text-onSecondary" : "bg-surface text-primaryMuted hover:text-black",
                     )}
                   >
                     {tab.title}

@@ -52,7 +52,7 @@ const WorkflowRuns: React.FC<Props> = ({slug, isAuthenticated, token}) => {
   return (
     <div>
       <button type="button"
-              className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer"
+              className="bg-primary hover:bg-primaryDark text-white font-bold py-2 px-4 rounded cursor-pointer"
               onClick={() => Promise.all([fetchAssets()])}>
         <svg xmlns="http://www.w3.org/2000/svg" className={clsx("h-5", "w-5", loadingAssets && "animate-spin")}
              viewBox="0 0 20 20" fill="currentColor">
@@ -72,18 +72,18 @@ const WorkflowRuns: React.FC<Props> = ({slug, isAuthenticated, token}) => {
         <table className="table-auto bg-white mt-5">
           <thead>
           <tr>
-            <th className="bg-blue-200 border text-left px-4 py-2">Name</th>
-            <th className="bg-blue-200 border text-left px-4 py-2">Status</th>
-            <th className="bg-blue-200 border text-left px-4 py-2">Progress</th>
+            <th className="bg-primaryContainer border text-left px-4 py-2">Name</th>
+            <th className="bg-primaryContainer border text-left px-4 py-2">Status</th>
+            <th className="bg-primaryContainer border text-left px-4 py-2">Progress</th>
           </tr>
           </thead>
           {slug != null ? (
             <tbody>
             {assets.map((workflow) => {
               return (
-                <tr key={workflow['argo_id']} className="odd:bg-gray-100">
+                <tr key={workflow['argo_id']} className="odd:bg-surfaceContainer">
                   <td className={"border text-left py-2 px-4"}>
-                    {/*<a className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"*/}
+                    {/*<a className="text-primary hover:underline"*/}
                     {/*   target="blank"*/}
                     {/*   href={workflow['argo_url']}>*/}
                     {/*  {workflow['argo_id']}*/}

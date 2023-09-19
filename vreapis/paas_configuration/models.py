@@ -9,8 +9,8 @@ class PaasConfiguration(models.Model):
     documentation_url = models.URLField(null=True, blank=True)
     site_icon = models.TextField(
         null=True,
-        help_text=("Base 64-encoded image, eg. data:image/png;base64,"
-                  "ZXhhbXBsZQo="),
+        help_text=("Base 64-encoded image with a resolution of minimum "
+                   "200x200 px. E.g. \"data:image/png;base64,[...]\""),
         )
 
     def __str__(self):

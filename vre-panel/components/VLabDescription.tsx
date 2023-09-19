@@ -58,7 +58,7 @@ const VLabDescription: React.FC<Props> = ({slug, isAuthenticated, token}) => {
         <>
           <p className="text-4xl font-sans">{vlab.title}</p>
           <a target="blank" href={vlab.endpoint}>
-            <button className="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded mt-5">
+            <button className="bg-primary hover:bg-primaryDark text-onPrimary font-bold py-2 px-4 rounded mt-5">
               Launch
             </button>
           </a>

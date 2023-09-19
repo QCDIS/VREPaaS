@@ -1,100 +1,156 @@
 import Link from 'next/link';
-import { Menu, Transition } from '@headlessui/react';
-import { useSession, signIn, signOut } from "next-auth/react"
-import getConfig from 'next/config'
-import {useContext} from "react";
+import {Menu, Transition} from '@headlessui/react';
+import {useSession, signIn, signOut} from "next-auth/react"
+import React, {Fragment, useContext} from "react";
 import {PaasConfigContext} from "../context/PaasConfig";
+import clsx from "clsx";
+import {useRouter} from "next/router";
 
 
 const Nav = () => {
 
-    const { publicRuntimeConfig } = getConfig()
-    const { data: session, status } = useSession()
+  const menuPages = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "About",
+      href: "/about",
+    },
+  ]
 
-    const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
+  const {data: session, status} = useSession()
+  const router = useRouter()
 
-    return (
-        <header className="top-0 z-30 w-full px-2 py-4 bg-surface sm:px-4 shadow-lg">
-            <nav className="bg-surface border-gray-200 h-10 px-2 sm:px-4 rounded">
-                <div className="container flex flex-wrap justify-between items-center mx-auto">
-                    <Link href='/' className="flex items-center">
-                        {paasConfigLoading || (
-                            <img
-                                src={paasConfig.site_icon}
-                                alt="Site icon"
-                                className="object-contain h-10 w-20"
-                            />
-                          )}
-                    </Link>
-                    <div className="flex items-center md:order-2">
-                        <div className="relative inline-block text-left">
-                            {status == "authenticated" ? (
-                                <Menu>
-                                    {({ open }) => (
-                                        <>
-                                            <Menu.Button className="inline-flex justify-center w-full">
-                                                <img src={`${publicRuntimeConfig.staticFolder}/user_placeholder.jpeg`} className='h-10 rounded-full border border-slate-300' />
-                                            </Menu.Button>
+  const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
 
-                                            <Transition
-                                                show={open}
-                                                enter="transition ease-out duration-100"
-                                                enterFrom="transform opacity-0 scale-95"
-                                                enterTo="transform opacity-100 scale-100"
-                                                leave="transition ease-in duration-75"
-                                                leaveFrom="transform opacity-100 scale-100"
-                                                leaveTo="transform opacity-0 scale-95"
-                                            >
-                                                <Menu.Items
-                                                    static
-                                                    className="absolute right-0 w-56 mt-2 origin-top-right bg-surface border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-                                                >
-                                                    <div className="px-4 py-3 bg-primary text-onPrimary">
-                                                        <p className="text-sm font-medium leading-5 truncate">
-                                                            {session?.user?.name}
-                                                        </p>
-                                                    </div>
-                                                    <div className="py-1">
-                                                        <Menu.Item key={"signout"}>
-                                                            {({ active }) => (
-                                                                <a onClick={() => signOut()}
-                                                                    href="#"
-                                                                    className={`${active
-                                                                        ? "bg-gray-100 text-gray-900"
-                                                                        : "text-gray-700"
-                                                                        } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                                                                >
-                                                                    Sign out
-                                                                </a>
-                                                            )}
-                                                        </Menu.Item>
-                                                    </div>
-                                                </Menu.Items>
-                                            </Transition>
-                                        </>
-                                    )}
-                                </Menu>
-                            ) : (
-                                <div>
-                                    <button onClick={() => signIn()} className="bg-primary hover:bg-primaryDark text-onPrimary font-bold py-2 px-4 rounded">
-                                        Sign In
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    {status == "authenticated" ? (
-                        <div className="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
-                            <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-                            </ul>
-                        </div>
-                    ) : (
-                        <div></div>
+  return (
+    <header className="top-0 z-30 w-full md:w-72 md:min-h-screen px-2 py-4 bg-surface sm:px-4 shadow-lg">
+      <nav className="bg-surface border-gray-200 h-10 px-2 sm:px-4 rounded">
+        <div className="container flex flex-row md:flex-col justify-between items-center md:items-start mx-auto">
+
+          <Link href='/' className="flex items-center md:w-full">
+            {paasConfigLoading || (
+              <img
+                src={paasConfig.site_icon}
+                alt="Site icon"
+                className="object-contain h-10 w-20 md:w-full md:h-auto md:p-4"
+              />
+            )}
+          </Link>
+
+
+          <ul
+            className="hidden md:block font-bold space-y-2 pt-10"
+          >
+            {menuPages.map((page) => {
+              return (
+                <li key={page.href}>
+                  <Link
+                    href={page.href}
+                    className={clsx(
+                      page.href == router.pathname ? "text-primary" : "text-onSurface",
+                      "hover:underline"
                     )}
+                  >
+                    {page.label}
+                  </Link>
+                </li>
+              )
+            })}
+            <li className="pt-10 font-normal">
+              {status == "authenticated" ? (
+                <>
+                  <p>Logged in as {session?.user?.name}</p>
+                  <a onClick={() => signOut()} href="#" className="hover:underline">[Logout]</a>
+                </>
+              ) : (
+                <a onClick={() => signIn()} href="#">Login</a>
+              )}
+            </li>
+          </ul>
+
+          <Menu as="div" className="md:hidden relative inline-block text-left">
+            <div>
+              <Menu.Button
+                className="w-full rounded bg-primary hover:bg-primaryDark text-onPrimary px-4 py-2">
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       className="h-5 w-5"
+                       viewBox="0 0 10 8" fill="currentColor"
+                  >
+                    <path
+                      d='M1 1h8M1 4h 8M1 7h8'
+                      stroke="currentColor"
+                    />
+                  </svg>
+                </>
+
+              </Menu.Button>
+            </div>
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items
+                className="absolute right-0 md:left-0 mt-2 w-56 origin-top-right md:origin-top-left divide-y divide-gray-100 rounded bg-surface shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="px-1 py-1 ">
+                  {menuPages.map((page) => {
+                    return (
+                      <Menu.Item>
+                        {({active}) => (
+                          <Link
+                            href={page.href}
+                            className={clsx(
+                              page.href == router.pathname ? "text-primary" : "text-onSurface",
+                              active ? 'bg-primary !text-onPrimary' : 'text-onSurface',
+                              "group flex w-full items-center rounded px-2 py-2")}
+                          >
+                            {page.label}
+                          </Link>
+                        )}
+                      </Menu.Item>
+                    )
+                  })}
                 </div>
-            </nav>
-        </header>
-    );
+                <div className="px-1 py-1 ">
+                  {status == "authenticated" && (
+                    <div className="px-2 py-2 font-bold text-primary">
+                      <p className="">
+                        Logged in as {session?.user?.name}
+                      </p>
+                    </div>
+                  )}
+                  <Menu.Item>
+                    {({active}) => (
+                      <button
+                        className={clsx(
+                          active ? 'bg-primary text-onPrimary' : 'text-onSurface',
+                          status == "authenticated" ? "px-6" : "px-2",
+                          'group flex w-full items-center rounded py-2')}
+                        onClick={() => {
+                          status == "authenticated" ? signOut() : signIn()
+                        }}
+                      >
+                        {status == "authenticated" ? "Logout" : "Login"}
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+
+        </div>
+      </nav>
+    </header>
+  );
 }
 
-export { Nav };
+export {Nav};

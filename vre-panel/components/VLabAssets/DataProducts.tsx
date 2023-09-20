@@ -1,16 +1,13 @@
 import React, {useEffect, useState} from "react";
 import getConfig from "next/config";
-import {JWT} from "next-auth/jwt";
 import clsx from "clsx";
 
 
 type Props = {
   slug: string | string[] | undefined,
-  isAuthenticated: boolean,
-  token: JWT,
 }
 
-const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
+const DataProducts: React.FC<Props> = ({slug}) => {
 
   const {publicRuntimeConfig} = getConfig()
 
@@ -22,15 +19,8 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
 
     setLoadingAssets(true);
 
-    var requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer: " + token.accessToken
-      },
-    };
-
     const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
-    const res = await fetch(`${apiUrl}/dataprods?vlab_slug=${slug}`, requestOptions);
+    const res = await fetch(`${apiUrl}/dataprods?vlab_slug=${slug}`);
     setLoadingAssets(false);
 
     try {
@@ -43,10 +33,10 @@ const DataProducts: React.FC<Props> = ({slug, isAuthenticated, token}) => {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (slug) {
       Promise.all([fetchAssets()])
     }
-  }, [isAuthenticated]);
+  }, [slug]);
 
   return (
     <div>

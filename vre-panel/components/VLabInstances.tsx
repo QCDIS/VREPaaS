@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from "react";
 import getConfig from "next/config";
-import {JWT} from "next-auth/jwt";
 import {VLab} from "../types/vlab";
 import {useSession} from "next-auth/react";
 
 type Props = {
   vlab: VLab,
   slug: string | string[] | undefined,
-  isAuthenticated: boolean,
-  token: JWT,
 }
 
 interface VLabInstance {
@@ -16,7 +13,7 @@ interface VLabInstance {
   username: string,
 }
 
-const VLabInstances: React.FC<Props> = ({vlab, slug, isAuthenticated, token}) => {
+const VLabInstances: React.FC<Props> = ({vlab, slug}) => {
 
   const {publicRuntimeConfig} = getConfig()
 
@@ -39,7 +36,6 @@ const VLabInstances: React.FC<Props> = ({vlab, slug, isAuthenticated, token}) =>
     const requestOptions: RequestInit = {
       method: "POST",
       headers: {
-        "Authorization": "Bearer: " + token.accessToken,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -54,15 +50,8 @@ const VLabInstances: React.FC<Props> = ({vlab, slug, isAuthenticated, token}) =>
 
   const fetchVlabInstances = async () => {
 
-    var requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer: " + token.accessToken
-      },
-    };
-
     const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
-    const res = await fetch(`${apiUrl}/vlab_instances/?vlab_slug=${slug}`, requestOptions);
+    const res = await fetch(`${apiUrl}/vlab_instances/?vlab_slug=${slug}`);
     try {
       const dat = await res.json()
       setVlabInstances(dat)
@@ -73,10 +62,10 @@ const VLabInstances: React.FC<Props> = ({vlab, slug, isAuthenticated, token}) =>
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (slug) {
       Promise.all([fetchVlabInstances()])
     }
-  }, [isAuthenticated]);
+  }, [slug]);
 
   return (
     <div className="space-y-4">

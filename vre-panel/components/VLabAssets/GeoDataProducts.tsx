@@ -1,11 +1,8 @@
-import {JWT} from "next-auth/jwt";
 import dynamic from "next/dynamic";
 const CatalogMapView = dynamic(() => import("./catalog_map"), {ssr: false})
 
 type Props = {
   slug: string | string[] | undefined,
-  isAuthenticated: boolean,
-  token: JWT,
 }
 
 const GeoDataProducts: React.FC<Props> = ({slug}) => {

@@ -1,8 +1,10 @@
 from dataclasses import fields
 from pyexpat import model
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from django.contrib.auth.models import User
-from virtual_labs.models import VM, SDIAProvision, Topology, VLProfile, VirtualLab
+from virtual_labs.models import (VM, SDIAProvision, Topology, VLProfile,
+                                 VirtualLab, VirtualLabInstance)
 from workflows.models import Workflow
 from workflows.serializers import WorkflowSerializer
 
@@ -97,3 +99,25 @@ class VirtualLabDetailSerializer(serializers.ModelSerializer):
             'description',
             'endpoint'
         )
+
+
+class VirtualLabInstanceSerializer(serializers.ModelSerializer):
+
+    vlab = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=VirtualLab.objects.all()
+        )
+
+    class Meta:
+        model = VirtualLabInstance
+        fields = (
+            'vlab',
+            'username',
+            )
+
+        validators = [
+            UniqueTogetherValidator(
+                queryset=VirtualLabInstance.objects.all(),
+                fields=['vlab', 'username'],
+                )
+            ]

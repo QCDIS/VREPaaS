@@ -114,3 +114,8 @@ class KeyCloakAuth(models.Model):
 
     class Meta:
         verbose_name = "KeyCloak Auth"
+
+
+class VirtualLabInstance(models.Model):
+    vlab = models.ForeignKey(VirtualLab, on_delete=models.CASCADE, null=True)
+    username = models.CharField(max_length=100, null=True)

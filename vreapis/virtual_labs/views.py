@@ -1,12 +1,10 @@
-from sys import stdout
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+
+from vreapis.views import GetSerializerMixin
+
 from . import serializers
 from . import models
-from workflows.models import Workflow
-from workflows.serializers import WorkflowSerializer
-import requests
-from vreapis.views import GetSerializerMixin
 
 
 class VirtualLabViewSet(GetSerializerMixin, viewsets.ModelViewSet):
@@ -17,6 +15,13 @@ class VirtualLabViewSet(GetSerializerMixin, viewsets.ModelViewSet):
     serializer_action_classes = {
         'list': serializers.VirtualLabSerializer
     }
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 
 class VirtualLabInstanceViewSet(
@@ -29,6 +34,13 @@ class VirtualLabInstanceViewSet(
     model = models.VirtualLabInstance
     queryset = model.objects.all()
     serializer_class = serializers.VirtualLabInstanceSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve', 'create']:
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         vlab_slug = self.request.query_params.get('vlab_slug', None)

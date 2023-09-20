@@ -1,4 +1,3 @@
-import {JWT} from "next-auth/jwt";
 import {Tab} from '@headlessui/react'
 import clsx from "clsx"
 import WorkflowRuns from "./VLabAssets/WorkflowRuns";
@@ -9,8 +8,6 @@ import {Fragment} from "react";
 
 type Props = {
   slug: string | string[] | undefined,
-  isAuthenticated: boolean,
-  token: JWT,
 }
 
 const tabs = [
@@ -28,7 +25,7 @@ const tabs = [
   },
 ]
 
-const VLabAssets: React.FC<Props> = ({slug, isAuthenticated, token}) => {
+const VLabAssets: React.FC<Props> = ({slug}) => {
 
   return (
     <div className="space-y-8">
@@ -57,7 +54,7 @@ const VLabAssets: React.FC<Props> = ({slug, isAuthenticated, token}) => {
           {tabs.map((tab) => {
             return (
               <Tab.Panel as={Fragment} key={tab.title}>
-                <tab.panelComponent slug={slug} isAuthenticated={isAuthenticated} token={token}/>
+                <tab.panelComponent slug={slug}/>
               </Tab.Panel>
             )
           })}

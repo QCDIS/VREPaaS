@@ -1,18 +1,16 @@
 import os
-
 import requests
+import logging
+
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import action, authentication_classes, permission_classes
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
+
 from . import models, serializers
-import logging
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
@@ -29,8 +27,6 @@ class WorkflowViewSet(GetSerializerMixin,
                       mixins.UpdateModelMixin,
                       mixins.ListModelMixin,
                       viewsets.GenericViewSet):
-    # authentication_classes = [TokenAuthentication]  # Add Token Authentication
-    # permission_classes = [IsAuthenticated]          # Add permission for authenticated users
     queryset = models.Workflow.objects.all()
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
@@ -38,13 +34,10 @@ class WorkflowViewSet(GetSerializerMixin,
     }
 
     def get_permissions(self):
-        """
-        Instantiates and returns the list of permissions that this view requires.
-        """
-        if self.action == 'submit':
-            permission_classes = [IsAuthenticated]
-        else:
+        if self.action in ['list', 'retrieve']:
             permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):

@@ -1,4 +1,3 @@
-import {getToken} from "next-auth/jwt";
 import {useRouter} from "next/router";
 import VLabDescription from "../../components/VLabDescription";
 import React, {useEffect, useState} from "react";
@@ -9,12 +8,7 @@ import VLabInstances from "../../components/VLabInstances";
 import getConfig from "next/config";
 import {VLab} from "../../types/vlab";
 
-
-interface VLabDetailsProps {
-  token?: any;
-}
-
-const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
+const VLabDetails = () => {
 
   const {publicRuntimeConfig} = getConfig()
 
@@ -25,7 +19,7 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
     endpoint: ""
   }
 
-  const isAuthenticated = useAuth(true);
+  useAuth(true);
   const router = useRouter();
   const {slug} = router.query;
 
@@ -33,16 +27,8 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
   const [backendError, setBackendError] = useState(false)
 
   const fetchVlab = async () => {
-
-    var requestOptions: RequestInit = {
-      method: "GET",
-      headers: {
-        "Authorization": "Bearer: " + token.accessToken
-      },
-    };
-
     const apiUrl = `${window.location.origin}/${publicRuntimeConfig.apiBasePath}`
-    const res = await fetch(`${apiUrl}/vlabs/${slug}`, requestOptions);
+    const res = await fetch(`${apiUrl}/vlabs/${slug}`);
     try {
       const dat = await res.json()
       setVlab(dat)
@@ -53,10 +39,10 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (slug) {
       Promise.all([fetchVlab()])
     }
-  }, [isAuthenticated]);
+  }, [slug]);
 
 
   return (
@@ -67,11 +53,11 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
       </div>
 
       <div className="rounded shadow-lg bg-white p-8">
-        <VLabInstances vlab={vlab} slug={slug} isAuthenticated={isAuthenticated} token={token}/>
+        <VLabInstances vlab={vlab} slug={slug}/>
       </div>
 
       <div className="rounded shadow-lg bg-white p-8">
-        <VLAbAssets slug={slug} isAuthenticated={isAuthenticated} token={token}/>
+        <VLAbAssets slug={slug}/>
       </div>
 
     </PageLayout>
@@ -79,16 +65,3 @@ const VLabDetails: React.FC<VLabDetailsProps> = ({token}) => {
 }
 
 export default VLabDetails;
-
-export async function getServerSideProps(context: any) {
-
-  const {req} = context;
-  const secret = process.env.SECRET;
-  const token = await getToken({req, secret});
-  console.log(token)
-  return {
-    props: {
-      token: token
-    }
-  };
-}

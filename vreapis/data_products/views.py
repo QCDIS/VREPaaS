@@ -1,4 +1,5 @@
 from rest_framework import mixins, viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_gis import filters
 
 from vreapis.views import GetSerializerMixin
@@ -22,6 +23,13 @@ class DataProductsViewSet(
         'list': serializers.DataProductSerializer,
         }
 
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
     def create(self, request, *args, **kwargs):
         print(request.data)
         return super().create(request)
@@ -34,6 +42,7 @@ class DataProductsViewSet(
             return self.model.objects.all()
 
 
+
 class GeoDataProductsViewSet(DataProductsViewSet):
     model = models.GeoDataProduct
     queryset = model.objects.all()
@@ -44,3 +53,10 @@ class GeoDataProductsViewSet(DataProductsViewSet):
     bbox_filter_field = 'spatial_coverage'
     bbox_filter_include_overlapping = True
     filter_backends = (filters.InBBoxFilter,)
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]

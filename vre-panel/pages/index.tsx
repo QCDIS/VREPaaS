@@ -1,6 +1,7 @@
-import {useEffect, useState, useContext} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import getConfig from 'next/config';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown'
 
 import {NewVREDialog} from '../components/NewVREDialog';
 import {PaasConfigContext} from '../context/PaasConfig';
@@ -60,7 +61,9 @@ const VLabs = ({}) => {
                     className="inline-block min-h-[1em] w-full flex-auto cursor-wait bg-onSurface align-middle opacity-50"></span>
                 </span>
           ) : (
-            paasConfig.description
+            <div className="prose">
+              <ReactMarkdown>{paasConfig.description}</ReactMarkdown>
+            </div>
           )}
         </p>
         {paasConfigLoading || (

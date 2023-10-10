@@ -5,6 +5,9 @@ WORKDIR /app
 RUN apt update && \
     apt install -y libpq-dev gcc gdal-bin curl net-tools iputils-ping
 
+# Install rysnc for Tilt syncback
+RUN apt install -y rsync
+
 RUN python3 -m venv /opt/venv
 RUN /opt/venv/bin/pip install pip --upgrade
 

@@ -1,6 +1,7 @@
 version_settings(constraint='>=0.22.2')
 secret_settings (disable_scrub=True)
 load('ext://helm_remote', 'helm_remote')
+load('ext://syncback', 'syncback')
 
 helm_remote(
     'vrepaas',
@@ -38,6 +39,23 @@ docker_build(
         run('cd /app && /opt/venv/bin/pip install -r requirements.txt', trigger='./vreapis/requirements.txt'),
     ],
 )
+
+vreapi_apps = [
+  'cells',
+  'data_products',
+  'paas_configuration',
+  'virtual_labs',
+  'workflows',
+  ]
+for app in vreapi_apps:
+  syncback(
+    'sb-' + app,
+    'deploy/vrepaas-vreapi',
+    '/app/' + app + '/migrations/',
+    paths=[ '*.py' ],
+    target_dir='./vreapis/' + app + '/migrations',
+    labels=['syncback'],
+  )
 
 docker_build(
     'qcdis/vreapp',

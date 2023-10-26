@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from django.conf import settings
+
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
 
@@ -77,7 +79,8 @@ class WorkflowViewSet(GetSerializerMixin,
             call_url,
             headers={
                 'Authorization': argo_api_token
-            }
+            },
+            verify=(not settings.ALLOW_INSECURE_TLS),
         )
         logger.debug('------------------------------------------------------------------------')
         logger.debug('resp_list: ' + str(resp_list))
@@ -140,7 +143,8 @@ class WorkflowViewSet(GetSerializerMixin,
             json=workflow,
             headers={
                 'Authorization': argo_api_token
-            }
+            },
+            verify=(not settings.ALLOW_INSECURE_TLS),
         )
 
         if resp_submit.status_code != 200:
@@ -152,7 +156,8 @@ class WorkflowViewSet(GetSerializerMixin,
             json=workflow,
             headers={
                 'Authorization': argo_api_token
-            }
+            },
+            verify=(not settings.ALLOW_INSECURE_TLS),
         )
         if resp_detail.status_code != 200:
             return Response(resp_submit.text, status=resp_detail.status_code)

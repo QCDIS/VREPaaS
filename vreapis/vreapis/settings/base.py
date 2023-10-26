@@ -28,6 +28,9 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http:\/\/localhost:\d+$',
 ]
 
+ALLOW_INSECURE_TLS = (os.getenv('ALLOW_INSECURE_TLS', 'false').lower() ==
+                      'true')
+
 KEYCLOAK_EXEMPT_URIS = []
 #
 KEYCLOAK_CONFIG = {

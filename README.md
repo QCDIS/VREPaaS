@@ -22,9 +22,7 @@ conda env update --file environment.yaml
 #### Install GitGuardian pre-commit hook
 
 ```
-pip install pre-commit
 pre-commit install
-pip install ggshield
 ggshield auth login
 ```
 

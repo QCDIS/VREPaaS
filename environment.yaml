@@ -3,20 +3,9 @@ channels:
   - conda-forge
 dependencies:
   - python>=3.9
-  - djangorestframework
+  - pip
   - tilt
-  - django>=4.0.0,<4.1.0
   - minikube
-  - requests
-  - whitenoise
-  - gunicorn
-  - pyyaml
-  - python-dotenv
-  - django-cors-headers
-  - django-extensions
   - pre_commit
-
-
-
-
-
+  - pip:
+    - ggshield

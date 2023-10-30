@@ -6,7 +6,7 @@ on:
 
 jobs:
   call-build-container-vreapis:
-    uses: ./.github/workflows/build-container.yml
+    uses: ./.github/workflows/ci-pipeline.yml
     with:
       docker_folder: vreapis
       tag: vreapi
@@ -16,7 +16,7 @@ jobs:
       docker_password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
   call-build-container-vre-panel:
-    uses: ./.github/workflows/build-container.yml
+    uses: ./.github/workflows/ci-pipeline.yml
     strategy:
       matrix:
         environment:

@@ -1,0 +1,16 @@
+services:
+  app:
+    image: vreapp
+    container_name: app
+    env_file:
+      - .env.test
+    environment:
+      - AUTH0_ID=
+      - AUTH0_ISSUER=
+      - SECRET=secret
+    ports:
+      - '127.0.0.1:3000:3000'
+    healthcheck:
+      test: |
+        wget http://localhost:3000/vreapp/ -O -
+      interval: 5s

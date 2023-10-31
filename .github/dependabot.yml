@@ -5,6 +5,12 @@ updates:
     schedule:
       interval: "monthly"
 
+  - package-ecosystem: "pip"
+    directory: "vreapis"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "[pip] "
 
   - package-ecosystem: "npm"
     directory: "vre-panel"

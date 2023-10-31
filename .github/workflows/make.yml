@@ -1,6 +1,5 @@
 name: make
 on:
-  pull_request:
   push:
     branches:
       - '**'

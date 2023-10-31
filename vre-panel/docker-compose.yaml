@@ -1,0 +1,11 @@
+services:
+  app:
+    image: vreapp
+    env_file:
+      - .env.test
+    environment:
+      - AUTH0_ID=
+      - AUTH0_ISSUER=
+      - SECRET=secret
+    ports:
+      - '127.0.0.1:3000:3000'

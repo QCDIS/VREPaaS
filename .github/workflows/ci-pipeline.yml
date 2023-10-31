@@ -32,9 +32,21 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
     - uses: actions/checkout@v4
+
     - name: Build docker
       run: |
           cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}"
+
+    - name: Run docker compose
+      uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: "${{ inputs.docker_folder }}/docker-compose.yaml"
+
+    - name: Wait for healthy app
+      uses: raschmitt/wait-for-healthy-container/@v1
+      with:
+        container-name: app
+        timeout: 120
 
     - name: Login to github Registry
       if: ${{ inputs.push }}
@@ -43,6 +55,7 @@ jobs:
         registry: "https://index.docker.io/v1/"
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_password }}
+
     - name: Push image to container Registry
       if: ${{ inputs.push }}
       run: |

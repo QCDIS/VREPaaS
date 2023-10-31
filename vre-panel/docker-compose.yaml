@@ -1,6 +1,7 @@
 services:
   app:
     image: vreapp
+    container_name: app
     env_file:
       - .env.test
     environment:

@@ -11,7 +11,7 @@
     "@headlessui/react": "~1.7.17",
     "@react-keycloak/ssr": "~3.3.0",
     "@tailwindcss/line-clamp": "latest",
-    "axios": "~1.5.1",
+    "axios": "~1.6.0",
     "clsx": "^2.0.0",
     "cookie": "~0.5.0",
     "http": "~0.0.1-security",

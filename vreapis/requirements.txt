@@ -1,7 +1,7 @@
 django==4.2.7
 djangorestframework==3.14.0
 djangorestframework-gis==1.0
-django-filter==22.1
+django-filter==23.3
 whitenoise==6.6.0
 django-keycloak-auth==0.9.6
 python-keycloak==3.3.0

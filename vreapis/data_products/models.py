@@ -13,7 +13,7 @@ class DataProduct(models.Model):
     description = models.TextField(null=True)
 
     vlab = models.ForeignKey(VirtualLab, on_delete=models.DO_NOTHING, null=True)
-    workflow = models.ForeignKey(Workflow, on_delete=models.DO_NOTHING,
+    workflow = models.ForeignKey(Workflow, on_delete=models.SET_NULL,
                                  null=True, blank=True)
     data_url = models.URLField(null=True)
 

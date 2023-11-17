@@ -1,5 +1,3 @@
-import os
-import requests
 import logging
 
 from rest_framework import mixins, viewsets
@@ -7,8 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from django.conf import settings
-
+from services.argo import ArgoWorkflow
 from virtual_labs.models import VirtualLab
 from vreapis.views import GetSerializerMixin
 
@@ -17,11 +14,6 @@ from . import models, serializers
 logger = logging.getLogger(__name__)
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(format=FORMAT)
-
-argo_url = os.getenv('ARGO_URL')
-argo_api_wf_url = argo_url + '/api/v1/workflows/'
-argo_api_token = os.getenv('ARGO_API_TOKEN').replace('"', '')
-namespace = os.getenv('ARGO_NAMESPACE')
 
 
 class WorkflowViewSet(GetSerializerMixin,
@@ -33,7 +25,7 @@ class WorkflowViewSet(GetSerializerMixin,
     serializer_class = serializers.WorkflowSerializer
     serializer_action_classes = {
         'list': serializers.WorkflowSerializer
-    }
+        }
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -41,6 +33,27 @@ class WorkflowViewSet(GetSerializerMixin,
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+    @staticmethod
+    def _update_workflows(instances, new_properties):
+        """ Update workflows from the db with properties retrieved from argo
+
+        :param instances: list of Workflow objects from the db
+        :param new_properties: list of serialized workflows
+        """
+        logger.debug('_update_workflows -------------------------------------')
+        logger.debug(f'_update_workflows instances: {instances}')
+        logger.debug(f'_update_workflows new_properties: {new_properties}')
+        wf_serializer = serializers.WorkflowSerializer(
+            instances,
+            data=new_properties,
+            partial=True,
+            many=True,
+            )
+
+        if wf_serializer.is_valid(raise_exception=True):
+            logger.debug("Serializer is valid")
+            wf_serializer.save()
 
     def get_queryset(self):
         logger.debug('----------------get_queryset-------------------------')
@@ -57,128 +70,60 @@ class WorkflowViewSet(GetSerializerMixin,
         else:
             return models.Workflow.objects.all()
 
+    def retrieve(self, request, *args, pk=None, **kwargs):
+        logger.debug('retrieve ----------------------------------------------')
+        workflow = ArgoWorkflow().retrieve_workflow(pk)
+        if workflow is not None:
+            self._update_workflows([self.get_object()], [workflow])
+        return super().retrieve(self, request, *args, **kwargs)
+
     def list(self, request, *args, **kwargs):
-        logger.debug('----------------list-------------------------')
-        query_params = self.request.query_params
-        logger.debug('list query_params: ' + str(query_params))
-
-        if not namespace:
-            return Response({'message': 'Argo namespace not set'}, status=500)
-        if argo_api_wf_url.endswith('/'):
-            call_url = argo_api_wf_url + namespace
-        else:
-            call_url = argo_api_wf_url + '/' + namespace
-        vlab_slug = query_params.get('vlab_slug', None)
-        if vlab_slug:
-            call_url = call_url + '?listOptions.labelSelector=vlab_slug=' + vlab_slug
-        else:
-            call_url = call_url
-
-        logger.debug('call_url: ' + call_url)
-        resp_list = requests.get(
-            call_url,
-            headers={
-                'Authorization': argo_api_token
-            },
-            verify=(not settings.ALLOW_INSECURE_TLS),
-        )
-        logger.debug('------------------------------------------------------------------------')
-        logger.debug('resp_list: ' + str(resp_list))
-        if resp_list.status_code != 200:
-            logger.warning(
-                'Error getting workflows. Status_code: ' + str(resp_list.status_code) + ' - ' + str(resp_list.text))
-            return Response(resp_list.text, status=resp_list.status_code)
-
-        resp_list_data = resp_list.json()
-
-        if resp_list_data['items']:
-            items = resp_list_data['items']
-            instances = self.get_queryset()
-
-            data_items = [
-                {
-                    'argo_id': item['metadata']['name'],
-                    'status': item['status']['phase'],
-                    'progress': item['status']['progress']
-                }
-                for item in items
-            ]
-
-            wf_serializer = serializers.WorkflowSerializer(instances, data=data_items, partial=True, many=True)
-
-            if wf_serializer.is_valid(raise_exception=True):
-                logger.debug("Serializer is valid")
-                wf_serializer.save()
-
+        logger.debug('list --------------------------------------------------')
+        vlab_slug = self.request.query_params.get('vlab_slug', None)
+        workflows = ArgoWorkflow().list_workflows(vlab_slug)
+        if workflows is not None:
+            self._update_workflows(self.get_queryset(), workflows)
         return super().list(self, request, *args, **kwargs)
 
     @action(detail=False, methods=['POST'], name='Submit a workflow')
     def submit(self, request, *args, **kwargs):
-        logger.debug('----------------submit-------------------------')
-        if not argo_api_wf_url:
-            return Response({'message': 'Argo API URL not set'}, status=500)
-        if not namespace:
-            return Response({'message': 'Argo namespace not set'}, status=500)
-
-        if argo_api_wf_url.endswith('/'):
-            call_url = argo_api_wf_url + namespace
-        else:
-            call_url = argo_api_wf_url + '/' + namespace
-
-        workflow = request.data['workflow_payload']
+        workflow = request.data.get('workflow_payload', None)
+        vlab_slug = request.data.get('vlab', None)
         if not workflow:
-            return Response({'message': 'Workflow payload not set'}, status=400)
-        vlab_slug = request.data['vlab']
+            return Response(
+                {'message': '"workflow_payload" not set'},
+                status=400)
+        # Note: vlab is unused, but still validated to not change the API spec.
+        # workflow_payload.workflow.metadata.labels.vlab_slug is used instead.
+        # They are set to the same value in NaaVRE ExecuteWorkflowHandler.post.
         if not vlab_slug:
-            return Response({'message': 'Virtual Lab not set'}, status=400)
+            return Response(
+                {'message': '"vlab" not set'},
+                status=400)
 
-        if not argo_api_token:
-            return Response({'message': 'Argo API token not set'}, status=500)
+        logger.debug('submitted workflow: ' + str(workflow))
+        workflow, argo_response = ArgoWorkflow().submit_workflow(workflow)
+        logger.debug('created workflow: ' + str(workflow))
 
-        if not argo_api_token:
-            return Response({'message': 'Argo API token not set'}, status=500)
+        if not workflow:
+            return Response(
+                {
+                    'message': 'Could not submit workflow',
+                    'argo_response': argo_response,
+                    'workflow': workflow,
+                    },
+                status=500)
 
-        resp_submit = requests.post(
-            call_url,
-            json=workflow,
-            headers={
-                'Authorization': argo_api_token
-            },
-            verify=(not settings.ALLOW_INSECURE_TLS),
-        )
-
-        if resp_submit.status_code != 200:
-            return Response(resp_submit.text, status=resp_submit.status_code)
-        resp_submit_data = resp_submit.json()
-
-        resp_detail = requests.get(
-            f"{call_url}/{resp_submit_data['metadata']['name']}",
-            json=workflow,
-            headers={
-                'Authorization': argo_api_token
-            },
-            verify=(not settings.ALLOW_INSECURE_TLS),
-        )
-        if resp_detail.status_code != 200:
-            return Response(resp_submit.text, status=resp_detail.status_code)
-
-        resp_detail_data = resp_detail.json()
-        try:
-            vlab = VirtualLab.objects.get(slug=vlab_slug)
-        except VirtualLab.DoesNotExist:
-            return Response({'message': 'Virtual Lab: ' + vlab_slug + ' not found'}, status=404)
-        if not argo_url:
-            return Response({'message': 'Argo URL not set'}, status=500)
-        argo_exec_url = f"{argo_url}/workflows/{namespace}/{resp_detail_data['metadata']['name']}"
-        new_data = {'argo_id': resp_submit_data['metadata']['name'],
-                    'status': f"{resp_detail_data['status']['phase']} - {resp_detail_data['status']['progress']}",
-                    'vlab': vlab.id, 'argo_url': argo_exec_url}
-
-        new_workflow = serializers.WorkflowSerializer(data=new_data)
-
+        new_workflow = serializers.WorkflowSerializer(data=workflow)
         if new_workflow.is_valid(raise_exception=True):
             new_workflow.save()
         else:
-            return Response({'message': 'Error in saving workflow'}, status=500)
+            return Response(
+                {
+                    'message': 'Could not save workflow',
+                    'argo_response': argo_response,
+                    'workflow': workflow,
+                    },
+                status=500)
 
         return Response(new_workflow.data)

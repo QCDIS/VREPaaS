@@ -31,15 +31,6 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 ALLOW_INSECURE_TLS = (os.getenv('ALLOW_INSECURE_TLS', 'false').lower() ==
                       'true')
 
-KEYCLOAK_EXEMPT_URIS = []
-#
-KEYCLOAK_CONFIG = {
-    'KEYCLOAK_SERVER_URL': os.getenv('KEYCLOAK_SERVER_URL'),
-    'KEYCLOAK_REALM': os.getenv('KEYCLOAK_REALM'),
-    'KEYCLOAK_CLIENT_ID': os.getenv('KEYCLOAK_CLIENT_ID'),
-    'KEYCLOAK_CLIENT_SECRET_KEY': os.getenv('KEYCLOAK_CLIENT_SECRET_KEY')
-}
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,7 +66,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django_keycloak_auth.middleware.KeycloakMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

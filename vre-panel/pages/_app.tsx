@@ -2,7 +2,6 @@ import { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { SessionProvider } from "next-auth/react"
 import { useState } from 'react';
-// import RefreshTokenHandler from './auth/refreshTokenHandler';
 import getConfig from 'next/config'
 
 import {PaasConfigProvider} from '../context/PaasConfig';

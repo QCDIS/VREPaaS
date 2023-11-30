@@ -103,7 +103,7 @@ const Nav = () => {
                 <div className="px-1 py-1 ">
                   {menuPages.map((page) => {
                     return (
-                      <Menu.Item>
+                      <Menu.Item key={page.href}>
                         {({active}) => (
                           <Link
                             href={page.href}

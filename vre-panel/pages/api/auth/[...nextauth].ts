@@ -4,10 +4,6 @@ import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak"
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import getConfig from 'next/config'
-
-const { publicRuntimeConfig } = getConfig()
-
 const refreshAccessToken = async (token: JWT) => {
 	try {
 		// Get a new set of tokens with a refreshToken
@@ -84,8 +80,5 @@ export default (req : NextApiRequest, res: NextApiResponse) => {
 				return session;
 			},
 		},
-		pages: {
-			signIn: `${publicRuntimeConfig.basePath}/auth/signin`
-		}
 	})
 }

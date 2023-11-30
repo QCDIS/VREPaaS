@@ -25,15 +25,11 @@ services:
       - DJANGO_SUPERUSER_EMAIL=admin@example.org
       - DJANGO_SUPERUSER_USERNAME=admin
       - DJANGO_USERNAME=user
-      - KEYCLOAK_CLIENT_ID=
-      - KEYCLOAK_REALM=
-      - KEYCLOAK_SERVER_URL=
       - TRUSTED_ORIGINS=http://localhost
       - ARGO_API_TOKEN=
       - DJANGO_PASSWORD=user
       - DJANGO_SUPERUSER_PASSWORD=admin
       - DJANGO_TOKEN=token
-      - KEYCLOAK_CLIENT_SECRET_KEY=
       - SECRET_KEY=secret
     ports:
       - '127.0.0.1:8000:8000'

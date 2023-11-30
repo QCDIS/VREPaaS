@@ -11,13 +11,14 @@ const { publicRuntimeConfig } = getConfig()
 const refreshAccessToken = async (token: JWT) => {
 	try {
 		// Get a new set of tokens with a refreshToken
-		console.log("KEYCLOAK_ISSUER", process.env.KEYCLOAK_ISSUER)
+		// console.log("AUTH0_ISSUER", process.env.AUTH0_ISSUER)
 		const tokenResponse = await axios.post(
-			process.env.KEYCLOAK_ISSUER + '/protocol/openid-connect/token',
+			process.env.AUTH0_ISSUER + '/protocol/openid-connect/token',
 			{
-				grant_type: 'urn:ietf:params:oauth:grant-type:token-exchange',
-				subject_token: token.accessToken,
-				client_id: process.env.KEYCLOAK_CLIENT_ID,
+				grant_type: 'refresh_token',
+				refresh_token: token.refreshToken,
+				client_id: process.env.AUTH0_ID,
+				client_secret: process.env.AUTH0_SECRET,
 				requested_token_type: 'urn:ietf:params:oauth:token-type:refresh_token'
 			},
 			{
@@ -31,11 +32,13 @@ const refreshAccessToken = async (token: JWT) => {
 
 		return {
 			...token,
-			accessToken: tokenResponse.data.accessToken,
-			accessTokenExpiry: tokenResponse.data.accessTokenExpiry,
-			refreshToken: tokenResponse.data.refreshToken
+			accessToken: tokenResponse.data.access_token,
+			accessTokenExpiry: Date.now() / 1e3 + tokenResponse.data.expires_in,
+			refreshToken: tokenResponse.data.refresh_token,
 		}
 	} catch (error) {
+		console.log('Caught exception in refreshAccessToken')
+		console.log(error)
 		return {
 			...token,
 			error: "RefreshAccessTokenError",
@@ -44,8 +47,6 @@ const refreshAccessToken = async (token: JWT) => {
 };
 
 export default (req : NextApiRequest, res: NextApiResponse) => {
-	console.log("AUTH0_ID", process.env.AUTH0_ID);
-	console.log("AUTH0_ISSUER", process.env.AUTH0_ISSUER);
 	return NextAuth(req, res, {
 		providers: [
 			KeycloakProvider({
@@ -54,36 +55,28 @@ export default (req : NextApiRequest, res: NextApiResponse) => {
 				issuer:  process.env.AUTH0_ISSUER,
 			})
 		],
-		// The secret should be set to a reasonably long random string.
-        // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
-        // a separate secret is defined explicitly for encrypting the JWT.
 		secret:  process.env.SECRET,
 		callbacks: {
 			async jwt({ token, user, account }) {
 				if (account && user) {
-	
 					token.accessToken = account.access_token;
 					token.refreshToken = account.refresh_token;
 					token.accessTokenExpiry = account.expires_at;
-					token.user = user;
 				}
 
-				// console.log(token);
-	
-				const unixTimeZero = Date.parse('01 Jan 1970 00:00:00 GMT');
-				const expiryDate = new Date();
-				expiryDate.setTime(unixTimeZero)
-				expiryDate.setSeconds(expiryDate.getSeconds() + token.accessTokenExpiry);
-				const refreshElapse = Math.round(expiryDate.getTime() - Date.now());
-	
-				if (refreshElapse > 0) return token;
-	
-				return refreshAccessToken(token);
-	
+				const expDate = new Date(token.accessTokenExpiry * 1e3)
+				const nowDate = new Date()
+				const tokenExpired = (expDate < nowDate)
+
+				if (tokenExpired) {
+					token = await refreshAccessToken(token);
+				}
+
+				return token;
+
 			},
 			async session({ session, token }) {
 				if (token) {
-					session.user = token.user;
 					session.error = token.error;
 					session.accessToken = token.accessToken;
 					session.accessTokenExpiry = token.accessTokenExpiry;

@@ -16,7 +16,6 @@ export default function useAuth(shouldRedirect: boolean) {
 
         if (session === null) {
             setIsAuthenticated(false);
-            console.log(router)
             if (router.isReady && (router.route !== `/auth/signin`)) {
                 const callbackUrl = `${router.basePath}${router.asPath}`
                 Promise.all([

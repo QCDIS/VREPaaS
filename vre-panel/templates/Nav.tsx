@@ -25,6 +25,9 @@ const Nav = () => {
 
   const {paasConfig, paasConfigLoading} = useContext(PaasConfigContext)
 
+  const signOutOptions = {callbackUrl: router.basePath, shouldRedirect: true}
+  const signInProvider = 'keycloak'
+
   return (
     <header className="top-0 z-30 w-full md:w-72 md:min-h-screen px-2 py-4 bg-surface sm:px-4 shadow-lg">
       <nav className="bg-surface border-gray-200 h-10 px-2 sm:px-4 rounded">
@@ -63,10 +66,10 @@ const Nav = () => {
               {status == "authenticated" ? (
                 <>
                   <p>Logged in as {session?.user?.name}</p>
-                  <a onClick={() => signOut()} href="#" className="hover:underline">[Logout]</a>
+                  <a onClick={() => signOut(signOutOptions)} href="#" className="hover:underline">[Logout]</a>
                 </>
               ) : (
-                <a onClick={() => signIn()} href="#">Login</a>
+                <a onClick={() => signIn(signInProvider)} href="#">Login</a>
               )}
             </li>
           </ul>
@@ -103,7 +106,7 @@ const Nav = () => {
                 <div className="px-1 py-1 ">
                   {menuPages.map((page) => {
                     return (
-                      <Menu.Item>
+                      <Menu.Item key={page.href}>
                         {({active}) => (
                           <Link
                             href={page.href}
@@ -135,7 +138,7 @@ const Nav = () => {
                           status == "authenticated" ? "px-6" : "px-2",
                           'group flex w-full items-center rounded py-2')}
                         onClick={() => {
-                          status == "authenticated" ? signOut() : signIn()
+                          status == "authenticated" ? signOut(signOutOptions) : signIn(signInProvider)
                         }}
                       >
                         {status == "authenticated" ? "Logout" : "Login"}

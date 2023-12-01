@@ -1,4 +1,4 @@
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -11,29 +11,24 @@ export default function useAuth(shouldRedirect: boolean) {
     useEffect(() => {
 
         if (session?.error === "RefreshAccessTokenError") {
-
             signOut({ redirect: shouldRedirect });
         }
 
         if (session === null) {
-
-            if (router.route !== `/auth/signin`) {
-                router.replace(`/auth/signin`);
-            }
-
             setIsAuthenticated(false);
-        } 
-        
-        else if (session !== undefined) {
-
-            if (router.route === '/auth/signin') {
-                router.replace('/');
+            if (router.isReady && (router.route !== `/auth/signin`)) {
+                const callbackUrl = `${router.basePath}${router.asPath}`
+                Promise.all([
+                  signIn('keycloak', {callbackUrl: callbackUrl}),
+                ])
             }
+        }
 
+        else if (session !== undefined) {
             setIsAuthenticated(true);
         }
 
-    }, [session]);
+    }, [session, router.isReady]);
 
     return isAuthenticated;
 }

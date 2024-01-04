@@ -24,7 +24,7 @@ export default function SignIn({ providers }: { providers: any }) {
                     {Object.values(providers).map((provider: any) => (
                         <div className="self-center" key={provider.name}>
                             <button className="bg-blue-400/50 hover:bg-blue-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mt-10" onClick={() => signIn(provider.id, { callbackUrl: process.env.CALL_BACK_URL })}>
-                                Sign in with {provider.name}
+                                Sign in
                             </button>
                         </div>
                     ))}
@@ -34,16 +34,17 @@ export default function SignIn({ providers }: { providers: any }) {
     )
 }
 
-export async function getServerSideProps(context: { req: any; }) {
+export async function getServerSideProps(context: { req: any, query: any}) {
 
-    const { req } = context;
+    const { req, query } = context;
     console.log("getProviders")
+    const redirectUrl = query.callbackUrl ? query.callbackUrl : '/'
     const providers = await getProviders()
     const session = await getSession({ req })
     if (session) {
-        console.log("Session exists, redirecting to", '/')
+        console.log("Session exists, redirecting to", redirectUrl)
         return {
-            redirect: { destination: '/' },
+            redirect: { destination: redirectUrl },
         };
     }
     console.log("providers: ", providers)

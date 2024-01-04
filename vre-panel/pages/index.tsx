@@ -54,7 +54,7 @@ const VLabs = ({}) => {
             paasConfig.title
           )}
         </h1>
-        <p className="text-l text-onSurface">
+        <div className="text-l text-onSurface">
           {paasConfigLoading ? (
             <span className="animate-pulse">
                   <span
@@ -65,7 +65,7 @@ const VLabs = ({}) => {
               <ReactMarkdown>{paasConfig.description}</ReactMarkdown>
             </div>
           )}
-        </p>
+        </div>
         {paasConfigLoading || (
           paasConfig.documentation_url && (
             <p className="mt-4">

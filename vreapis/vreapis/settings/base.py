@@ -22,7 +22,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
+# CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
+CSRF_TRUSTED_ORIGINS = os.getenv('TRUSTED_ORIGINS').split(sep=';')
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http:\/\/localhost:\d+$',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'virtual_labs',
     'data_products',
     'paas_configuration',
+    'containerizer',
     'rest_framework',
     'rest_framework_gis',
     'rest_framework.authtoken',

@@ -38,7 +38,8 @@ router.register(r'paas_configuration', PaasConfigurationViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/containerizer/', include('containerizer.urls')),
 ]
 
 if BASE_PATH:

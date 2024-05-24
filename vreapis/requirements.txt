@@ -1,4 +1,4 @@
-django==5.0.3
+django==5.0.6
 djangorestframework==3.14.0
 djangorestframework-gis==1.0
 django-filter==24.2

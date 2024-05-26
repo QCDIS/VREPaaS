@@ -186,3 +186,11 @@ STATIC_URL = '/static/'
 if BASE_PATH:
     STATIC_URL = f'{BASE_PATH}/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# CUSTOM VARS
+
+KEYCLOAK_URL: str = os.getenv('KEYCLOAK_URL', 'https://naavre-dev.minikube.test/auth')
+KEYCLOAK_REALM: str = os.getenv('KEYCLOAK_REALM', 'vre')
+KEYCLOAK_LOGIN_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token'
+KEYCLOAK_VERIF_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/certs'
+KEYCLOAK_CLIENT_ID: str = os.getenv('KEYCLOAK_CLIENT_ID', 'myclient')

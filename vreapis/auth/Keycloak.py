@@ -20,7 +20,7 @@ class KeycloakAuthentication(BaseAuthentication):
         try:
             verif_body: dict[str, any] = common.session.get(settings.KEYCLOAK_VERIF_URL, verify=settings.ALLOW_INSECURE_TLS).json()
         except RequestException as e:
-            common.logger.error(f'Internal server error while getting Keycloak public key.')
+            common.logger.error(f'[{e.response.status_code}] Error while getting Keycloak public key.')
             return None
         kid: str = token_header.get('kid', '')
         if kid == '':

@@ -23,7 +23,7 @@ class KeycloakAuthentication(BaseAuthentication):
             return None
         kid: str = token_header.get('kid', '')
         if kid == '':
-            common.logger.error(f'JWT Key ID [kid] not found:{os.linesep}{received_token}')
+            common.logger.error(f'JWT Key ID (kid) not found:{os.linesep}{received_token}')
             return None
         verif_keys: list[dict[str, any]] = verif_body.get('keys', [])
         key = next((key for key in verif_keys if key['kid'] == kid), None)
@@ -36,7 +36,8 @@ class KeycloakAuthentication(BaseAuthentication):
         if username == '':
             common.logger.error(f'Username (preferred_username) not found in token:{os.linesep}{received_token}')
             return None
-        user: User | None = User.objects.get(username=username)
-        if user is None:
-            User.objects.create_user(username)
+        try:
+            user: User | None = User.objects.get(username=username)
+        except User.DoesNotExist:
+            user: User = User.objects.create_user(username)
         return user, None

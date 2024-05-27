@@ -12,13 +12,17 @@ import common
 
 
 class KeycloakAuthentication(BaseAuthentication):
+    @staticmethod
+    def get_verif_inf() -> dict[str, any]:
+        return common.session.get(settings.KEYCLOAK_VERIF_URL, verify=settings.ALLOW_INSECURE_TLS).json()
+
     def authenticate(self, request: HttpRequest):
         received_token: str = request.headers.get('Authorization', '')
         if received_token == '':
             raise AuthenticationFailed('Authorization header not found. Login using Keycloak to get an access token.')
         token_header: dict[str, any] = jwt.get_unverified_header(received_token)
         try:
-            verif_body: dict[str, any] = common.session.get(settings.KEYCLOAK_VERIF_URL, verify=settings.ALLOW_INSECURE_TLS).json()
+            verif_inf: dict[str, any] = KeycloakAuthentication.get_verif_inf()
         except RequestException as e:
             common.logger.error(f'[{e.response.status_code}] Error while getting Keycloak public key.')
             return None
@@ -26,7 +30,7 @@ class KeycloakAuthentication(BaseAuthentication):
         if kid == '':
             common.logger.error(f'JWT Key ID (kid) not found:{os.linesep}{received_token}')
             raise AuthenticationFailed(f'Invalid token format: JWT Key ID (kid) not found.')
-        verif_keys: list[dict[str, any]] = verif_body.get('keys', [])
+        verif_keys: list[dict[str, any]] = verif_inf.get('keys', [])
         key = next((key for key in verif_keys if key['kid'] == kid), None)
         if key is None:
             common.logger.error(f'Keycloak public key not found.')

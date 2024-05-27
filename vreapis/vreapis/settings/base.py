@@ -189,6 +189,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # CUSTOM VARS
 
+API_ENDPOINT: str = os.getenv('API_ENDPOINT', "https://naavre-dev.minikube.test/vre-api-test")
+
 KEYCLOAK_URL: str = os.getenv('KEYCLOAK_URL', 'https://naavre-dev.minikube.test/auth')
 KEYCLOAK_REALM: str = os.getenv('KEYCLOAK_REALM', 'vre')
 KEYCLOAK_LOGIN_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token'

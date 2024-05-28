@@ -8,7 +8,7 @@ import common
 
 
 @api_view(['GET'])
-@authentication_classes([KeycloakAuthentication])
+# @authentication_classes([KeycloakAuthentication])e
 def get_base_images(request):
     url: str = os.getenv('BASE_IMAGE_TAGS_URL', 'https://github.com/QCDIS/NaaVRE-flavors/releases/latest/download/base_image_tags.json')
     common.logger.debug(f'Base image tags URL: {url}')

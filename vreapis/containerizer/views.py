@@ -1,14 +1,14 @@
 import os
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
 import requests
-from auth.Keycloak import KeycloakAuthentication
 import common
 
 
 @api_view(['GET'])
-# @authentication_classes([KeycloakAuthentication])e
+# @authentication_classes([TokenAuthentication])
 def get_base_images(request):
     url: str = os.getenv('BASE_IMAGE_TAGS_URL', 'https://github.com/QCDIS/NaaVRE-flavors/releases/latest/download/base_image_tags.json')
     common.logger.debug(f'Base image tags URL: {url}')

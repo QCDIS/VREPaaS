@@ -6,10 +6,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 import requests
 import common
+from auth.simple import StaticTokenAuthentication
 
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
+@authentication_classes([StaticTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_base_images(request):
     url: str = os.getenv('BASE_IMAGE_TAGS_URL', 'https://github.com/QCDIS/NaaVRE-flavors/releases/latest/download/base_image_tags.json')

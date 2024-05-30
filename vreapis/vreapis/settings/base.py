@@ -196,3 +196,5 @@ KEYCLOAK_REALM: str = os.getenv('KEYCLOAK_REALM', 'vre')
 KEYCLOAK_LOGIN_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token'
 KEYCLOAK_VERIF_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/certs'
 KEYCLOAK_CLIENT_ID: str = os.getenv('KEYCLOAK_CLIENT_ID', 'myclient')
+
+NAAVRE_API_TOKEN: str = os.getenv('NAAVRE_API_TOKEN')

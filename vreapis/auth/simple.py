@@ -3,6 +3,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.conf import settings
+import string
+import random
 
 
 class StaticTokenAuthentication(BaseAuthentication):
@@ -12,7 +14,7 @@ class StaticTokenAuthentication(BaseAuthentication):
         try:
             StaticTokenAuthentication.dummy_user = User.objects.get(username=settings.NAAVRE_API_TOKEN)
         except User.DoesNotExist:
-            StaticTokenAuthentication.dummy_user = User.objects.create_user(settings.NAAVRE_API_TOKEN, password='0')
+            StaticTokenAuthentication.dummy_user = User.objects.create_user(settings.NAAVRE_API_TOKEN, password=''.join(random.choice(string.printable) for _ in range(32)))
 
     def authenticate(self, request: HttpRequest):
         access_token: str = request.headers.get('Authorization', '')

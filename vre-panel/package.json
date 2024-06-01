@@ -15,7 +15,7 @@
     "clsx": "^2.0.0",
     "cookie": "~0.6.0",
     "http": "~0.0.1-security",
-    "keycloak-js": "~23.0.3",
+    "keycloak-js": "~24.0.4",
     "next": "13.4.4",
     "next-auth": "~4.5.0",
     "react": "18.2.0",

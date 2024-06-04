@@ -13,3 +13,9 @@ psycopg2==2.9.9
 django-probes==1.7.0
 pyjwt==2.8.0
 cryptography==42.0.7
+nbformat
+python-slugify
+colorhash
+rpy2==3.5.11
+pyflakes
+pytype

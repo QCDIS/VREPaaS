@@ -6,6 +6,10 @@ import rpy2.rinterface as rinterface
 import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
 from rpy2.robjects.packages import importr
+from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
+import logging
+
+rpy2_logger.setLevel(logging.WARNING)
 
 from .extractor import Extractor
 
@@ -13,10 +17,29 @@ from .extractor import Extractor
 r_env = robjects.globalenv
 
 # install R packages
-packnames = ('rlang', 'lobstr', 'purrr',)
+robjects.r('''
+install_package_with_retry <- function(package_name, max_attempts = 5) {
+  for(i in 1:max_attempts) {
+    print(paste("Attempt", i, "to install", package_name))
+    tryCatch({
+      install.packages(package_name, quiet = TRUE)
+      print(paste(package_name, "installed successfully."))
+      return(TRUE)
+    }, warning = function(w) {
+      print(paste("Warning while installing", package_name, ":", w))
+      Sys.sleep(2)
+    }, error = function(e) {
+      print(paste("Failed to install", package_name, ":", e))
+      Sys.sleep(2)
+    })
+  }
+  return(FALSE)
+}
+''')
+packnames = ('rlang', 'lobstr', 'purrr','renv',)
 for p in packnames:
     if not rpackages.isinstalled(p):
-        robjects.r(f'install.packages("{p}")')
+        robjects.r(f'install_package_with_retry("{p}")')
 
 # This R code is used to obtain all assignment variables (source https://adv-r.hadley.nz/expressions.html)
 r_env["result"] = robjects.r("""

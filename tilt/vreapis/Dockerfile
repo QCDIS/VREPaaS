@@ -15,7 +15,7 @@ COPY ./vreapis/requirements.txt /app
 RUN /opt/venv/bin/pip install -r requirements.txt
 
 # Set another directory for installation of R packages to avoid permission problem
-RUN echo 'R_LIBS_USER="~/R/library"' >> ~/.Renviron
+# RUN echo 'R_LIBS_USER="~/R/library"' >> ~/.Renviron
 
 COPY ./vreapis /app
 RUN chmod +x entrypoint.dev.sh

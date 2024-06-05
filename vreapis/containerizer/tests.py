@@ -32,7 +32,7 @@ class ContainerizerTestCase(TestCase):
             dummy_user = User.objects.create_user(dummy_username, password=dummy_password)
         client.login(username=dummy_username, password=dummy_password)
 
-        response = client.get('/api/containerizer/baseimagetags/')
+        response = client.get('/api/containerizer/baseimagetags/', headers={'Authorization': f'Token {settings.NAAVRE_API_TOKEN}'})
         self.assertEqual(response.status_code, 200)
         images = response.json()
         self.assertIsInstance(images, dict)
@@ -49,11 +49,13 @@ class ExtractorTestCase(TestCase):
         'param_string_with_comment': 'param_string value',
     }
 
-    def __init__(self):
+    def setUp(self):
+        super().__init__()
+        self.base_path = ''
         if os.path.exists('resources'):
-            base_path = 'resources'
-        elif os.path.exists('jupyterlab_vre/tests/resources/'):
-            base_path = 'jupyterlab_vre/tests/resources/'
+            self.base_path = 'resources'
+        elif os.path.exists('tests/resources/'):
+            self.base_path = 'tests/resources/'
 
     def create_cell(self, payload_path=None):
         with open(payload_path, 'r') as file:

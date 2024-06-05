@@ -19,3 +19,4 @@ colorhash
 rpy2==3.5.11
 pyflakes
 pytype
+tinydb

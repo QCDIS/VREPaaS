@@ -10,11 +10,23 @@ from urllib.parse import urlencode
 import requests
 import nbformat
 from slugify import slugify
+from unittest import mock
 
 from services.extractor.pyextractor import PyExtractor
 from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
 from db.cell import Cell
+from .views import ExtractorHandler
+
+base_path = ''
+if os.path.exists('resources'):
+    base_path = 'resources'
+elif os.path.exists('tests/resources/'):
+    base_path = 'tests/resources/'
+
+
+def get_auth_header() -> dict[str, str]:
+    return {'Authorization': f'Token {settings.NAAVRE_API_TOKEN}'}
 
 
 class ContainerizerTestCase(TestCase):
@@ -32,7 +44,7 @@ class ContainerizerTestCase(TestCase):
             dummy_user = User.objects.create_user(dummy_username, password=dummy_password)
         client.login(username=dummy_username, password=dummy_password)
 
-        response = client.get('/api/containerizer/baseimagetags/', headers={'Authorization': f'Token {settings.NAAVRE_API_TOKEN}'})
+        response = client.get('/api/containerizer/baseimagetags/', headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
         images = response.json()
         self.assertIsInstance(images, dict)
@@ -51,11 +63,6 @@ class ExtractorTestCase(TestCase):
 
     def setUp(self):  # use setUp instead of __init__, or 'uncaught TypeError: __init__() takes 1 positional argument but 2 were given'
         super().__init__()
-        self.base_path = ''
-        if os.path.exists('resources'):
-            self.base_path = 'resources'
-        elif os.path.exists('tests/resources/'):
-            self.base_path = 'tests/resources/'
 
     def create_cell(self, payload_path=None):
         with open(payload_path, 'r') as file:
@@ -125,7 +132,7 @@ class ExtractorTestCase(TestCase):
         return None
 
     def test_extract_cell(self):
-        notebooks_json_path = os.path.join(self.base_path, 'notebooks')
+        notebooks_json_path = os.path.join(base_path, 'notebooks')
         notebooks_files = glob.glob(
             os.path.join(notebooks_json_path, "*.json")
         )
@@ -143,3 +150,23 @@ class ExtractorTestCase(TestCase):
                 if os.path.basename(notebook_file) in ['test_param_values_Python.json', 'test_param_values_R.json', ]:
                     for param_name in cell['params']:
                         self.assertTrue(cell['param_values'][param_name] == self.param_values_ref[param_name])
+
+
+class ExtractorHandlerTestCase(TestCase):
+    def test(self):
+        notebooks_json_path = os.path.join(base_path, 'notebooks')
+        notebooks_files = glob.glob(os.path.join(notebooks_json_path, "*.json"))
+        for notebook_file in notebooks_files:
+            with open(notebook_file, 'r') as file:
+                notebook = json.load(file)
+                # print(f'[Notebook File]{os.linesep}{notebook_file}')
+                # print(f'[Notebook Content]{os.linesep}{notebook}')
+            file.close()
+            client = Client()
+            response = client.post('/api/containerizer/extractorhandler/', headers=get_auth_header(), data=notebook, content_type="application/json")
+            self.assertEqual(response.status_code, 200)
+            # get JSON response
+            JSON_response = json.loads(response.data)
+            self.assertIsNotNone(JSON_response)
+            cell = notebook['notebook']['cells'][notebook['cell_index']]
+            print('cell: ', cell)

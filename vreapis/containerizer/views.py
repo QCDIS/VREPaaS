@@ -24,6 +24,7 @@ from services.converter import ConverterReactFlowChart
 import utils.cors
 from auth.simple import StaticTokenAuthentication
 from db.catalog import Catalog
+from db.cell import Cell
 
 import common
 
@@ -45,7 +46,10 @@ def get_base_images(request):
     return Response(dat, headers=utils.cors.get_CORS_headers(request))
 
 
-class ExtractorHandler(APIView):
+class ExtractorHandler(APIView, Catalog):
+    authentication_classes = [StaticTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def extract_cell_by_index(self, notebook, cell_index):
         new_nb = copy.deepcopy(notebook)
         if cell_index < len(notebook.cells):
@@ -66,7 +70,7 @@ class ExtractorHandler(APIView):
 
     def post(self, request: Request):
         payload = request.data
-        common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
+        # common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
         kernel = payload['kernel']
         cell_index = payload['cell_index']
         notebook = nbformat.reads(json.dumps(payload['notebook']), nbformat.NO_CONVERT)

@@ -159,8 +159,6 @@ class ExtractorHandlerTestCase(TestCase):
         for notebook_file in notebooks_files:
             with open(notebook_file, 'r') as file:
                 notebook = json.load(file)
-                # print(f'[Notebook File]{os.linesep}{notebook_file}')
-                # print(f'[Notebook Content]{os.linesep}{notebook}')
             file.close()
             client = Client()
             response = client.post('/api/containerizer/extractorhandler/', headers=get_auth_header(), data=notebook, content_type="application/json")

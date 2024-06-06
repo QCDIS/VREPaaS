@@ -66,11 +66,11 @@ class ExtractorHandler(APIView, Catalog):
 
     def get(self, request: Request):
         msg_json = dict(title="Operation not supported.")
-        return Response(msg_json)
+        return Response(msg_json, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request: Request):
         payload = request.data
-        # common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
+        common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
         kernel = payload['kernel']
         cell_index = payload['cell_index']
         notebook = nbformat.reads(json.dumps(payload['notebook']), nbformat.NO_CONVERT)
@@ -145,3 +145,55 @@ class ExtractorHandler(APIView, Catalog):
         cell.chart_obj = chart
         Catalog.editor_buffer = copy.deepcopy(cell)
         return Response(cell.toJSON())
+
+
+class TypesHandler(APIView, Catalog):
+    authentication_classes = [StaticTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request):
+        payload = request.data
+        common.logger.debug('TypesHandler. payload: ' + str(payload))
+        port = payload['port']
+        p_type = payload['type']
+        cell = Catalog.editor_buffer
+        cell.types[port] = p_type
+
+
+class BaseImageHandler(APIView, Catalog):
+    authentication_classes = [StaticTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request: Request):
+        payload = request.data
+        common.logger.debug('BaseImageHandler. payload: ' + str(payload))
+        print('BaseImageHandler. payload: ' + str(payload))
+        base_image = payload['image']
+        cell = Catalog.editor_buffer
+        cell.base_image = base_image
+
+
+class CellsHandler(APIView, Catalog):
+    authentication_classes = [StaticTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request):
+        msg_json = dict(title="Operation not supported.")
+        return Response(msg_json)
+
+    def post(self, request: Request):
+        try:
+            current_cell = Catalog.editor_buffer
+            current_cell.clean_code()
+            current_cell.clean_title()
+            current_cell.clean_task_name()
+        except Exception as ex:
+            err_msg = 'Error setting cell: ' + str(ex)
+            common.logger.error(err_msg)
+            return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
+
+        common.logger.debug('current_cell: ' + current_cell.toJSON())
+        all_vars = current_cell.params + current_cell.inputs + current_cell.outputs
+        for param_name in all_vars:
+            if param_name not in current_cell.types:
+                pass

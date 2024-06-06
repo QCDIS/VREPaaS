@@ -49,7 +49,7 @@ class ExtractorTestCase(TestCase):
         'param_string_with_comment': 'param_string value',
     }
 
-    def setUp(self):
+    def setUp(self):  # use setUp instead of __init__, or 'uncaught TypeError: __init__() takes 1 positional argument but 2 were given'
         super().__init__()
         self.base_path = ''
         if os.path.exists('resources'):

@@ -4,6 +4,7 @@ import traceback
 import copy
 import hashlib
 from typing import Optional
+from pathlib import Path
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -177,6 +178,13 @@ class BaseImageHandler(APIView, Catalog):
 class CellsHandler(APIView, Catalog):
     authentication_classes = [StaticTokenAuthentication]
     permission_classes = [IsAuthenticated]
+    cells_path = os.path.join(str(Path.home()), 'NaaVRE', 'cells')
+
+    def write_cell_to_file(self, current_cell):
+        Path('/tmp/workflow_cells/cells').mkdir(parents=True, exist_ok=True)
+        with open('/tmp/workflow_cells/cells/' + current_cell.task_name + '.json', 'w') as f:
+            f.write(current_cell.toJSON())
+            f.close()
 
     def get(self, request: Request):
         return return_error('Operation not supported.', stat=status.HTTP_400_BAD_REQUEST)
@@ -206,4 +214,27 @@ class CellsHandler(APIView, Catalog):
                 Catalog.add_cell(current_cell)
         except Exception as ex:
             return return_error('Error adding or updating cell in catalog', ex, status.HTTP_400_BAD_REQUEST)
+
+        if os.getenv('DEBUG'):
+            self.write_cell_to_file(current_cell)
+
+        if not os.path.exists(self.cells_path):
+            os.mkdir(self.cells_path)
+
+        cell_path = os.path.join(self.cells_path, current_cell.task_name)
+
+        if os.path.exists(cell_path):
+            for files in os.listdir(cell_path):
+                path = os.path.join(cell_path, files)
+                if os.path.isfile(path):
+                    os.remove(path)
+        else:
+            os.mkdir(cell_path)
+
+        registry_credentials = Catalog.get_registry_credentials()
+        if not registry_credentials or len(registry_credentials) <= 0:
+            return return_error('Registry credentials not found', stat=status.HTTP_400_BAD_REQUEST)
+        image_repo = registry_credentials[0]['url']
+        if not image_repo:
+            return return_error('Registry not found')
 

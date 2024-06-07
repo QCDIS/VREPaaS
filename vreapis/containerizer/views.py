@@ -3,12 +3,12 @@ import json
 import traceback
 import copy
 import hashlib
+from typing import Optional
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
-from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 import requests
@@ -29,6 +29,11 @@ from db.cell import Cell
 import common
 
 
+def return_error(err_msg: str, e: Optional[Exception], stat: status = status.HTTP_400_BAD_REQUEST) -> Response:
+    common.logger.error(err_msg, e)
+    return Response(err_msg, status=stat)
+
+
 @api_view(['GET'])
 @authentication_classes([StaticTokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -40,9 +45,7 @@ def get_base_images(request):
         response.raise_for_status()
         dat: dict[str, dict[str, str]] = response.json()
     except (requests.ConnectionError, requests.HTTPError, requests.JSONDecodeError,) as e:
-        msg: str = f'Error loading base image tags from {url}\n{e}'
-        common.logger.debug(msg)
-        return Response({'error': msg}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return return_error(f'Error loading base image tags from {url}', e, stat=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response(dat, headers=utils.cors.get_CORS_headers(request))
 
 
@@ -65,8 +68,7 @@ class ExtractorHandler(APIView, Catalog):
         return new_nb
 
     def get(self, request: Request):
-        msg_json = dict(title="Operation not supported.")
-        return Response(msg_json, status=status.HTTP_400_BAD_REQUEST)
+        return return_error("Operation not supported.", stat=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request: Request):
         payload = request.data
@@ -85,7 +87,7 @@ class ExtractorHandler(APIView, Catalog):
             try:
                 extractor = HeaderExtractor(notebook, source)
             except jsonschema.ValidationError as e:
-                return Response({'message': f"Error in cell header: {e}", 'reason': None, 'traceback': traceback.format_exception(e), }, status=HTTP_400_BAD_REQUEST)
+                return return_error('Error in cell header', e, stat=status.HTTP_400_BAD_REQUEST)
 
             # Extractor based on code analysis. Used if the cell has no header, or if some values are not specified in the header
             if not extractor.is_complete():
@@ -167,7 +169,6 @@ class BaseImageHandler(APIView, Catalog):
     def post(self, request: Request):
         payload = request.data
         common.logger.debug('BaseImageHandler. payload: ' + str(payload))
-        print('BaseImageHandler. payload: ' + str(payload))
         base_image = payload['image']
         cell = Catalog.editor_buffer
         cell.base_image = base_image
@@ -178,8 +179,7 @@ class CellsHandler(APIView, Catalog):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Request):
-        msg_json = dict(title="Operation not supported.")
-        return Response(msg_json)
+        return return_error('Operation not supported.', stat=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request: Request):
         try:
@@ -188,12 +188,22 @@ class CellsHandler(APIView, Catalog):
             current_cell.clean_title()
             current_cell.clean_task_name()
         except Exception as ex:
-            err_msg = 'Error setting cell: ' + str(ex)
-            common.logger.error(err_msg)
-            return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
+            return return_error('Error setting cell', ex, status.HTTP_400_BAD_REQUEST)
 
         common.logger.debug('current_cell: ' + current_cell.toJSON())
         all_vars = current_cell.params + current_cell.inputs + current_cell.outputs
         for param_name in all_vars:
             if param_name not in current_cell.types:
-                pass
+                return return_error(f'{param_name} not in types', stat=status.HTTP_400_BAD_REQUEST)
+
+        if not hasattr(current_cell, 'base_image'):
+            return return_error(f'{current_cell.task_name} has not selected base image', stat=status.HTTP_400_BAD_REQUEST)
+        try:
+            doc_cell = Catalog.get_cell_from_og_node_id(current_cell.node_id)
+            if doc_cell:
+                Catalog.update_cell(current_cell)
+            else:
+                Catalog.add_cell(current_cell)
+        except Exception as ex:
+            return return_error('Error adding or updating cell in catalog', ex, status.HTTP_400_BAD_REQUEST)
+

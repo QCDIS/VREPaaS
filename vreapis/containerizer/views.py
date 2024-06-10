@@ -293,7 +293,7 @@ class CellsHandler(APIView, Catalog):
         common.logger.debug('files_info: ' + str(files_info))
         common.logger.debug('cell.dependencies: ' + str(cell.dependencies))
         set_conda_deps, set_pip_deps = self.map_dependencies(dependencies=cell.dependencies, module_name_mapping=module_name_mapping, )
-        loader = PackageLoader('jupyterlab_vre', 'templates')
+        loader = PackageLoader('.', 'templates')
         template_env = Environment(loader=loader, trim_blocks=True, lstrip_blocks=True)
 
         if cell.title.startswith('visualize-'):

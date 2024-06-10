@@ -198,7 +198,7 @@ class CellsHandlerTestCase(TestCase):
         return test_cell, cell
 
     def call_cell_handler(self):
-        return self.client.post('/api/containerizer/cellshandler/', content_type='application/json')
+        return self.client.post('/api/containerizer/cellshandler/', content_type='application/json', headers=get_auth_header())
 
     def delete_text(self, file_path, text_to_delete):
         # Read the file

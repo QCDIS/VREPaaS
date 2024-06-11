@@ -379,7 +379,7 @@ class CellsHandlerTestCase(TestCase):
                 if 'example_inputs' in cell:
                     example_inputs = ' '.join(cell['example_inputs'])
                 command = 'Rscript ' + run_local_cell_path + ' ' + example_inputs
-                R_dependencies: list[str] = ['optparse', 'jsonlite', ]
+                R_dependencies: list[str] = ['optparse', 'jsonlite', ]  # Some versions [e.g., older ones] may make this test fail
                 for dependency in R_dependencies:
                     result = subprocess.run(['Rscript', '-e', f'if(!require("{dependency}")) install.packages("{dependency}")'], capture_output=True, text=True)
                     print(result.stdout)

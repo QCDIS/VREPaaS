@@ -1,0 +1,52 @@
+[
+    {
+        "save": false,
+        "kernel": "ipython",
+        "cell_index": 0,
+        "notebook": {
+            "metadata": {
+                "kernelspec": {
+                    "display_name": "Python 3 (ipykernel)",
+                    "language": "python",
+                    "name": "python3"
+                },
+                "language_info": {
+                    "codemirror_mode": {
+                        "name": "ipython",
+                        "version": 3
+                    },
+                    "file_extension": ".py",
+                    "mimetype": "text/x-python",
+                    "name": "python",
+                    "nbconvert_exporter": "python",
+                    "pygments_lexer": "ipython3",
+                    "version": "3.11.9"
+                }
+            },
+            "nbformat_minor": 5,
+            "nbformat": 4,
+            "cells": [
+                {
+                    "cell_type": "code",
+                    "source": "# input names\nnames = [\"Alice\", \"Bob\"]",
+                    "metadata": {
+                        "trusted": true
+                    },
+                    "execution_count": null,
+                    "outputs": [],
+                    "id": "87f87efd-50e8-41cd-b4f6-2ba14d442cfb"
+                },
+                {
+                    "cell_type": "code",
+                    "source": "# print names\nfor name in names:\n    print(f\"Hello, {name}!\")",
+                    "metadata": {
+                        "trusted": true
+                    },
+                    "execution_count": null,
+                    "outputs": [],
+                    "id": "848c006a-bf2b-439d-8fec-ed16c5eae66d"
+                }
+            ]
+        }
+    }
+]

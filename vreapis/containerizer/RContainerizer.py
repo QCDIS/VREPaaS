@@ -1,9 +1,9 @@
 import logging
 import os
 
-from jinja2 import Environment, PackageLoader
+import jinja2
 
-logger = logging.getLogger(__name__)
+import common
 
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
@@ -15,7 +15,7 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 
 # Add the handler to the logger
-logger.addHandler(handler)
+common.logger.addHandler(handler)
 
 
 class RContainerizer:
@@ -64,16 +64,16 @@ class RContainerizer:
         inputs.append('id')
         cell.concatenate_all_inputs()
         types['id'] = 'str'
-        logger.debug("inputs: " + str(cell.inputs))
-        logger.debug("types: " + str(cell.types))
-        logger.debug("params: " + str(cell.params))
-        logger.debug("outputs: " + str(cell.outputs))
+        common.logger.debug("inputs: " + str(cell.inputs))
+        common.logger.debug("types: " + str(cell.types))
+        common.logger.debug("params: " + str(cell.params))
+        common.logger.debug("outputs: " + str(cell.outputs))
 
-        logger.debug('files_info: ' + str(files_info))
-        logger.debug('cell.dependencies: ' + str(cell.dependencies))
+        common.logger.debug('files_info: ' + str(files_info))
+        common.logger.debug('cell.dependencies: ' + str(cell.dependencies))
 
-        loader = PackageLoader('jupyterlab_vre', 'templates')
-        template_env = Environment(loader=loader, trim_blocks=True, lstrip_blocks=True)
+        loader = jinja2.FileSystemLoader(searchpath=f'{common.project_root}/templates')
+        template_env = jinja2.Environment(loader=loader, trim_blocks=True, lstrip_blocks=True)
 
         template_cell = template_env.get_template('R_cell_template.jinja2')
         template_dockerfile = template_env.get_template('dockerfile_template_conda.jinja2')
@@ -93,6 +93,6 @@ class RContainerizer:
         template_dockerfile.stream(task_name=cell.task_name, base_image=cell.base_image).dump(files_info['dockerfile']['path'])
 
         set_conda_deps, set_pip_deps = RContainerizer.map_dependencies(cell.dependencies, module_name_mapping)
-        logger.debug('cell.dependencies.conda: ' + str(cell.dependencies))
+        common.logger.debug('cell.dependencies.conda: ' + str(cell.dependencies))
         template_conda = template_env.get_template('conda_env_template.jinja2')
         template_conda.stream(base_image=cell.base_image, conda_deps=list(set_conda_deps), pip_deps=list(set_pip_deps)).dump(files_info['environment']['path'])

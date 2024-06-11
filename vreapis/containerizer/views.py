@@ -3,7 +3,6 @@ import os
 import json
 import re
 import sys
-import traceback
 import copy
 import hashlib
 import uuid
@@ -12,7 +11,7 @@ from pathlib import Path
 
 import autopep8
 from distro import distro
-from jinja2 import PackageLoader, Environment
+import jinja2
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -293,8 +292,8 @@ class CellsHandler(APIView, Catalog):
         common.logger.debug('files_info: ' + str(files_info))
         common.logger.debug('cell.dependencies: ' + str(cell.dependencies))
         set_conda_deps, set_pip_deps = self.map_dependencies(dependencies=cell.dependencies, module_name_mapping=module_name_mapping, )
-        loader = PackageLoader('.', 'templates')
-        template_env = Environment(loader=loader, trim_blocks=True, lstrip_blocks=True)
+        loader = jinja2.FileSystemLoader(searchpath=f'{common.project_root}/templates')
+        template_env = jinja2.Environment(loader=loader, trim_blocks=True, lstrip_blocks=True)
 
         if cell.title.startswith('visualize-'):
             template_cell = template_env.get_template('vis_cell_template.jinja2')
@@ -488,3 +487,5 @@ class CellsHandler(APIView, Catalog):
             current_cell.set_image_version(image_version)
             Catalog.delete_cell_from_task_name(current_cell.task_name)
             Catalog.add_cell(current_cell)
+
+        return Response({'wf_id': wf_id, 'dispatched_github_workflow': do_dispatch_github_workflow, 'image_version': image_version})

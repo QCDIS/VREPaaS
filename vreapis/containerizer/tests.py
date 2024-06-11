@@ -343,9 +343,9 @@ class CellsHandlerTestCase(TestCase):
             test_cell, cell = self.create_cell_and_add_to_cat(cell_path=cell_path)
             response = self.call_cell_handler()
             self.assertEqual(200, response.status_code)
-            wf_id = json.loads(response.body.decode('utf-8'))['wf_id']
+            wf_id = response.data['wf_id']
             wf_creation_utc = datetime.datetime.now(tz=datetime.timezone.utc)
-            dispatched_github_workflow = json.loads(response.body.decode('utf-8'))['dispatched_github_workflow']
+            dispatched_github_workflow = response.data['dispatched_github_workflow']
             test_cells.append({
                 'wf_id': wf_id,
                 'wf_creation_utc': wf_creation_utc,
@@ -379,6 +379,12 @@ class CellsHandlerTestCase(TestCase):
                 if 'example_inputs' in cell:
                     example_inputs = ' '.join(cell['example_inputs'])
                 command = 'Rscript ' + run_local_cell_path + ' ' + example_inputs
+                R_dependencies: list[str] = ['optparse', 'jsonlite', ]
+                for dependency in R_dependencies:
+                    result = subprocess.run(['Rscript', '-e', f'if(!require("{dependency}")) install.packages("{dependency}")'], capture_output=True, text=True)
+                    print(result.stdout)
+                    print(result.stderr)
+                    self.assertEqual(0, result.returncode, result.stderr)
                 result = subprocess.run(shlex.split(command), capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, result.stderr)
 

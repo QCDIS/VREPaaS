@@ -1,6 +1,9 @@
 import logging
 import urllib3
+import os
 import requests.adapters
+
+project_root = os.path.dirname(os.path.abspath(__file__))
 
 # customized requests.Session [w/ auto retry]
 session = requests.Session()

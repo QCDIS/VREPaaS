@@ -179,6 +179,7 @@ LOGGING = {
     },
 }
 
+APPEND_SLASH = False
 
 BASE_PATH = os.environ.get('BASE_PATH', '').strip('/')
 

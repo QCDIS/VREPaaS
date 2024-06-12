@@ -164,7 +164,7 @@ class ExtractorHandlerTestCase(TestCase):
                 notebook = json.load(file)
             file.close()
             client = Client()
-            response = client.post('/api/containerizer/extract/', headers=get_auth_header(), data=notebook, content_type="application/json")
+            response = client.post('/api/containerizer/extract', headers=get_auth_header(), data=notebook, content_type="application/json")
             self.assertEqual(response.status_code, 200)
             # get JSON response
             JSON_response = json.loads(response.data)
@@ -198,7 +198,7 @@ class CellsHandlerTestCase(TestCase):
         return test_cell, cell
 
     def call_cell_handler(self):
-        return self.client.post('/api/containerizer/addcell/', content_type='application/json', headers=get_auth_header())
+        return self.client.post('/api/containerizer/addcell', content_type='application/json', headers=get_auth_header())
 
     def delete_text(self, file_path, text_to_delete):
         # Read the file

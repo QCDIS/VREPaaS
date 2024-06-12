@@ -1,4 +1,6 @@
-FROM python:3.12.2-slim
+# FROM python:3.12.2-slim
+FROM python:3.11.9-slim
+# Dependency pytype [used by PyExtractor] complains 'Python versions > 3.11 are not yet supported'
 
 WORKDIR /app
 

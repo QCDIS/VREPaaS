@@ -52,7 +52,7 @@ class GetBaseImagesTestCase(TestCase):
             dummy_user = User.objects.create_user(dummy_username, password=dummy_password)
         client.login(username=dummy_username, password=dummy_password)
 
-        response = client.get('/api/containerizer/baseimagetags/', headers=get_auth_header())
+        response = client.get('/api/containerizer/baseimagetags', headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
         images = response.json()
         self.assertIsInstance(images, dict)

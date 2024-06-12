@@ -1,0 +1,1 @@
+{"image": {"build": "ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.14", "runtime": "ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.14"}}

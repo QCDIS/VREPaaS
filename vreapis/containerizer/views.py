@@ -38,8 +38,8 @@ from db.cell import Cell
 import common
 
 
-def return_error(err_msg: str, e: Optional[Exception], stat: status = status.HTTP_400_BAD_REQUEST) -> Response:
-    common.logger.error(err_msg, e)
+def return_error(err_msg: str = 'Unknown ERROR', e: Optional[Exception] = None, stat: status = status.HTTP_400_BAD_REQUEST) -> Response:
+    common.logger.error(err_msg, exc_info=e)
     return Response(err_msg, status=stat)
 
 
@@ -169,6 +169,7 @@ class TypesHandler(APIView, Catalog):
         p_type = payload['type']
         cell = Catalog.editor_buffer
         cell.types[port] = p_type
+        return Response({})  # must return a Response, or 500 occurs
 
 
 class BaseImageHandler(APIView, Catalog):
@@ -181,6 +182,7 @@ class BaseImageHandler(APIView, Catalog):
         base_image = payload['image']
         cell = Catalog.editor_buffer
         cell.base_image = base_image
+        return Response({})
 
 
 class CellsHandler(APIView, Catalog):

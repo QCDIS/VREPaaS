@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from pathlib import Path
 
 from tinydb import TinyDB, where
@@ -38,7 +39,6 @@ class Catalog:
     def update_cell(cls, cell: Cell):
         cls.cells.update(cell.__dict__, where('node_id') == cell.node_id)
 
-
     @classmethod
     def get_search_entries(cls):
         return cls.search_entry.all()
@@ -72,7 +72,7 @@ class Catalog:
 
     @classmethod
     def get_repository_credentials(cls):
-        credentials = cls.repository.all()
+        credentials = cls.repositories.all()
         return credentials
 
     @classmethod
@@ -181,3 +181,46 @@ class Catalog:
             kernel=cell_document.get('kernel', ''),
             notebook_dict=cell_document.get('notebook_dict', {})
         )
+
+    @classmethod
+    def get_registry_url(cls, registry_url, github_url):
+        """ Convert registry URL
+
+        https://hub.docker.com/u/my_username/ -> docker.io/my_username
+        oci://ghcr.io/my_username/my_repo/ -> ghcr.io/my_username/my_repo
+        oci://my_domain/my/custom/path/ -> my_domain/my/custom/path
+        None -> ghcr.io url, derived from github_url
+
+        Resulting urls can be converted to pullable, e.g.:
+
+        docker pull {url}/{image_name}:{tag}
+
+        where image_name doesn't contain any path information (e.g. my-cell-name)
+
+        """
+        if registry_url:
+            m = re.match(r'^https://hub\.docker\.com/u/(\w+)/?$', registry_url)
+            if m:
+                return f"docker.io/{m.group(1)}"
+            m = re.match(r'^oci://([\w\./-]+?)/?$', registry_url)
+            if m:
+                return m.group(1)
+            raise ValueError(f"Could not parse registry url: {registry_url}")
+        else:
+            m = re.match(r'^https://github.com/([\w-]+/[\w-]+)(?:\.git)?', github_url)
+            if m:
+                return f"ghcr.io/{m.group(1).lower()}"
+
+
+github_url: str = os.getenv('CELL_GITHUB')
+github_token: str = os.getenv('CELL_GITHUB_TOKEN')
+registry_url: str = os.getenv('REGISTRY_URL')
+# force: bool = True if os.getenv('FORCED_CREDENTIALS_REPLACEMENT', 'false').lower() == 'true' else 'false'
+registry_url = Catalog.get_registry_url(registry_url, github_url)
+
+input_repository_credentials = Repository(github_url.split('https://github.com/')[1], github_url, github_token)
+Catalog.add_gh_credentials(input_repository_credentials)
+Catalog.add_repository_credentials(input_repository_credentials)
+
+input_registry_credentials = Repository(registry_url, registry_url, None)
+Catalog.add_registry_credentials(input_registry_credentials)

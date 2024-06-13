@@ -4,6 +4,7 @@ import json
 import re
 import sys
 import copy
+import time
 import hashlib
 import uuid
 from typing import Optional
@@ -370,7 +371,7 @@ class CellsHandler(APIView, Catalog):
         else:
             return None
 
-    def dispatch_github_workflow(owner, repository_name, task_name, files_info, repository_token, image, wf_id=None, image_version=None):
+    def dispatch_github_workflow(self, owner, repository_name, task_name, files_info, repository_token, image, wf_id=None, image_version=None):
         url = CellsHandler.github_url_repos + '/' + owner + '/' + repository_name + '/actions/workflows/' + CellsHandler.github_workflow_file_name + '/dispatches'
         resp = common.session.post(
             url=url,
@@ -467,10 +468,16 @@ class CellsHandler(APIView, Catalog):
         repository_name = url_repos.split('https://github.com/')[1].split('/')[1]
         if '.git' in repository_name:
             repository_name = repository_name.split('.git')[0]
-        try:
-            gh_repository = gh_token.get_repo(owner + '/' + repository_name)
-        except Exception as ex:
-            return return_error(f'Error getting repository', ex)
+        retry_count: int = 0
+        while True:
+            try:
+                gh_repository = gh_token.get_repo(owner + '/' + repository_name)
+                break
+            except Exception as ex:
+                time.sleep(common.retry_delay(retry_count))
+                retry_count += 1
+                if retry_count >= common.max_retry_count:
+                    return return_error(f'Error getting repository', ex)
         do_dispatch_github_workflow, image_version = self.create_or_update_cell_in_repository(task_name=current_cell.task_name, repository=gh_repository, files_info=files_info, )
         wf_id = str(uuid.uuid4())
 

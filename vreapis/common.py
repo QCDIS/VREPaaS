@@ -21,4 +21,4 @@ logger = logging.getLogger(__name__)
 
 def retry_delay(cumulated_retry_count: int, initial_delay: int | float = initial_retry_delay, max_delay: int | float = max_retry_delay) -> int | float:
     """delay is in seconds"""
-    return min(initial_delay ** cumulated_retry_count, max_delay)
+    return min(initial_delay * 2 ** cumulated_retry_count, max_delay)

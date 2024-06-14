@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from virtual_labs.views import VirtualLabViewSet, VirtualLabInstanceViewSet
-from cells.views import CellsViewSet
 from workflows.views import WorkflowViewSet
 from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
 from paas_configuration.views import PaasConfigurationViewSet
@@ -31,7 +30,6 @@ router = routers.DefaultRouter()
 router.register(r'vlabs', VirtualLabViewSet)
 router.register(r'vlab_instances', VirtualLabInstanceViewSet)
 router.register(r'workflows', WorkflowViewSet)
-router.register(r'cells', CellsViewSet)
 router.register(r'dataprods', DataProductsViewSet)
 router.register(r'geodataprods', GeoDataProductsViewSet)
 router.register(r'paas_configuration', PaasConfigurationViewSet)

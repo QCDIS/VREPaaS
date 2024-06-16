@@ -29,8 +29,6 @@ class Catalog:
     registry_credentials = db.table('registry_credentials')
     search_entry = db.table('search_entries')
 
-    editor_buffer: Cell
-
     @classmethod
     def add_search_entry(cls, query: dict):
         cls.search_entry.insert(query)

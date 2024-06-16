@@ -2,44 +2,30 @@ import json
 import re
 
 from slugify import slugify
+from django.db import models
+
+import common
 
 
-class Cell():
-    title: str
-    task_name: str
-    original_source: str
-    base_image: dict
-    inputs: list
-    outputs: list
-    params: list
-    param_values: dict
-    confs: dict
-    dependencies: list
-    chart_obj: dict
-    node_id: str
-    container_source: str
-    global_conf: dict
-    kernel: str
-    notebook_json: dict
-    image_version: str
-
-    def __init__(self, title, task_name, original_source, inputs, outputs, params, confs, dependencies, container_source, chart_obj=None, node_id='', kernel='', notebook_dict=None, image_version=None) -> None:
-        self.title = slugify(title.strip())
-        self.task_name = slugify(task_name)
-        self.original_source = original_source
-        self.types = dict()
-        self.add_inputs(inputs)
-        self.add_outputs(outputs)
-        self.add_params(params)
-        self.add_param_values(params)
-        self.confs = confs
-        self.all_inputs = list(inputs) + list(params)
-        self.dependencies = list(sorted(dependencies, key=lambda x: x['name']))
-        self.chart_obj = chart_obj
-        self.node_id = node_id
-        self.container_source = container_source
-        self.kernel = kernel
-        self.notebook_dict = notebook_dict
+class Cell(models.Model):
+    title = models.CharField(max_length=common.default_varchar_length)
+    task_name = models.CharField(max_length=common.default_varchar_length)
+    original_source = models.CharField(max_length=common.default_varchar_length)
+    types = models.JSONField(blank=True, null=True, default=dict)
+    base_image = models.JSONField(blank=True, null=True)
+    inputs = models.JSONField(blank=True, null=True, default=list)
+    outputs = models.JSONField(blank=True, null=True, default=list)
+    params = models.JSONField(blank=True, null=True, default=list)
+    param_values = models.JSONField(blank=True, null=True)
+    confs = models.JSONField(blank=True, null=True)
+    dependencies = models.JSONField(blank=True, null=True)
+    chart_obj = models.JSONField(blank=True, null=True)
+    node_id = models.CharField(max_length=common.default_varchar_length, primary_key=True)
+    container_source = models.CharField(max_length=common.default_varchar_length)
+    global_conf = models.JSONField(blank=True, null=True)
+    kernel = models.CharField(max_length=common.default_varchar_length)
+    notebook_dict = models.JSONField(blank=True, null=True)
+    image_version = models.CharField(max_length=common.default_varchar_length)
 
     def _extract_types(self, vars_dict):
         """ Extract types to self.types and return list of var names

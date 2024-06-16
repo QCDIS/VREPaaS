@@ -35,6 +35,7 @@ ALLOW_INSECURE_TLS = (os.getenv('ALLOW_INSECURE_TLS', 'false').lower() ==
 # Application definition
 
 INSTALLED_APPS = [
+    'catalog',
     'workflows',
     'virtual_labs',
     'data_products',

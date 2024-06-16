@@ -7,6 +7,8 @@ max_retry_count: int = 10
 initial_retry_delay: int | float = 0.1
 max_retry_delay: int | float = 5
 
+default_varchar_length: int = 255
+
 project_root: str = os.path.dirname(os.path.abspath(__file__))
 
 # customized requests.Session [w/ auto retry]

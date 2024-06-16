@@ -13,19 +13,25 @@ from pathlib import Path
 import autopep8
 from distro import distro
 import jinja2
-from rest_framework.permissions import IsAuthenticated
+from django.db.models import QuerySet
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework import viewsets
+from rest_framework.request import Request
 import requests
 import nbformat
 import jsonschema
 from slugify import slugify
 from github import Github, UnknownObjectException
 
+from catalog.serializers import CellSerializer
 from containerizer.RContainerizer import RContainerizer
+from db.repository import Repository
 from services.extractor.extractor import DummyExtractor
 from services.extractor.headerextractor import HeaderExtractor
 from services.extractor.pyextractor import PyExtractor
@@ -34,7 +40,7 @@ from services.converter import ConverterReactFlowChart
 import utils.cors
 from auth.simple import StaticTokenAuthentication
 from db.catalog import Catalog
-from db.cell import Cell
+from catalog.models import Cell
 
 import common
 
@@ -155,43 +161,21 @@ class ExtractorHandler(APIView, Catalog):
         chart = {'offset': {'x': 0, 'y': 0, }, 'scale': 1, 'nodes': {node_id: node}, 'links': {}, 'selected': {}, 'hovered': {}, }
 
         cell.chart_obj = chart
-        Catalog.editor_buffer = copy.deepcopy(cell)
         return Response(cell.toJSON())
 
 
-class TypesHandler(APIView, Catalog):
-    authentication_classes = [StaticTokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request: Request):
-        payload = request.data
-        common.logger.debug('TypesHandler. payload: ' + str(payload))
-        port = payload['port']
-        p_type = payload['type']
-        cell = Catalog.editor_buffer
-        cell.types[port] = p_type
-        return Response({})  # must return a Response, or 500 occurs
-
-
-class BaseImageHandler(APIView, Catalog):
-    authentication_classes = [StaticTokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request: Request):
-        payload = request.data
-        common.logger.debug('BaseImageHandler. payload: ' + str(payload))
-        base_image = payload['image']
-        cell = Catalog.editor_buffer
-        cell.base_image = base_image
-        return Response({})
-
-
-class CellsHandler(APIView, Catalog):
-    authentication_classes = [StaticTokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    cells_path = os.path.join(str(Path.home()), 'NaaVRE', 'cells')
-    github_url_repos = 'https://api.github.com/repos'
-    github_workflow_file_name = 'build-push-docker.yml'
+class CellsHandler(viewsets.ModelViewSet):
+    queryset: QuerySet = Cell.objects.all()
+    serializer_class = CellSerializer
+    authentication_classes: list[BaseAuthentication] = [StaticTokenAuthentication]
+    permission_classes: list[BasePermission] = [IsAuthenticated]
+    cells_path: str = os.path.join(str(Path.home()), 'NaaVRE', 'cells')
+    github_url_repos: str = 'https://api.github.com/repos'
+    github_workflow_file_name: str = 'build-push-docker.yml'
+    github_url: str = os.getenv('CELL_GITHUB')
+    github_token: str = os.getenv('CELL_GITHUB_TOKEN')
+    registry_url: str = os.getenv('REGISTRY_URL')
+    repo_name: str = github_url.split('https://github.com/')[1]
 
     def write_cell_to_file(self, current_cell):
         Path('/tmp/workflow_cells/cells').mkdir(parents=True, exist_ok=True)
@@ -391,12 +375,15 @@ class CellsHandler(APIView, Catalog):
         )
         return resp
 
-    def get(self, request: Request):
-        return return_error('Operation not supported.')
+    def get_registry_credentials(self) -> list[dict[str, str]]:
+        return [Repository(CellsHandler.registry_url, CellsHandler.registry_url, None).__dict__]
 
-    def post(self, request: Request):
+    def get_repositories(self) -> list[dict[str, str]]:
+        return [Repository(CellsHandler.repo_name, CellsHandler.github_url, CellsHandler.github_token).__dict__]
+
+    def create(self, request: Request, *args, **kwargs):
         try:
-            current_cell = Catalog.editor_buffer
+            current_cell = Cell(**request.data)
             current_cell.clean_code()
             current_cell.clean_title()
             current_cell.clean_task_name()
@@ -405,6 +392,7 @@ class CellsHandler(APIView, Catalog):
 
         common.logger.debug('current_cell: ' + current_cell.toJSON())
         all_vars = current_cell.params + current_cell.inputs + current_cell.outputs
+        # all_vars = json.loads(current_cell.params) + json.loads(current_cell.inputs) + json.loads(current_cell.outputs)
         for param_name in all_vars:
             if param_name not in current_cell.types:
                 return return_error(f'{param_name} not in types')
@@ -412,11 +400,14 @@ class CellsHandler(APIView, Catalog):
         if not hasattr(current_cell, 'base_image'):
             return return_error(f'{current_cell.task_name} has not selected base image')
         try:
-            doc_cell = Catalog.get_cell_from_og_node_id(current_cell.node_id)
-            if doc_cell:
-                Catalog.update_cell(current_cell)
-            else:
-                Catalog.add_cell(current_cell)
+            # doc_cell = Catalog.get_cell_from_og_node_id(current_cell.node_id)
+            # if doc_cell:
+            #     Catalog.update_cell(current_cell)
+            # else:
+            #     Catalog.add_cell(current_cell)
+            serializer: CellSerializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            instance, created = Cell.objects.update_or_create(defaults=serializer.validated_data)
         except Exception as ex:
             return return_error('Error adding or updating cell in catalog', ex)
 
@@ -436,7 +427,7 @@ class CellsHandler(APIView, Catalog):
         else:
             os.mkdir(cell_path)
 
-        registry_credentials = Catalog.get_registry_credentials()
+        registry_credentials = self.get_registry_credentials()
         if not registry_credentials or len(registry_credentials) <= 0:
             return return_error('Registry credentials not found')
         image_repo = registry_credentials[0]['url']
@@ -453,7 +444,7 @@ class CellsHandler(APIView, Catalog):
             return return_error(f'Kernel {current_cell.kernel} not supported')
 
         # upload to GIT
-        cat_repositories = Catalog.get_repositories()
+        cat_repositories = self.get_repositories()
 
         repo_token = cat_repositories[0]['token']
         if not repo_token:
@@ -494,7 +485,11 @@ class CellsHandler(APIView, Catalog):
             if resp.status_code != 201 and resp.status_code != 200 and resp.status_code != 204:
                 return return_error(resp.text)
             current_cell.set_image_version(image_version)
-            Catalog.delete_cell_from_task_name(current_cell.task_name)
-            Catalog.add_cell(current_cell)
+            # Catalog.delete_cell_from_task_name(current_cell.task_name)
+            # Catalog.add_cell(current_cell)
+            Cell.objects.filter(task_name=current_cell.task_name).delete()
+            serializer = self.get_serializer(data=current_cell)
+            serializer.is_valid(raise_exception=True)
+            instance = serializer.save()
 
         return Response({'wf_id': wf_id, 'dispatched_github_workflow': do_dispatch_github_workflow, 'image_version': image_version})

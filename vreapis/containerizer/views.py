@@ -392,7 +392,6 @@ class CellsHandler(viewsets.ModelViewSet):
 
         common.logger.debug('current_cell: ' + current_cell.toJSON())
         all_vars = current_cell.params + current_cell.inputs + current_cell.outputs
-        # all_vars = json.loads(current_cell.params) + json.loads(current_cell.inputs) + json.loads(current_cell.outputs)
         for param_name in all_vars:
             if param_name not in current_cell.types:
                 return return_error(f'{param_name} not in types')

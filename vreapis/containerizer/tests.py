@@ -180,25 +180,22 @@ class CellsHandlerTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-    def create_cell_and_add_to_cat(self, cell_path=None):
+    def create_cell_and_add_to_cat(self, cell_path=None) -> (dict, dict):
         print('Creating cell from: ', cell_path)
         with open(cell_path, 'r') as file:
             cell = json.load(file)
-        file.close()
-        notebook_dict = {}
-        if 'notebook_dict' in cell:
-            notebook_dict = cell['notebook_dict']
-        test_cell = Cell(cell['title'], cell['task_name'], cell['original_source'], cell['inputs'],
-                         cell['outputs'],
-                         cell['params'], cell['confs'], cell['dependencies'], cell['container_source'],
-                         cell['chart_obj'], cell['node_id'], cell['kernel'], notebook_dict)
-        test_cell.types = cell['types']
-        test_cell.base_image = cell['base_image']
-        Catalog.editor_buffer = test_cell
+        # notebook_dict = {}
+        # if 'notebook_dict' in cell:
+        #     notebook_dict = cell['notebook_dict']
+        # test_cell = Cell(cell['title'], cell['task_name'], cell['original_source'], cell['inputs'],
+        #                  cell['outputs'],
+        #                  cell['params'], cell['confs'], cell['dependencies'], cell['container_source'],
+        #                  cell['chart_obj'], cell['node_id'], cell['kernel'], notebook_dict)
+        # test_cell.types = cell['types']
+        # test_cell.base_image = cell['base_image']
+        selected_keys: list[str] = ['title', 'task_name', 'original_source', 'inputs', 'outputs', 'params', 'confs', 'dependencies', 'container_source', 'chart_obj', 'node_id', 'kernel', 'types', 'base_image', 'notebook_dict']
+        test_cell = {k: cell[k] for k in selected_keys if k in cell}
         return test_cell, cell
-
-    def call_cell_handler(self):
-        return self.client.post('/api/containerizer/addcell', content_type='application/json', headers=get_auth_header())
 
     def delete_text(self, file_path, text_to_delete):
         # Read the file
@@ -341,7 +338,7 @@ class CellsHandlerTestCase(TestCase):
         for cell_file in cells_files:
             cell_path = os.path.join(cells_json_path, cell_file)
             test_cell, cell = self.create_cell_and_add_to_cat(cell_path=cell_path)
-            response = self.call_cell_handler()
+            response = self.client.post('/api/containerizer/addcell', content_type='application/json', headers=get_auth_header(), data=test_cell)
             self.assertEqual(200, response.status_code)
             wf_id = response.data['wf_id']
             wf_creation_utc = datetime.datetime.now(tz=datetime.timezone.utc)

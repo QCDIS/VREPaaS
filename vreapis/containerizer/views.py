@@ -435,7 +435,7 @@ class CellsHandler(viewsets.ModelViewSet):
             #     Catalog.add_cell(current_cell)
             serializer: CellSerializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            instance, created = Cell.objects.update_or_create(defaults=serializer.validated_data)
+            instance, created = Cell.objects.update_or_create(node_id=serializer.validated_data['node_id'], defaults=serializer.validated_data)
         except Exception as ex:
             return return_error('Error adding or updating cell in catalog', ex)
 

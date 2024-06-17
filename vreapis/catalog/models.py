@@ -21,11 +21,11 @@ class Cell(models.Model):
     dependencies = models.JSONField(blank=True, null=True)
     chart_obj = models.JSONField(blank=True, null=True)
     node_id = models.CharField(max_length=common.default_varchar_length, primary_key=True)
-    container_source = models.CharField(max_length=common.default_varchar_length)
+    container_source = models.CharField(max_length=common.default_varchar_length, blank=True, null=True)
     global_conf = models.JSONField(blank=True, null=True)
     kernel = models.CharField(max_length=common.default_varchar_length)
     notebook_dict = models.JSONField(blank=True, null=True)
-    image_version = models.CharField(max_length=common.default_varchar_length)
+    image_version = models.CharField(max_length=common.default_varchar_length, blank=True, null=True)
 
     def _extract_types(self, vars_dict):
         """ Extract types to self.types and return list of var names

@@ -24,7 +24,7 @@ from db.catalog import Catalog
 from services.extractor.pyextractor import PyExtractor
 from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
-from db.cell import Cell
+from catalog.models import Cell
 
 base_path = ''
 if os.path.exists('resources'):
@@ -350,8 +350,8 @@ class CellsHandlerTestCase(TestCase):
             })
             if 'skip_exec' in cell and cell['skip_exec']:
                 continue
-            if 'python' in test_cell.kernel and 'skip_exec':
-                cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell.task_name, 'task.py')
+            if 'python' in test_cell['kernel'] and 'skip_exec':
+                cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell['task_name'], 'task.py')
                 print('---------------------------------------------------')
                 print('Executing cell: ', cell_path)
                 if 'example_inputs' in cell:
@@ -367,9 +367,9 @@ class CellsHandlerTestCase(TestCase):
                 print("return code:", cell_exec.returncode)
                 print('---------------------------------------------------')
                 self.assertEqual(0, cell_exec.returncode, 'Cell execution failed: ' + cell_file)
-            elif test_cell.kernel == 'IRkernel' and 'skip_exec':
-                cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell.task_name, 'task.R')
-                run_local_cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell.task_name, 'run_local.R')
+            elif test_cell['kernel'] == 'IRkernel' and 'skip_exec':
+                cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell['task_name'], 'task.R')
+                run_local_cell_path = os.path.join(CellsHandlerTestCase.cells_path, test_cell['task_name'], 'run_local.R')
                 shutil.copy(cell_path, run_local_cell_path)
                 self.delete_text(run_local_cell_path, 'setwd(\'/app\')')
                 example_inputs = ''

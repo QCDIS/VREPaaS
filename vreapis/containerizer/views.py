@@ -375,6 +375,35 @@ class CellsHandler(viewsets.ModelViewSet):
         )
         return resp
 
+    @classmethod
+    def get_registry_url(cls, registry_url, github_url):
+        """ Convert registry URL
+
+        https://hub.docker.com/u/my_username/ -> docker.io/my_username
+        oci://ghcr.io/my_username/my_repo/ -> ghcr.io/my_username/my_repo
+        oci://my_domain/my/custom/path/ -> my_domain/my/custom/path
+        None -> ghcr.io url, derived from github_url
+
+        Resulting urls can be converted to pullable, e.g.:
+
+        docker pull {url}/{image_name}:{tag}
+
+        where image_name doesn't contain any path information (e.g. my-cell-name)
+
+        """
+        if registry_url:
+            m = re.match(r'^https://hub\.docker\.com/u/(\w+)/?$', registry_url)
+            if m:
+                return f"docker.io/{m.group(1)}"
+            m = re.match(r'^oci://([\w\./-]+?)/?$', registry_url)
+            if m:
+                return m.group(1)
+            raise ValueError(f"Could not parse registry url: {registry_url}")
+        else:
+            m = re.match(r'^https://github.com/([\w-]+/[\w-]+)(?:\.git)?', github_url)
+            if m:
+                return f"ghcr.io/{m.group(1).lower()}"
+
     def get_registry_credentials(self) -> list[dict[str, str]]:
         return [Repository(CellsHandler.registry_url, CellsHandler.registry_url, None).__dict__]
 
@@ -431,7 +460,7 @@ class CellsHandler(viewsets.ModelViewSet):
             return return_error('Registry credentials not found')
         image_repo = registry_credentials[0]['url']
         if not image_repo:
-            return return_error('Registry not found')
+            return return_error(f'Registry not found. Registry credentials:{os.linesep}{registry_credentials}')
 
         if current_cell.kernel == "IRkernel":
             files_info = RContainerizer.get_files_info(cell=current_cell, cells_path=CellsHandler.cells_path)
@@ -492,3 +521,6 @@ class CellsHandler(viewsets.ModelViewSet):
             instance = serializer.save()
 
         return Response({'wf_id': wf_id, 'dispatched_github_workflow': do_dispatch_github_workflow, 'image_version': image_version})
+
+
+CellsHandler.registry_url = CellsHandler.get_registry_url(CellsHandler.registry_url, CellsHandler.github_url)

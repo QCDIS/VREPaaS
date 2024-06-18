@@ -332,6 +332,13 @@ class CellsHandlerTestCase(TestCase):
             sleep(5)
 
     def test(self):
+        test_dir: str = '/tmp/data'
+        if not os.path.exists(test_dir):
+            os.makedirs(test_dir)
+        test_file: str = f'{test_dir}/hello.txt'
+        if not os.path.exists(test_file):
+            with open(test_file, 'w'):
+                pass
         cells_json_path = os.path.join(base_path, 'cells')
         cells_files = os.listdir(cells_json_path)
         test_cells = []

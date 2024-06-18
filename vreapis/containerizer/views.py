@@ -39,7 +39,6 @@ from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
 import utils.cors
 from auth.simple import StaticTokenAuthentication
-from db.catalog import Catalog
 from catalog.models import Cell
 
 import common
@@ -65,7 +64,7 @@ def get_base_images(request):
     return Response(dat, headers=utils.cors.get_CORS_headers(request))
 
 
-class ExtractorHandler(APIView, Catalog):
+class ExtractorHandler(APIView):
     authentication_classes = [StaticTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -407,7 +406,8 @@ class CellsHandler(viewsets.ModelViewSet):
     def get_registry_credentials(self) -> list[dict[str, str]]:
         return [Repository(CellsHandler.registry_url, CellsHandler.registry_url, None).__dict__]
 
-    def get_repositories(self) -> list[dict[str, str]]:
+    @classmethod
+    def get_repositories(cls) -> list[dict[str, str]]:
         return [Repository(CellsHandler.repo_name, CellsHandler.github_url, CellsHandler.github_token).__dict__]
 
     def create(self, request: Request, *args, **kwargs):
@@ -428,11 +428,6 @@ class CellsHandler(viewsets.ModelViewSet):
         if not hasattr(current_cell, 'base_image'):
             return return_error(f'{current_cell.task_name} has not selected base image')
         try:
-            # doc_cell = Catalog.get_cell_from_og_node_id(current_cell.node_id)
-            # if doc_cell:
-            #     Catalog.update_cell(current_cell)
-            # else:
-            #     Catalog.add_cell(current_cell)
             serializer: CellSerializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             instance, created = Cell.objects.update_or_create(node_id=serializer.validated_data['node_id'], defaults=serializer.validated_data)
@@ -513,8 +508,6 @@ class CellsHandler(viewsets.ModelViewSet):
             if resp.status_code != 201 and resp.status_code != 200 and resp.status_code != 204:
                 return return_error(resp.text)
             current_cell.set_image_version(image_version)
-            # Catalog.delete_cell_from_task_name(current_cell.task_name)
-            # Catalog.add_cell(current_cell)
             Cell.objects.filter(task_name=current_cell.task_name).delete()
             serializer = self.get_serializer(data=current_cell)
             serializer.is_valid(raise_exception=True)

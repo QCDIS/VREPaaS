@@ -20,7 +20,7 @@ from slugify import slugify
 from tornado.gen import sleep
 
 import common
-from db.catalog import Catalog
+from containerizer.views import CellsHandler
 from services.extractor.pyextractor import PyExtractor
 from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
@@ -213,7 +213,7 @@ class CellsHandlerTestCase(TestCase):
             file.writelines(updated_lines)
 
     def wait_for_github_api_resources(self):
-        github = Github(Catalog.get_repositories()[0]['token'])
+        github = Github(CellsHandler.get_repositories()[0]['token'])
         rate_limit = github.get_rate_limit()
         while rate_limit.core.remaining <= 0:
             reset = rate_limit.core.reset
@@ -392,7 +392,7 @@ class CellsHandlerTestCase(TestCase):
                 result = subprocess.run(shlex.split(command), capture_output=True, text=True)
                 self.assertEqual(0, result.returncode, result.stderr)
 
-        cat_repositories = Catalog.get_repositories()
+        cat_repositories = CellsHandler.get_repositories()
         repo = cat_repositories[0]
         repo_token = repo['token']
         owner, repository_name = repo['url'].removeprefix('https://github.com/').split('/')

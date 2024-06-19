@@ -129,5 +129,10 @@ class Cell(models.Model):
             resolves.append(conf)
         return resolves
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    def toJSON(self) -> str:
+        # return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        array_fields = ['inputs', 'outputs', 'params', ]
+        result = {k: v for k, v in self.__dict__.items() if k not in array_fields}
+        for field in array_fields:
+            result[field] = list(getattr(self, field))
+        return json.dumps(result, default=lambda o: o.__dict__, sort_keys=True, indent=4)

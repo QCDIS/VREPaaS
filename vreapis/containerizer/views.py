@@ -441,7 +441,7 @@ class CellsHandler(viewsets.ModelViewSet):
             self.write_cell_to_file(current_cell)
 
         if not os.path.exists(self.cells_path):
-            os.mkdir(self.cells_path)
+            os.makedirs(self.cells_path, exist_ok=True)
 
         cell_path = os.path.join(self.cells_path, current_cell.task_name)
 
@@ -451,7 +451,7 @@ class CellsHandler(viewsets.ModelViewSet):
                 if os.path.isfile(path):
                     os.remove(path)
         else:
-            os.mkdir(cell_path)
+            os.makedirs(cell_path, exist_ok=True)
 
         registry_credentials = self.get_registry_credentials()
         if not registry_credentials or len(registry_credentials) <= 0:

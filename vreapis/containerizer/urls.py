@@ -11,7 +11,4 @@ urlpatterns = [
     path('addcell', views.CellsHandler.as_view({
         'post': 'create',
     })),
-    path('catalog/cells/all', views.CellsHandler.as_view({
-        'get': 'list',
-    })),
 ]

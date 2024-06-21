@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+
+import containerizer.views
 from virtual_labs.views import VirtualLabViewSet, VirtualLabInstanceViewSet
 from workflows.views import WorkflowViewSet
 from data_products.views import DataProductsViewSet, GeoDataProductsViewSet
@@ -38,6 +40,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/containerizer/', include('containerizer.urls')),
+    path('api/catalog/cells/all', containerizer.views.CellsHandler.as_view({
+        'get': 'list',
+    })),
 ]
 
 if BASE_PATH:

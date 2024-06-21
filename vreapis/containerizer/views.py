@@ -126,9 +126,10 @@ class ExtractorHandler(APIView):
             title += '-' + slugify(os.environ['JUPYTERHUB_USER'])
 
         # If any of these change, we create a new cell in the catalog. This matches the cell properties saved in workflows.
-        cell_identity_dict = {'title': title, 'params': extractor.params, 'inputs': extractor.ins, 'outputs': extractor.outs, }
-        cell_identity_str = json.dumps(cell_identity_dict, sort_keys=True)
-        node_id = hashlib.sha1(cell_identity_str.encode()).hexdigest()[:7]
+        # cell_identity_dict = {'title': title, 'params': extractor.params, 'inputs': extractor.ins, 'outputs': extractor.outs, }
+        # cell_identity_str = json.dumps(cell_identity_dict, sort_keys=True)
+        # node_id = hashlib.sha1(cell_identity_str.encode()).hexdigest()[:7]
+        node_id = str(time.time_ns())[len('0x'):]
 
         cell = Cell(
             node_id=node_id,

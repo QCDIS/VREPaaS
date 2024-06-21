@@ -15,7 +15,7 @@ session = requests.Session()
 for i in range(1, len(sys.argv)):
     with open(f'{script_path}/dat/{sys.argv[i]}.json') as f:
         body: dict[str, any] = json.load(f)
-        match sys.argv[1]:
+        match sys.argv[i]:
             case 'addcell':
                 body['node_id'] = str(hex(time.time_ns())[len('0x'):])
     response = session.post(f'{endpoint}/{sys.argv[i]}', json.dumps(body), headers=headers, verify=False)

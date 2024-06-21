@@ -24,7 +24,7 @@ class Cell(models.Model):
     container_source = models.CharField(max_length=common.default_varchar_length, blank=True, null=True)
     global_conf = models.JSONField(blank=True, null=True)
     kernel = models.CharField(max_length=common.default_varchar_length)
-    notebook_dict = models.JSONField(blank=True, null=True)
+    notebook_dict = models.JSONField(blank=True, null=True, default=dict)
     image_version = models.CharField(max_length=common.default_varchar_length, blank=True, null=True)
 
     def _extract_types(self, vars_dict):

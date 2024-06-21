@@ -1,0 +1,113 @@
+{
+    "_state": {},
+    "base_image": {
+        "build": "ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.14",
+        "runtime": "ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.14"
+    },
+    "chart_obj": {
+        "hovered": {},
+        "links": {},
+        "nodes": {
+            "603faa7": {
+                "id": "603faa7",
+                "ports": {
+                    "names": {
+                        "id": "names",
+                        "properties": {
+                            "color": "#ac5397"
+                        },
+                        "type": "left",
+                        "position": {
+                            "x": 22.5,
+                            "y": 74.5
+                        }
+                    }
+                },
+                "position": {
+                    "x": 35,
+                    "y": 15
+                },
+                "properties": {
+                    "inputs": [
+                        "names"
+                    ],
+                    "og_node_id": "603faa7",
+                    "outputs": [],
+                    "params": [],
+                    "title": "print-names0-user",
+                    "vars": [
+                        {
+                            "color": "#ac5397",
+                            "direction": "input",
+                            "name": "names",
+                            "type": "datatype"
+                        }
+                    ]
+                },
+                "type": "input-output",
+                "size": {
+                    "width": 250,
+                    "height": 150
+                }
+            }
+        },
+        "offset": {
+            "x": 0,
+            "y": 0
+        },
+        "scale": 1,
+        "selected": {}
+    },
+    "confs": {},
+    "container_source": "",
+    "dependencies": [],
+    "global_conf": null,
+    "image_version": null,
+    "inputs": [
+        "names"
+    ],
+    "kernel": "ipython",
+    "node_id": "603faa7",
+    "notebook_dict": {
+        "cells": [
+            {
+                "cell_type": "code",
+                "execution_count": null,
+                "id": "848c006a-bf2b-439d-8fec-ed16c5eae66d",
+                "metadata": {},
+                "outputs": [],
+                "source": "# print names0\nfor name in names:\n    print(f\"Hello, {name}!\")"
+            }
+        ],
+        "metadata": {
+            "kernelspec": {
+                "display_name": "python3",
+                "language": "python3",
+                "name": "python3"
+            },
+            "language_info": {
+                "codemirror_mode": {
+                    "name": "ipython",
+                    "version": 3
+                },
+                "file_extension": ".py",
+                "mimetype": "text/x-python",
+                "name": "python",
+                "nbconvert_exporter": "python",
+                "pygments_lexer": "ipython3",
+                "version": "3.11.9"
+            }
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5
+    },
+    "original_source": "# print names0\nfor name in names:\n    print(f\"Hello, {name}!\")",
+    "outputs": [],
+    "param_values": {},
+    "params": [],
+    "task_name": "print-names0-user",
+    "title": "print-names0-user",
+    "types": {
+        "names": "list"
+    }
+}

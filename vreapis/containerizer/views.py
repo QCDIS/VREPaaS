@@ -412,7 +412,10 @@ class CellsHandler(viewsets.ModelViewSet):
 
     def create(self, request: Request, *args, **kwargs):
         try:
-            current_cell = Cell(**request.data)
+            Cell_field_names = [f.name for f in Cell._meta.get_fields()]
+            filtered_incoming_body = {k: request.data[k] for k in Cell_field_names if k in request.data}
+            current_cell = Cell(**filtered_incoming_body)
+            # current_cell = Cell(**request.data)
             current_cell.clean_code()
             current_cell.clean_title()
             current_cell.clean_task_name()

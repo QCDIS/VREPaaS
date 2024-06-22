@@ -7,7 +7,7 @@ import re
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('in_def', nargs='+')
-arg_parser.add_argument('--in-no', action='append', nargs='+')
+arg_parser.add_argument('--in-id', action='append', nargs='+')
 args = arg_parser.parse_args()
 
 script_path: str = os.path.dirname(os.path.realpath(__file__))
@@ -36,8 +36,8 @@ for endpoint in args.in_def:
     request_body_files: list[str] = [file for file in files if file_pattern.match(file)]
     test(endpoint, request_body_files)
 
-if args.in_no is not None:
-    for test_info in args.in_no:
+if args.in_id is not None:
+    for test_info in args.in_id:
         endpoint: str = test_info[0]
-        files: list[str] = [f'{endpoint}.{no}.json' for no in test_info[1:]]
+        files: list[str] = [f'{endpoint}.{id}.json' for id in test_info[1:]]
         test(endpoint, files)

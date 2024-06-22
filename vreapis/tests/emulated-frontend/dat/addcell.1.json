@@ -1,0 +1,113 @@
+{
+    "_state": {},
+    "base_image": {
+        "build": "ghcr.io/qcdis/naavre/naavre-cell-build-python:v0.14",
+        "runtime": "ghcr.io/qcdis/naavre/naavre-cell-runtime-python:v0.14"
+    },
+    "chart_obj": {
+        "hovered": {},
+        "links": {},
+        "nodes": {
+            "19096734787431788": {
+                "id": "19096734787431788",
+                "ports": {
+                    "names": {
+                        "id": "names",
+                        "properties": {
+                            "color": "#ac5397"
+                        },
+                        "type": "right",
+                        "position": {
+                            "x": 225.5,
+                            "y": 74.5
+                        }
+                    }
+                },
+                "position": {
+                    "x": 35,
+                    "y": 15
+                },
+                "properties": {
+                    "inputs": [],
+                    "og_node_id": "19096734787431788",
+                    "outputs": [
+                        "names"
+                    ],
+                    "params": [],
+                    "title": "input-names-user",
+                    "vars": [
+                        {
+                            "color": "#ac5397",
+                            "direction": "output",
+                            "name": "names",
+                            "type": "datatype"
+                        }
+                    ]
+                },
+                "type": "input-output",
+                "size": {
+                    "width": 250,
+                    "height": 150
+                }
+            }
+        },
+        "offset": {
+            "x": 0,
+            "y": 0
+        },
+        "scale": 1,
+        "selected": {}
+    },
+    "confs": {},
+    "container_source": "",
+    "dependencies": [],
+    "global_conf": null,
+    "image_version": null,
+    "inputs": [],
+    "kernel": "ipython",
+    "node_id": "19096734787431788",
+    "notebook_dict": {
+        "cells": [
+            {
+                "cell_type": "code",
+                "execution_count": null,
+                "id": "87f87efd-50e8-41cd-b4f6-2ba14d442cfb",
+                "metadata": {},
+                "outputs": [],
+                "source": "# input names\nnames = [\"Alice\", \"Bob\"]"
+            }
+        ],
+        "metadata": {
+            "kernelspec": {
+                "display_name": "python3",
+                "language": "python3",
+                "name": "python3"
+            },
+            "language_info": {
+                "codemirror_mode": {
+                    "name": "ipython",
+                    "version": 3
+                },
+                "file_extension": ".py",
+                "mimetype": "text/x-python",
+                "name": "python",
+                "nbconvert_exporter": "python",
+                "pygments_lexer": "ipython3",
+                "version": "3.11.9"
+            }
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5
+    },
+    "original_source": "# input names\nnames = [\"Alice\", \"Bob\"]",
+    "outputs": [
+        "names"
+    ],
+    "param_values": {},
+    "params": [],
+    "task_name": "input-names-user",
+    "title": "input-names-user",
+    "types": {
+        "names": "list"
+    }
+}

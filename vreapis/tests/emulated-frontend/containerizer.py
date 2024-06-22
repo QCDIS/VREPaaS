@@ -5,9 +5,18 @@ import time
 import argparse
 import re
 
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('in_def', nargs='+')
-arg_parser.add_argument('--in-id', action='append', nargs='+')
+arg_parser = argparse.ArgumentParser(description='''
+These tests emulate a frontend to test the endpoints of VRE PaaS API.
+At this moment, folder `dat` contains all the test input data. Each file represents an entire request body.
+Some files contain only 1 segment of extension `.json`. This indicates that the file is the only test case.
+Some files contain 2 segments of extension (ex. `.1.json`). The substring between 2 dots is the ID of the test case (`1` in this example).
+'''.strip())
+arg_parser.add_argument('in_def', nargs='+', help='''
+Default: Test the designated endpoint using all the existing request bodies.
+'''.strip())
+arg_parser.add_argument('--in-id', action='append', nargs='+', help='''
+Specify test cases by ID: Test the designated endpoint using the request bodies with the specified IDs. 
+'''.strip())
 args = arg_parser.parse_args()
 
 script_path: str = os.path.dirname(os.path.realpath(__file__))

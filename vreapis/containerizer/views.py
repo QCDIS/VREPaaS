@@ -78,9 +78,11 @@ class ExtractorHandler(APIView):
     def set_notebook_kernel(self, notebook: nbformat.NotebookNode, kernel: str) -> nbformat.NotebookNode:
         new_nb: nbformat.NotebookNode = copy.deepcopy(notebook)
         # Replace kernel name in the notebook metadata
-        new_nb.metadata.kernelspec.name = kernel
-        new_nb.metadata.kernelspec.display_name = kernel
-        new_nb.metadata.kernelspec.language = kernel
+        new_nb.metadata['kernelspec'] = {
+            'name': kernel,
+            'display_name': kernel,
+            'language': kernel,
+        }
         return new_nb
 
     def get(self, request: Request):

@@ -69,14 +69,14 @@ class ExtractorHandler(APIView):
     authentication_classes = [StaticTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def extract_cell_by_index(self, notebook, cell_index):
+    def extract_cell_by_index(self, notebook: nbformat.notebooknode, cell_index: int) -> nbformat.NotebookNode:
         new_nb = copy.deepcopy(notebook)
         if cell_index < len(notebook.cells):
             new_nb.cells = [notebook.cells[cell_index]]
             return new_nb
 
-    def set_notebook_kernel(self, notebook, kernel):
-        new_nb = copy.deepcopy(notebook)
+    def set_notebook_kernel(self, notebook: nbformat.NotebookNode, kernel: str) -> nbformat.NotebookNode:
+        new_nb: nbformat.NotebookNode = copy.deepcopy(notebook)
         # Replace kernel name in the notebook metadata
         new_nb.metadata.kernelspec.name = kernel
         new_nb.metadata.kernelspec.display_name = kernel

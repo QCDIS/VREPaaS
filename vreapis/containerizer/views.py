@@ -28,6 +28,7 @@ import nbformat
 import jsonschema
 from slugify import slugify
 from github import Github, UnknownObjectException
+import jupytext
 
 from catalog.serializers import CellSerializer
 from containerizer.RContainerizer import RContainerizer
@@ -88,9 +89,15 @@ class ExtractorHandler(APIView):
     def post(self, request: Request):
         payload = request.data
         common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
+        if 'rmarkdown' in payload:
+            Rmd = jupytext.reads(payload['rmarkdown'], fmt='Rmd')
+            ipynb = jupytext.writes(Rmd, fmt='ipynb')
+            payload['notebook'] = ipynb
         kernel = payload['kernel']
         cell_index = payload['cell_index']
-        notebook = nbformat.reads(json.dumps(payload['notebook']), nbformat.NO_CONVERT)
+        if isinstance(payload['notebook'], dict):
+            payload['notebook'] = json.dumps(payload['notebook'])
+        notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
 
         source = notebook.cells[cell_index].source
 

@@ -1,0 +1,2 @@
+[tool.jupytext]
+split_at_heading = true

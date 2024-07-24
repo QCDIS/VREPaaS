@@ -9,6 +9,7 @@ import hashlib
 import uuid
 from typing import Optional
 from pathlib import Path
+import subprocess
 
 import autopep8
 from distro import distro
@@ -28,7 +29,6 @@ import nbformat
 import jsonschema
 from slugify import slugify
 from github import Github, UnknownObjectException
-import jupytext
 
 from catalog.serializers import CellSerializer
 from containerizer.RContainerizer import RContainerizer
@@ -92,14 +92,20 @@ class ExtractorHandler(APIView):
         payload = request.data
         common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
         if 'rmarkdown' in payload:
-            Rmd = jupytext.reads(payload['rmarkdown'], fmt='Rmd')
-            ipynb = jupytext.writes(Rmd, fmt='ipynb')
-            payload['notebook'] = ipynb
+            # Directly setting `NotebookNode.metadata['jupytext'] = {'split_at_heading': True, }` is no use. I don't know why. So we don't use lib jupytext here.
+            venv_activator = '/opt/venv/bin/activate'
+            command_jupytext = f'source {venv_activator}; jupytext --from Rmd --to ipynb --opt split_at_heading=true -o -'
+            process_jupytext = subprocess.Popen(command_jupytext, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
+            stdout, stderr = process_jupytext.communicate(input=payload['rmarkdown'].encode())
+            process_jupytext.stdin.close()
+            process_jupytext.wait()
+            payload['notebook'] = stdout.decode()
         kernel = payload['kernel']
         cell_index = payload['cell_index']
         if isinstance(payload['notebook'], dict):
             payload['notebook'] = json.dumps(payload['notebook'])
         notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
+        common.logger.debug(len(notebook.cells))
 
         source = notebook.cells[cell_index].source
 

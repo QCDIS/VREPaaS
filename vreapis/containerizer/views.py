@@ -1,3 +1,4 @@
+import bisect
 import importlib
 import os
 import json
@@ -100,12 +101,14 @@ class ExtractorHandler(APIView):
             process_jupytext.stdin.close()
             process_jupytext.wait()
             payload['notebook'] = stdout.decode()
+            cell_index = payload['cell_index'] - bisect.bisect_right(payload['rmarkdown_heading_indices'], payload['cell_index']) - 1
+        else: # if 'notebook' in payload
+            cell_index = payload['cell_index']
         kernel = payload['kernel']
-        cell_index = payload['cell_index']
         if isinstance(payload['notebook'], dict):
             payload['notebook'] = json.dumps(payload['notebook'])
         notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
-        common.logger.debug(len(notebook.cells))
+        common.logger.debug(cell_index)
 
         source = notebook.cells[cell_index].source
 

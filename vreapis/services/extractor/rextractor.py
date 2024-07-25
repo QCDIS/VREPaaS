@@ -17,6 +17,9 @@ from .extractor import Extractor
 # Create an R environment
 r_env = robjects.globalenv
 
+robject_converter = default_converter # + conversion.localconverter(default_converter)
+robjects.conversion.set_conversion(robject_converter)
+
 # install R packages
 robjects.r('''
 install_package_with_retry <- function(package_name, max_attempts = 5) {
@@ -164,10 +167,10 @@ class RExtractor(Extractor):
             ''' Approach 2: Static analysis using 'renv' package.
                 this approach is more safe as it covers more cases and checks comments
             '''
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.R') as tmp_file, conversion.localconverter(default_converter) as converter:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.R') as tmp_file:
                 tmp_file.write(s.encode())
                 tmp_file.flush()
-                robjects.conversion.set_conversion(converter)
+                robjects.conversion.set_conversion(robject_converter)
                 renv = rpackages.importr('renv')
                 function_list = renv.dependencies(tmp_file.name)
 

@@ -7,6 +7,7 @@ import rpy2.robjects as robjects
 import rpy2.robjects.packages as rpackages
 from rpy2.robjects.packages import importr
 from rpy2.rinterface_lib.callbacks import logger as rpy2_logger
+from rpy2.robjects import conversion, default_converter
 import logging
 
 rpy2_logger.setLevel(logging.WARNING)
@@ -163,9 +164,10 @@ class RExtractor(Extractor):
             ''' Approach 2: Static analysis using 'renv' package.
                 this approach is more safe as it covers more cases and checks comments
             '''
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.R') as tmp_file:
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.R') as tmp_file, conversion.localconverter(default_converter) as converter:
                 tmp_file.write(s.encode())
                 tmp_file.flush()
+                robjects.conversion.set_conversion(converter)
                 renv = rpackages.importr('renv')
                 function_list = renv.dependencies(tmp_file.name)
 

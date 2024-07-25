@@ -155,6 +155,9 @@ class RExtractor(Extractor):
         super().__init__(notebook, cell_source)
 
     def __extract_imports(self, sources):
+        robjects.conversion.set_conversion(robject_converter)
+        renv = rpackages.importr('renv')
+
         imports = {}
         for s in sources:
             packages = []
@@ -170,8 +173,6 @@ class RExtractor(Extractor):
             with tempfile.NamedTemporaryFile(delete=False, suffix='.R') as tmp_file:
                 tmp_file.write(s.encode())
                 tmp_file.flush()
-                robjects.conversion.set_conversion(robject_converter)
-                renv = rpackages.importr('renv')
                 function_list = renv.dependencies(tmp_file.name)
 
                 # transpose renv dependencies to readable dependencies
@@ -183,7 +184,7 @@ class RExtractor(Extractor):
             # format the packages
             for package in packages:
                 imports[package] = {
-                    # asname and module are specific to Python packages. So you can probably leave them out here
+                    # as name and module are specific to Python packages. So you can probably leave them out here
                     'name': package,
                     'asname': '',
                     'module': ''

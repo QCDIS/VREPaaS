@@ -91,7 +91,7 @@ class ExtractorHandler(APIView):
 
     def post(self, request: Request):
         payload = request.data
-        common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
+        # common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
         if 'rmarkdown' in payload:
             # Directly setting `NotebookNode.metadata['jupytext'] = {'split_at_heading': True, }` is no use. I don't know why. So we don't use lib jupytext here.
             venv_activator = '/opt/venv/bin/activate'
@@ -108,7 +108,7 @@ class ExtractorHandler(APIView):
         if isinstance(payload['notebook'], dict):
             payload['notebook'] = json.dumps(payload['notebook'])
         notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
-        common.logger.debug(cell_index)
+        # common.logger.debug(cell_index)
 
         source = notebook.cells[cell_index].source
 

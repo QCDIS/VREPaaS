@@ -17,8 +17,8 @@ from .extractor import Extractor
 # Create an R environment
 r_env = robjects.globalenv
 
-robject_converter = default_converter # + conversion.localconverter(default_converter)
-robjects.conversion.set_conversion(robject_converter)
+robject_converter = default_converter  # + conversion.localconverter(default_converter)
+# robjects.conversion.set_conversion(robject_converter)
 
 # install R packages
 robjects.r('''
@@ -40,7 +40,7 @@ install_package_with_retry <- function(package_name, max_attempts = 5) {
   return(FALSE)
 }
 ''')
-packnames = ('rlang', 'lobstr', 'purrr','renv',)
+packnames = ('rlang', 'lobstr', 'purrr', 'renv',)
 for p in packnames:
     if not rpackages.isinstalled(p):
         robjects.r(f'install_package_with_retry("{p}")')

@@ -101,7 +101,7 @@ class ExtractorHandler(APIView):
             process_jupytext.stdin.close()
             process_jupytext.wait()
             payload['notebook'] = stdout.decode()
-            cell_index = payload['cell_index'] - bisect.bisect_right(payload['rmarkdown_heading_indices'], payload['cell_index']) - 1
+            cell_index = payload['cell_index'] - bisect.bisect_right(payload['rmarkdown_offset_indices'], payload['cell_index']) - 1
         else: # if 'notebook' in payload
             cell_index = payload['cell_index']
         kernel = payload['kernel']

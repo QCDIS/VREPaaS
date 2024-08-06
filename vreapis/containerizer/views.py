@@ -102,13 +102,20 @@ class ExtractorHandler(APIView):
             process_jupytext.wait()
             payload['notebook'] = stdout.decode()
             cell_index = payload['cell_index'] - bisect.bisect_right(payload['rmarkdown_offset_indices'], payload['cell_index']) - 1
-        else: # if 'notebook' in payload
+        else:  # if 'notebook' in payload
             cell_index = payload['cell_index']
         kernel = payload['kernel']
         if isinstance(payload['notebook'], dict):
             payload['notebook'] = json.dumps(payload['notebook'])
         notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
-        # common.logger.debug(cell_index)
+        if 'rmarkdown' in payload:
+            filtered_cells = [notebook.cells[0]]
+            for i in range(1, len(notebook.cells)):
+                cell = notebook.cells[i]
+                if not (cell['cell_type'] == 'markdown' and all(line == os.linesep for line in cell['source']) and notebook.cells[i - 1]['cell_type'] == 'code'):
+                    filtered_cells.append(cell)
+            notebook.cells = filtered_cells
+        common.logger.debug(cell_index)
 
         source = notebook.cells[cell_index].source
 

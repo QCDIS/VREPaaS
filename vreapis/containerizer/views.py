@@ -93,7 +93,7 @@ class ExtractorHandler(APIView):
         payload = request.data
         # common.logger.debug('ExtractorHandler. payload: ' + json.dumps(payload, indent=4))
         if 'rmarkdown' in payload:
-            # Directly setting `NotebookNode.metadata['jupytext'] = {'split_at_heading': True, }` is no use. I don't know why. So we don't use lib jupytext here.
+            # Directly setting `NotebookNode.metadata['jupytext'] = {'split_at_heading': True, }` has no use. I don't know why. So we don't use lib jupytext here.
             venv_activator = '/opt/venv/bin/activate'
             command_jupytext = f'source {venv_activator}; jupytext --from Rmd --to ipynb --opt split_at_heading=true -o -'
             process_jupytext = subprocess.Popen(command_jupytext, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
@@ -108,7 +108,7 @@ class ExtractorHandler(APIView):
         if isinstance(payload['notebook'], dict):
             payload['notebook'] = json.dumps(payload['notebook'])
         notebook = nbformat.reads(payload['notebook'], nbformat.NO_CONVERT)
-        if 'rmarkdown' in payload:
+        if 'rmarkdown' in payload:  # parsermd ignores md cells with \n only. We need to remove them here to keep consistency
             filtered_cells = [notebook.cells[0]]
             for i in range(1, len(notebook.cells)):
                 cell = notebook.cells[i]

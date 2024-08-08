@@ -30,7 +30,11 @@ updates:
           - '*'
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directories:
+      - tilt/vre-panel
+      - tilt/vreapis
+      - vre-panel
+      - vreapis
     schedule:
       interval: "monthly"
     commit-message:

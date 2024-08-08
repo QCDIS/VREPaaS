@@ -188,7 +188,7 @@ if BASE_PATH:
     STATIC_URL = f'{BASE_PATH}/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# CUSTOM VARS
+# CUSTOM VARS # todo. delete default values
 
 API_ENDPOINT: str = os.getenv('API_ENDPOINT', "https://naavre-dev.minikube.test/vre-api-test")
 
@@ -199,3 +199,5 @@ KEYCLOAK_VERIF_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/open
 KEYCLOAK_CLIENT_ID: str = os.getenv('KEYCLOAK_CLIENT_ID', 'myclient')
 
 NAAVRE_API_TOKEN: str = os.getenv('NAAVRE_API_TOKEN')
+
+VENV_ACTIVATOR: str = os.getenv('VENV_ACTIVATOR', '/opt/venv/bin/activate')

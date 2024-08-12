@@ -528,6 +528,7 @@ class CellsHandler(viewsets.ModelViewSet):
             do_dispatch_github_workflow = True
         else:
             image_info = self.query_registry_for_image(image_repo=image_repo, image_name=current_cell.task_name, )
+            common.logger.debug(f'image_info: {image_info}')
             if not image_info:
                 do_dispatch_github_workflow = True
 
@@ -538,9 +539,7 @@ class CellsHandler(viewsets.ModelViewSet):
                 return return_error(resp.text)
             current_cell.set_image_version(image_version)
             Cell.objects.filter(task_name=current_cell.task_name).delete()
-            serializer = self.get_serializer(data=current_cell)
-            serializer.is_valid(raise_exception=True)
-            instance = serializer.save()
+            current_cell.save()
 
         return Response({'wf_id': wf_id, 'dispatched_github_workflow': do_dispatch_github_workflow, 'image_version': image_version})
 

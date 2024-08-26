@@ -4,6 +4,7 @@ import os
 import jinja2
 
 import common
+from catalog.models import Cell
 
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
@@ -57,9 +58,11 @@ class RContainerizer:
         return set_conda_deps, set_pip_deps
 
     @staticmethod
-    def build_templates(cell=None, files_info=None, module_name_mapping=None):
+    def build_templates(cell: Cell=None, files_info=None, module_name_mapping=None):
         # we also want to always add the id to the input parameters
         inputs = cell.inputs
+        if isinstance(cell.types, list):
+            cell.types = {}  # In R, builtin list is used to represent both arrays and dicts. From R side of the frontend, an empty list is serialized into [] rather than {} and it seems difficult to handle this in R. So we correct it here.
         types = cell.types
         inputs.append('id')
         cell.concatenate_all_inputs()

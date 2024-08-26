@@ -46,7 +46,13 @@ jobs:
       uses: raschmitt/wait-for-healthy-container/@v1
       with:
         container-name: app
-        timeout: 300
+        timeout: 120
+
+    - name: Capture Docker Logs
+      run: |
+        echo 'Capturing Docker logs...'
+        docker logs app
+      shell: /usr/bin/bash --noprofile --norc -e -o pipefail
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

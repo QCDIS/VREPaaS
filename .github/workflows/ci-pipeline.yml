@@ -49,6 +49,7 @@ jobs:
         timeout: 120
 
     - name: Capture Docker Logs
+      if: always()
       run: |
         echo 'Capturing Docker logs...'
         docker logs app

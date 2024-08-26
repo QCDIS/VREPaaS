@@ -46,7 +46,7 @@ jobs:
       uses: raschmitt/wait-for-healthy-container/@v1
       with:
         container-name: app
-        timeout: 120
+        timeout: 300
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

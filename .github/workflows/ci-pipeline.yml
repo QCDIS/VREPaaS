@@ -52,7 +52,6 @@ jobs:
       run: |
         echo 'Capturing Docker logs...'
         docker logs app
-      shell: /usr/bin/bash --noprofile --norc -e -o pipefail
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

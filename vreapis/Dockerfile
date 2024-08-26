@@ -3,7 +3,7 @@ FROM python:3.12.2-slim
 WORKDIR /app
 
 RUN apt update && \
-    apt install -y libpq-dev gcc gdal-bin curl net-tools iputils-ping
+    apt install -y libpq-dev gcc gdal-bin curl net-tools iputils-ping r-base
 
 RUN python3 -m venv /opt/venv
 RUN /opt/venv/bin/pip install pip --upgrade

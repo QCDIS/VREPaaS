@@ -58,7 +58,9 @@ jobs:
     - name: Capture Docker Logs
       if: failure()
       run: |
-        echo 'Capturing Docker logs...'
+        echo '-> envvar:'
+        env
+        echo '-> Capturing Docker logs ...'
         docker logs app
 
     - name: Login to github Registry

@@ -51,7 +51,9 @@ jobs:
         timeout: 120
 
     - name: Print all environment variables
-      run: env
+      run: |
+        echo 'envvar:'
+        env
 
     - name: Capture Docker Logs
       if: failure()

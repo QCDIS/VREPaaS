@@ -25,6 +25,8 @@ env:
   DOCKER_FOLDER:  ${{ inputs.docker_folder }}
   TAG:  ${{ inputs.tag }}
   DOCKERHUB_IMAGE_ID: "qcdis/"
+  CELL_GITHUB: ${{ env.CELL_GITHUB }}
+  CELL_GITHUB_TOKEN: ${{ secrets.CELL_GITHUB_TOKEN }}
 
 jobs:
   build:

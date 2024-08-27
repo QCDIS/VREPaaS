@@ -37,7 +37,3 @@ services:
       test: |
         curl --fail http://localhost:8000/vre-api-test/api/
       interval: 5s
-
-  envchk:
-    image: python:3.12.2-slim
-    command: python -c "import os; print(os.getenv('CELL_GITHUB'))"

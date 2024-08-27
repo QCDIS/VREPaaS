@@ -60,6 +60,7 @@ jobs:
         timeout: 120
 
     - name: chkenv3
+      if: always()
       run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
 
     - name: Capture Docker Logs

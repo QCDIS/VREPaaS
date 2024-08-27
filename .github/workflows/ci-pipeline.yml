@@ -42,7 +42,7 @@ jobs:
       run: |
           echo '-> envvar:'
           env
-          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}"
+          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}:CELL_GITHUB=${{ env.CELL_GITHUB }}"
 
     - name: Run docker compose
       # uses: isbang/compose-action@v1.5.1

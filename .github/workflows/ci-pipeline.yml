@@ -35,6 +35,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: envvar chk
+      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
+
     - name: Build docker
       run: |
           echo '-> envvar:'

@@ -62,6 +62,8 @@ jobs:
         env
         echo '-> Capturing Docker logs ...'
         docker logs app
+        echo '-> envvar:'
+        env
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

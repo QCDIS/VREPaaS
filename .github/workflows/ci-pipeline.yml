@@ -35,25 +35,23 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: envvar chk
+    - name: chkenv
       run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
 
     - name: Build docker
       run: |
           echo '-> envvar:'
           env
-          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}:CELL_GITHUB=${{ env.CELL_GITHUB }}"
+          cd $DOCKER_FOLDER && docker build . --file Dockerfile -t $TAG --build-arg "NODE_ENV=${{ inputs.environment }}"
 
     - name: Run docker compose
       # uses: isbang/compose-action@v1.5.1
       uses: hoverkraft-tech/compose-action@v2.0.1
       with:
         compose-file: "${{ inputs.docker_folder }}/docker-compose.yaml"
-      env:
-        CELL_GITHUB: "https://github.com/QCDIS/NaaVRE-cells-test-3"
 
-    - name: envchk
-      run: cd $DOCKER_FOLDER && docker-compose logs envchk
+    - name: chkenv2
+      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
 
     - name: Wait for healthy app
       uses: raschmitt/wait-for-healthy-container/@v1
@@ -61,20 +59,14 @@ jobs:
         container-name: app
         timeout: 120
 
-    - name: Print all environment variables
-      run: |
-        echo 'envvar:'
-        env
+    - name: chkenv
+      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
 
     - name: Capture Docker Logs
       if: failure()
       run: |
-        echo '-> envvar:'
-        env
         echo '-> Capturing Docker logs ...'
         docker logs app
-        echo '-> envvar:'
-        env
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

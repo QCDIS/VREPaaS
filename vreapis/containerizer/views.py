@@ -190,6 +190,7 @@ class ExtractorHandler(APIView):
 
 
 class CellsHandler(viewsets.ModelViewSet):
+    common.logger.debug(f"CELL_GITHUB: {os.getenv('CELL_GITHUB')}")
     queryset: QuerySet = Cell.objects.all()
     serializer_class = CellSerializer
     authentication_classes: list[BaseAuthentication] = [StaticTokenAuthentication]

@@ -46,7 +46,7 @@ jobs:
 
     - name: Run docker compose
       # uses: isbang/compose-action@v1.5.1
-      uses: hoverkraft-tech/compose-action@v0.0.0
+      uses: hoverkraft-tech/compose-action@v2.0.1
       with:
         compose-file: "${{ inputs.docker_folder }}/docker-compose.yaml"
       env:

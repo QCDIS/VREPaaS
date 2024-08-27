@@ -48,6 +48,8 @@ jobs:
       uses: isbang/compose-action@v1.5.1
       with:
         compose-file: "${{ inputs.docker_folder }}/docker-compose.yaml"
+      env:
+        CELL_GITHUB: "https://github.com/QCDIS/NaaVRE-cells-test-3"
 
     - name: Wait for healthy app
       uses: raschmitt/wait-for-healthy-container/@v1

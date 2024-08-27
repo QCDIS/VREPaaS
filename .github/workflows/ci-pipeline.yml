@@ -50,6 +50,9 @@ jobs:
         container-name: app
         timeout: 120
 
+    - name: Print all environment variables
+      run: printenv
+
     - name: Capture Docker Logs
       if: failure()
       run: |

@@ -52,6 +52,9 @@ jobs:
       env:
         CELL_GITHUB: "https://github.com/QCDIS/NaaVRE-cells-test-3"
 
+    - name: envchk
+      run: docker-compose logs envchk
+
     - name: Wait for healthy app
       uses: raschmitt/wait-for-healthy-container/@v1
       with:

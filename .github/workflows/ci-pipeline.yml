@@ -25,6 +25,8 @@ env:
   DOCKER_FOLDER:  ${{ inputs.docker_folder }}
   TAG:  ${{ inputs.tag }}
   DOCKERHUB_IMAGE_ID: "qcdis/"
+  CELL_GITHUB: "https://github.com/QCDIS/NaaVRE-cells-test-3"
+  CELL_GITHUB_TOKEN: ${{ secrets.CELL_GITHUB_TOKEN }}
 
 jobs:
   build:
@@ -47,6 +49,19 @@ jobs:
       with:
         container-name: app
         timeout: 120
+
+    - name: Print all environment variables
+      run: |
+        echo 'envvar:'
+        env
+
+    - name: Capture Docker Logs
+      if: failure()
+      run: |
+        echo '-> envvar:'
+        env
+        echo '-> Capturing Docker logs ...'
+        docker logs app
 
     - name: Login to github Registry
       if: ${{ inputs.push }}

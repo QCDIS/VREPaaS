@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: chkenv
-      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
+      run: python -c "import os; print(os.getenv('CELL_GITHUB')); print(os.getenv('BASE_PATH'))"
 
     - name: Build docker
       run: |
@@ -51,7 +51,7 @@ jobs:
         compose-file: "${{ inputs.docker_folder }}/docker-compose.yaml"
 
     - name: chkenv2
-      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
+      run: python -c "import os; print(os.getenv('CELL_GITHUB')); print(os.getenv('BASE_PATH'))"
 
     - name: Wait for healthy app
       uses: raschmitt/wait-for-healthy-container/@v1
@@ -61,7 +61,7 @@ jobs:
 
     - name: chkenv3
       if: always()
-      run: python -c "import os; print(os.getenv('CELL_GITHUB'))"
+      run: python -c "import os; print(os.getenv('CELL_GITHUB')); print(os.getenv('BASE_PATH'))"
 
     - name: Capture Docker Logs
       if: failure()

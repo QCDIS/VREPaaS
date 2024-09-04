@@ -31,7 +31,8 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=admin
       - DJANGO_TOKEN=token
       - SECRET_KEY=secret
-      - CELL_GITHUB=S{CELL_GITHUB}
+      # for GitHub action to read envvar
+      - CELL_GITHUB=${CELL_GITHUB}
       - CELL_GITHUB_TOKEN=${CELL_GITHUB_TOKEN}
     ports:
       - '127.0.0.1:8000:8000'

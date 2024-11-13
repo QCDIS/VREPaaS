@@ -28,7 +28,7 @@ headers: dict = {
 session = requests.Session()
 
 
-def test(endpoint: str, files: list[str]):
+def test_post(endpoint: str, files: list[str]):
     for file in files:
         with open(f'{script_path}/dat/{file}') as f:
             body: dict[str, any] = json.load(f)
@@ -40,13 +40,18 @@ def test(endpoint: str, files: list[str]):
 
 
 for endpoint in args.in_def:
-    file_pattern = re.compile(fr'{endpoint}(\..+)?.json')
-    files: list[str] = os.listdir(f'{script_path}/dat')
-    request_body_files: list[str] = [file for file in files if file_pattern.match(file)]
-    test(endpoint, request_body_files)
+    match endpoint:
+        case 'baseimagetags':
+            response = session.get(f'{API_ENDPOINT}/{endpoint}', headers=headers, verify=False)
+            print(response.text)
+        case _:
+            file_pattern = re.compile(fr'{endpoint}(\..+)?.json')
+            files: list[str] = os.listdir(f'{script_path}/dat')
+            request_body_files: list[str] = [file for file in files if file_pattern.match(file)]
+            test_post(endpoint, request_body_files)
 
 if args.in_id is not None:
     for test_info in args.in_id:
         endpoint: str = test_info[0]
         files: list[str] = [f'{endpoint}.{id}.json' for id in test_info[1:]]
-        test(endpoint, files)
+        test_post(endpoint, files)

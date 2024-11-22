@@ -147,8 +147,10 @@ class ExtractorHandler(APIView):
         title = source.partition('\n')[0].strip()
         title = slugify(title) if title and title[0] == "#" else "Untitled"
 
-        if 'JUPYTERHUB_USER' in os.environ:
-            title += '-' + slugify(os.environ['JUPYTERHUB_USER'])
+        # if 'JUPYTERHUB_USER' in os.environ:
+        #     title += '-' + slugify(os.environ['JUPYTERHUB_USER'])
+        if 'JUPYTERHUB_USER' in payload:
+            title += '-' + slugify(payload['JUPYTERHUB_USER'])
 
         # If any of these change, we create a new cell in the catalog. This matches the cell properties saved in workflows.
         # cell_identity_dict = {'title': title, 'params': extractor.params, 'inputs': extractor.ins, 'outputs': extractor.outs, }

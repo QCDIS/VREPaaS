@@ -11,6 +11,8 @@ RUN /opt/venv/bin/pip install pip --upgrade
 COPY ./requirements.txt /app
 RUN /opt/venv/bin/pip install -r requirements.txt
 
+RUN Rscript -e "install.packages(c('rlang', 'lobstr', 'purrr', 'renv'), repos = 'https://cloud.r-project.org')"
+
 COPY . /app
 RUN chmod +x entrypoint.sh
 

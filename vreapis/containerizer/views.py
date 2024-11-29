@@ -17,6 +17,7 @@ from distro import distro
 import jinja2
 from django.db.models import QuerySet
 from rest_framework.authentication import BaseAuthentication
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -153,10 +154,10 @@ class ExtractorHandler(APIView):
             title += '-' + slugify(payload['JUPYTERHUB_USER'])
 
         # If any of these change, we create a new cell in the catalog. This matches the cell properties saved in workflows.
-        # cell_identity_dict = {'title': title, 'params': extractor.params, 'inputs': extractor.ins, 'outputs': extractor.outs, }
-        # cell_identity_str = json.dumps(cell_identity_dict, sort_keys=True)
-        # node_id = hashlib.sha1(cell_identity_str.encode()).hexdigest()[:7]
-        node_id = str(time.time_ns())[len('0x'):]
+        cell_identity_dict = {'title': title, 'params': extractor.params, 'inputs': extractor.ins, 'outputs': extractor.outs, }
+        cell_identity_str = json.dumps(cell_identity_dict, sort_keys=True)
+        node_id = hashlib.sha1(cell_identity_str.encode()).hexdigest()[:7]
+        # node_id = str(time.time_ns())[len('0x'):]
 
         cell = Cell(
             node_id=node_id,
@@ -452,7 +453,7 @@ class CellsHandler(viewsets.ModelViewSet):
         except Exception as ex:
             return return_error('Error setting cell', ex)
 
-        common.logger.debug('current_cell: ' + current_cell.toJSON())
+        # common.logger.debug('current_cell: ' + current_cell.toJSON())
         all_vars = current_cell.params + current_cell.inputs + current_cell.outputs
         for param_name in all_vars:
             if param_name not in current_cell.types:
@@ -462,8 +463,14 @@ class CellsHandler(viewsets.ModelViewSet):
             return return_error(f'{current_cell.task_name} has not selected base image')
         try:
             serializer: CellSerializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            instance, created = Cell.objects.update_or_create(node_id=serializer.validated_data['node_id'], defaults=serializer.validated_data)
+            try:
+                serializer.is_valid(raise_exception=True)
+            except ValidationError as ex:
+                if 'node_id' in ex.detail and str(ex.detail) == 'cell with this node id already exists.':
+                    Cell.objects.update(**serializer.validated_data)
+            else:
+                Cell.objects.create(**serializer.validated_data)
+            # instance, created = Cell.objects.update_or_create(node_id=serializer.validated_data['node_id'], defaults=serializer.validated_data)
         except Exception as ex:
             return return_error('Error adding or updating cell in catalog', ex)
 

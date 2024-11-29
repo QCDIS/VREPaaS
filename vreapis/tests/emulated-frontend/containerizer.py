@@ -32,9 +32,9 @@ def test_post(endpoint: str, files: list[str]):
     for file in files:
         with open(f'{script_path}/dat/{file}') as f:
             body: dict[str, any] = json.load(f)
-            match endpoint:
-                case 'addcell':
-                    body['node_id'] = str(hex(time.time_ns())[len('0x'):])
+            # match endpoint:
+            #     case 'addcell':
+            #         body['node_id'] = str(hex(time.time_ns())[len('0x'):])  # use a unique node_id
         response = session.post(f'{API_ENDPOINT}/{endpoint}', json.dumps(body), headers=headers, verify=False)
         print(response.text)
 

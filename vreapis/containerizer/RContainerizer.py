@@ -49,7 +49,8 @@ class RContainerizer:
 
     @staticmethod
     def map_dependencies(dependencies, module_name_mapping):
-        dependencies = map(lambda x: 'r-' + x['name'], dependencies)
+        # dependencies = map(lambda x: 'r-' + x['name'], dependencies)
+        dependencies = map(lambda x: x['name'], dependencies)
         dependencies = map(lambda x: module_name_mapping.get('r', {}).get(x, x), dependencies)
         set_conda_deps = set(dependencies)
         set_pip_deps = set()

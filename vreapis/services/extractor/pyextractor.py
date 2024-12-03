@@ -151,7 +151,9 @@ class PyExtractor(Extractor):
         :param type_annotation: type annotation obtained by e.g. pytype
         :return: converted type: 'int', 'float', 'str', 'list', or None
         """
+        # logging.getLogger(__name__).debug(f'type_annotation = {type_annotation}')
         if type_annotation is None:
+            # logging.getLogger(__name__).debug(f'type_annotation is None')
             return None
 
         patterns = {
@@ -176,6 +178,7 @@ class PyExtractor(Extractor):
         for type_name, regs in patterns.items():
             for reg in regs:
                 if reg.match(type_annotation):
+                    # logging.getLogger(__name__).debug(f'type_name = {type_name}')
                     return type_name
 
         logging.getLogger(__name__).debug(f'Unmatched type: {type_annotation}')

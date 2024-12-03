@@ -37,7 +37,8 @@ from catalog.serializers import CellSerializer
 from containerizer.RContainerizer import RContainerizer
 from db.repository import Repository
 from services.extractor.extractor import DummyExtractor
-from services.extractor.headerextractor import HeaderExtractor
+from services.extractor.pyheaderextractor import PyHeaderExtractor
+from services.extractor.rheaderextractor import RHeaderExtractor
 from services.extractor.pyextractor import PyExtractor
 from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
@@ -126,7 +127,11 @@ class ExtractorHandler(APIView):
         else:
             # extractor based on the cell header
             try:
-                extractor = HeaderExtractor(notebook, source)
+                # extractor = HeaderExtractor(notebook, source)
+                if 'python' in kernel.lower():
+                    extractor = PyHeaderExtractor(notebook, source)
+                elif 'r' in kernel.lower():
+                    extractor = RHeaderExtractor(notebook, source)
             except jsonschema.ValidationError as e:
                 return return_error('Error in cell header', e, stat=status.HTTP_400_BAD_REQUEST)
 
@@ -173,6 +178,8 @@ class ExtractorHandler(APIView):
             kernel=kernel,
             notebook_dict=extracted_nb.dict()
         )
+        cell.add_inputs(extractor.ins)
+        cell.add_outputs(extractor.outs)
         cell.integrate_configuration()
         extractor.params = extractor.extract_cell_params(cell.original_source)
         cell.add_params(extractor.params)

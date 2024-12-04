@@ -1,6 +1,8 @@
 from django.core.management import CommandParser
 from django.core.management.base import BaseCommand, CommandError
 from catalog.models import Cell
+from catalog.serializers import CellSerializer
+
 
 class Command(BaseCommand):
     help = 'Export designated tables in legacy db schema'
@@ -14,6 +16,8 @@ class Command(BaseCommand):
             match table:
                 case 'Cell':
                     queryset = Cell.objects.all()
-                    print(queryset)
+                    for cell in queryset:
+                        serializer = CellSerializer(cell)
+                        print(serializer.data)
                 case _:
                     raise CommandError(f"Table {table} is not supported")

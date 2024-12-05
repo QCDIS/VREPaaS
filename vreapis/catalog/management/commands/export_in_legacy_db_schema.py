@@ -1,10 +1,10 @@
 import json
-import os.path
 
 from django.core.management import CommandParser
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import QuerySet
 
+import common
 from catalog.models import Cell
 from catalog.serializers import CellSerializer
 
@@ -26,7 +26,7 @@ class Command(BaseCommand):
                     for cell in queryset:
                         serializer = CellSerializer(cell)
                         cells[str(no)] = serializer.data
-                    db_file: str = os.path.expanduser('~/NaaVRE/NaaVRE_db.json')
+                    db_file: str = f'{common.project_root}/NaaVRE_db.json'
                     with open(db_file) as f:
                         db = json.load(f)
                         db['cells'] = cells

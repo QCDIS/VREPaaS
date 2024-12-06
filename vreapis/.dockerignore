@@ -1,0 +1,6 @@
+.env
+export_VARS
+.idea
+.pytest_cache
+__pycache__
+NaaVRE_db.json

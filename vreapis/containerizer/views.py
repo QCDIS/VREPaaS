@@ -43,7 +43,7 @@ from services.extractor.pyextractor import PyExtractor
 from services.extractor.rextractor import RExtractor
 from services.converter import ConverterReactFlowChart
 import utils.cors
-from auth.simple import StaticTokenAuthentication
+# from auth.simple import StaticTokenAuthentication
 from catalog.models import Cell
 
 import common
@@ -55,7 +55,7 @@ def return_error(err_msg: str = 'Unknown ERROR', e: Optional[Exception] = None, 
 
 
 @api_view(['GET'])
-@authentication_classes([StaticTokenAuthentication])
+# @authentication_classes([StaticTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_base_images(request):
     url: str = os.getenv('BASE_IMAGE_TAGS_URL', 'https://github.com/QCDIS/NaaVRE-flavors/releases/latest/download/base_image_tags.json')
@@ -70,7 +70,7 @@ def get_base_images(request):
 
 
 class ExtractorHandler(APIView):
-    authentication_classes = [StaticTokenAuthentication]
+    # authentication_classes = [StaticTokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def extract_cell_by_index(self, notebook: nbformat.notebooknode, cell_index: int) -> nbformat.NotebookNode:
@@ -204,7 +204,7 @@ class CellsHandler(viewsets.ModelViewSet):
     common.logger.debug(f"BASE_PATH: {os.getenv('BASE_PATH')}")
     queryset: QuerySet = Cell.objects.all()
     serializer_class = CellSerializer
-    authentication_classes: list[BaseAuthentication] = [StaticTokenAuthentication]
+    # authentication_classes: list[BaseAuthentication] = [StaticTokenAuthentication]
     permission_classes: list[BasePermission] = [IsAuthenticated]
     cells_path: str = os.path.join(str(Path.home()), 'NaaVRE', 'cells')
     github_url_repos: str = 'https://api.github.com/repos'

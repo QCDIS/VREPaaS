@@ -22,8 +22,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
-CSRF_TRUSTED_ORIGINS = os.getenv('TRUSTED_ORIGINS').split(sep=';')
+CSRF_TRUSTED_ORIGINS = [os.getenv('TRUSTED_ORIGINS')]
+# CSRF_TRUSTED_ORIGINS = os.getenv('TRUSTED_ORIGINS').split(sep=';')
 
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http:\/\/localhost:\d+$',
@@ -190,14 +190,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # CUSTOM VARS # todo. delete default values
 
-API_ENDPOINT: str = os.getenv('API_ENDPOINT', "https://naavre-dev.minikube.test/vre-api-test")
-
-KEYCLOAK_URL: str = os.getenv('KEYCLOAK_URL', 'https://naavre-dev.minikube.test/auth')
-KEYCLOAK_REALM: str = os.getenv('KEYCLOAK_REALM', 'vre')
-KEYCLOAK_LOGIN_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token'
-KEYCLOAK_VERIF_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/certs'
-KEYCLOAK_CLIENT_ID: str = os.getenv('KEYCLOAK_CLIENT_ID', 'myclient')
-
-NAAVRE_API_TOKEN: str = os.getenv('NAAVRE_API_TOKEN')
+# API_ENDPOINT: str = os.getenv('API_ENDPOINT', "https://naavre-dev.minikube.test/vre-api-test")
+#
+# KEYCLOAK_URL: str = os.getenv('KEYCLOAK_URL', 'https://naavre-dev.minikube.test/auth')
+# KEYCLOAK_REALM: str = os.getenv('KEYCLOAK_REALM', 'vre')
+# KEYCLOAK_LOGIN_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/token'
+# KEYCLOAK_VERIF_URL: str = f'{KEYCLOAK_URL}/realms/{KEYCLOAK_REALM}/protocol/openid-connect/certs'
+# KEYCLOAK_CLIENT_ID: str = os.getenv('KEYCLOAK_CLIENT_ID', 'myclient')
+#
+# NAAVRE_API_TOKEN: str = os.getenv('NAAVRE_API_TOKEN')
 
 VENV_ACTIVATOR: str = os.getenv('VENV_ACTIVATOR', '/opt/venv/bin/activate')

@@ -20,5 +20,5 @@ class StaticTokenAuthentication(BaseAuthentication):
         access_token: str = request.headers.get('Authorization', '')
         print(access_token == f'Token {settings.NAAVRE_API_TOKEN}')
         if access_token != f'Token {settings.NAAVRE_API_TOKEN}':
-            raise AuthenticationFailed(f'Invalid token')
+            raise AuthenticationFailed(f'Invalid NaaVRE API token')
         return StaticTokenAuthentication.dummy_user, None

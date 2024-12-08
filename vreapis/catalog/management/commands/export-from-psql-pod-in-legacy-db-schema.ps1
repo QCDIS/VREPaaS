@@ -1,3 +1,5 @@
+$cwd = $PWD
+
 $project_root = Resolve-Path "$PSScriptRoot/../../.."
 
 $vreapi_pod_inf = kubectl get pod | sls '^vrepaas-vreapi-\w+-\w+'
@@ -19,6 +21,10 @@ $var[$off_DB_PASSWORD] = "export DB_PASSWORD=vrepaas"
 $var > /tmp/export_VARS
 kubectl cp /tmp/export_VARS "${vreapi_pod_name}:/tmp"
 kubectl cp "$PSScriptRoot/export-from-psql-pod-in-legacy-db-schema.sh" "${vreapi_pod_name}:/tmp"
+
+kubectl cp ~/NaaVRE/NaaVRE_db.json "${vreapi_pod_name}:/app"
 kubectl exec -it $vreapi_pod_name -- bash "/tmp/export-from-psql-pod-in-legacy-db-schema.sh"
 
-kubectl cp "${vreapi_pod_name}:/app/NaaVRE_db.json" $project_root/NaaVRE_db.json
+kubectl cp "${vreapi_pod_name}:/app/NaaVRE_db.json" ~/NaaVRE/NaaVRE_db.json
+
+cd $cwd

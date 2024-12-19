@@ -20,7 +20,7 @@ class Command(BaseCommand):
         for table in options['tables']:
             match table:
                 case 'Cell':
-                    queryset: QuerySet = Cell.objects.all()
+                    queryset: QuerySet = Cell.objects.all().order_by('task_name')
                     print(f'Cell count: {queryset.count()}')
                     no: int = 1
                     cells: dict[str, dict] = {}

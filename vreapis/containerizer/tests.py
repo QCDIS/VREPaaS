@@ -12,6 +12,7 @@ from pathlib import Path
 from django.test import TestCase, Client
 from django.conf import settings
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 from urllib.parse import urlencode
 import requests
 import nbformat
@@ -32,9 +33,22 @@ if os.path.exists('resources'):
 elif os.path.exists('tests/resources/'):
     base_path = 'tests/resources/'
 
+dummy_username = f'test'
+dummy_password = '0'
+
+def create_dummy_credentials():
+    dummy_username = f'test'
+    dummy_password = '0'
+    try:
+        dummy_user: User = User.objects.get(username=dummy_username)
+    except User.DoesNotExist:
+        dummy_user = User.objects.create_user(dummy_username, password=dummy_password)
+    django_token, created = Token.objects.get_or_create(user=dummy_user, key=os.getenv("DJANGO_TOKEN"))
+
 
 def get_auth_header() -> dict[str, str]:
-    return {'Authorization': f'Token {settings.NAAVRE_API_TOKEN}'}
+    # return {'Authorization': f'Token {django_token}'}
+    return {'Authorization': f'Token {os.getenv("DJANGO_TOKEN")}'}
 
 
 class GetBaseImagesTestCase(TestCase):
@@ -44,12 +58,7 @@ class GetBaseImagesTestCase(TestCase):
 
     def test_get_base_images(self):
         client = Client()
-        dummy_username = f'test'
-        dummy_password = '0'
-        try:
-            dummy_user: User = User.objects.get(username=dummy_username)
-        except User.DoesNotExist:
-            dummy_user = User.objects.create_user(dummy_username, password=dummy_password)
+        create_dummy_credentials()
         client.login(username=dummy_username, password=dummy_password)
 
         response = client.get('/api/containerizer/baseimagetags', headers=get_auth_header())
@@ -164,6 +173,7 @@ class ExtractorHandlerTestCase(TestCase):
                 notebook = json.load(file)
             file.close()
             client = Client()
+            create_dummy_credentials()
             response = client.post('/api/containerizer/extract', headers=get_auth_header(), data=notebook, content_type="application/json")
             self.assertEqual(response.status_code, 200)
             # get JSON response
@@ -179,6 +189,7 @@ class CellsHandlerTestCase(TestCase):
 
     def setUp(self):
         self.client = Client()
+        create_dummy_credentials()
 
     def create_cell_and_add_to_cat(self, cell_path=None) -> (dict, dict):
         print('Creating cell from: ', cell_path)

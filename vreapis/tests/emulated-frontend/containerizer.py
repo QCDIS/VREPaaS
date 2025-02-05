@@ -23,7 +23,7 @@ script_path: str = os.path.dirname(os.path.realpath(__file__))
 API_ENDPOINT: str = f"{os.getenv('API_ENDPOINT')}/api/containerizer"
 headers: dict = {
     "Content-Type": "application/json",
-    "Authorization": f"Token {os.getenv('NAAVRE_API_TOKEN')}",
+    "Authorization": f"Token {os.getenv('DJANGO_TOKEN')}",
 }
 session = requests.Session()
 

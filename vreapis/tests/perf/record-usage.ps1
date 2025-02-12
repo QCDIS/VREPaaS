@@ -1,5 +1,8 @@
 param(
-    [string]$pod_name = 'vrepaas-vreapi',
+    [string]$browser_cmd = $null,
+    [switch]$jupyterlab_backend = $false,
+    [switch]$rstudio_backend = $false,
+    [string]$pod_name = $null,
     [string]$log_dir = '.log',
     [Double]$interval = 1
 )

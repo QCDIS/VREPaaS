@@ -1,0 +1,21 @@
+# duplicate rmd test files for test repetitions
+
+param(
+    [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$pathnames,
+    [int]$copies = 10,
+    [string]$extension_prefix_prefix = '.',
+    [string]$extension_prefix_suffix = '',
+    [string]$magic_prefix = ' # C25B14E054D65738 [rpt ',
+    [string]$magic_suffix = '] '
+)
+
+foreach ($pathname in $pathnames) {
+    $content = Get-Content -Raw $pathname
+    $re = '((^|[\r\n])```{r[^\r\n]+[\r\n]+(\s#\|[^\r\n]*[\r\n]+)*#[^\r\n]*)' # code chunk header to 1st line comment
+    # $res = $content | Select-String -AllMatches $re
+    # $res.Matches | ForEach-Object { Write-Host $_.Value }
+    for ($i = 0; $i -lt $copies; ++$i) {
+        $new_content = $content -replace $re, "`$1$magic_prefix$i$magic_suffix"
+        Set-Content "$($pathname.DirectoryName)/$($pathname.BaseName)$extension_prefix_prefix$i$extension_prefix_suffix$($pathname.Extension)" $new_content
+    }
+}

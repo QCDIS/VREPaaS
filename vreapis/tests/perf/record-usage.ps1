@@ -37,7 +37,7 @@ class Pod_Metric {
 while ($true) {
     $entry = kubectl top pod $pod_name --no-headers | ForEach-Object {
         $col = $_ -split '\s+'
-        [Pod_Metric]::new($col[1], $col[2])
+        [Pod_Metric]::new($col[1], $col[2]) # cols from /usr/bin/ps: USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
     }
     $entry | Export-Csv -Append $log_file
     Start-Sleep $interval

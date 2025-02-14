@@ -12,7 +12,7 @@ param(
 
 foreach ($pathname in $pathnames) {
     $content = Get-Content -Raw $pathname
-    $re = '((^|[\r\n])```{r[^\r\n]+[\r\n]+(\s#\|[^\r\n]*[\r\n]+)*#[^\r\n]*)' # code chunk header to 1st line comment [chunk options w/ prefix #| skipped]
+    $re = '((^|[\r\n])```{r[^\r\n]+[\r\n]+(\s#\|[^\r\n]*[\r\n]+)*#[^\r\n]*)' # code chunk header to 1st line comment [chunk options w/ prefix #| skipped] [see https://yihui.org/knitr/options/?utm_source=chatgpt.com]
     # $res = $content | Select-String -AllMatches $re
     # $res.Matches | ForEach-Object { Write-Host $_.Value }
     for ($i = 0; $i -lt $copies; ++$i) {

@@ -101,7 +101,7 @@ if ($pod_name -ne $null) {
     $mem_headers += "mem:pod:$pod_name"
 }
 $cpu_headers + $mem_headers | ForEach-Object { $compound_resource_metric | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
-if (-not (Test-Path $cooked_log_file)) { $compound_resource_metric | Export-Csv $cooked_log_file }
+if (-not (Test-Path $cooked_log_file)) { $compound_resource_metric | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 $ps_pathname = '/usr/bin/ps'
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'

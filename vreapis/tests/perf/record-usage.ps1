@@ -123,9 +123,9 @@ while ($true) {
         $compound_resource_metric."mem:browser:$browser_program_name" = $browser_metric.mem
     }
     if ($JupyterLab_backend) {
-        $JupyterLab_backend = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a 'jupyter.?lab'
+        $JupyterLab_backend_processes = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a 'jupyter.?lab'
         $JupyterLab_backend_metric = [Resource_Metric]::new()
-        foreach ($process in $JupyterLab_backend) {
+        foreach ($process in $JupyterLab_backend_processes) {
             $m = [Simplified_ps_Entry]::new($time, $process)
             $new_raw_ps_entries.Add($m)
             $JupyterLab_backend_metric.CPU += [double]$m.CPU

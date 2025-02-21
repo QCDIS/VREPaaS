@@ -1,12 +1,18 @@
 # duplicate rmd test files for test repetitions
 # At present, Cell Containerizer from NaaVRE automatically generates Docker image name for a cell using login username and its 1st line comment. To bring more convenience to test repetitions, this script directly duplicates designated test files with suffix added to the 1st line comment.
+# Example:
+#   ./dup-test-files a.Rmd
+# Results:
+#   'a.Rmd' -> 'a.0.Rmd', 'a.1.Rmd', 'a.2.Rmd', ..., 'a.9.Rmd'
+# Convert to ipynb:
+#   ls a*.Rmd | % { cat -raw $_ | jupytext --from Rmd --to ipynb --opt split_at_heading=true -o - > "$($_.BaseName).ipynb" }
 
 param(
-    [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$pathnames,
-    [int]$copies = 10,
+    [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$pathnames, # files to dup
+    [int]$copies = 10,                                              # number of copies
     [string]$extension_prefix_prefix = '.',
     [string]$extension_prefix_suffix = '',
-    [string]$magic_prefix = ' # C25B14E054D65738 [rpt ',
+    [string]$magic_prefix = ' # C25B14E054D65738 [rpt ',            # to conveniently recognise copies
     [string]$magic_suffix = '] '
 )
 

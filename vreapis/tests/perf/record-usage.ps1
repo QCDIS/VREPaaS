@@ -1,15 +1,13 @@
 param(
-    [string]$browser_program_name = $null,
-    [switch]$JupyterLab_backend = $false,
-    [switch]$RStudio_backend = $false,
-    [string]$pod_name = $null,
-    [string]$log_dir = '.log',
-    [Double]$interval = 1
+    [string]$browser_program_name = $null,  # record resource usage for browser. use this param to specify re pattern for browser pathname
+    [switch]$JupyterLab_backend = $false,   # record resource usage for JupyterLab backend
+    [switch]$RStudio_backend = $false,      # record resource usage for RStudio backend
+    [string]$pod_name = $null,              # record resource usage for pod [common backend]. use this param to specify re pattern for pod name
+    [string]$log_dir = '.log',              # directory to store log files
+    [Double]$interval = 1                   # interval between 2 adjacent resource usage captures [seconds]
 )
 
-if ((Test-Path $log_dir) -eq $false) {
-    & '/usr/bin/mkdir' -p $log_dir
-}
+if ((Test-Path $log_dir) -eq $false) { & '/usr/bin/mkdir' -p $log_dir }
 
 $date = Get-Date -Format 'yyyyMMdd-HHmmss'
 $raw_log_file = $log_dir + "/$date.raw.csv"
@@ -135,7 +133,7 @@ while ($true) {
         $compound_resource_metric."mem:JupyterLab backend" = $JupyterLab_backend_metric.mem
     }
     if ($RStudio_backend) {
-        $RStudio_backend_processes = & $ps_pathname 'axo' $([Simplified_ps_Entry]::header_row) | Select-String -a 'rstudio' # here axo not exo since all process got by the latter are contained in those got by the former
+        $RStudio_backend_processes = & $ps_pathname 'axo' $([Simplified_ps_Entry]::header_row) | Select-String -a 'rstudio' # here 'axo' not 'exo' since all process got by the latter are contained in those got by the former
         $RStudio_backend_metric = [Resource_Metric]::new()
         foreach ($process in $RStudio_backend_processes) {
             $m = [Simplified_ps_Entry]::new($time, $process)

@@ -155,7 +155,7 @@ $loop_body = {
         $compound_resource_metric."mem:pod:$pod_name" = $pod_metric.mem
     }
     if ($console) {
-        Write-Output $compound_resource_metric
+        $compound_resource_metric | Format-Table | Write-Output
     } else {
         $new_raw_ps_entries | Export-Csv -Append $raw_log_file
         $compound_resource_metric | Export-Csv -Append $cooked_log_file

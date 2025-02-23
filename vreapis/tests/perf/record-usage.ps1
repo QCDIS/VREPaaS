@@ -4,7 +4,9 @@ param(
     [switch]$RStudio_backend = $false,      # record resource usage for RStudio backend
     [string]$pod_name = $null,              # record resource usage for pod [common backend]. use this param to specify re pattern for pod name
     [string]$log_dir = '.log',              # directory to store log files
-    [Double]$interval = 1                   # interval between 2 adjacent resource usage captures [seconds]
+    [Double]$interval = 1,                  # interval between 2 adjacent resource usage captures [seconds]
+    [long]$number_of_records = 0,           # 0 or neg means infinite records, pos value means number of records to capture
+    [switch]$console = $false               # print usage data to console
 )
 
 if ((Test-Path $log_dir) -eq $false) { & '/usr/bin/mkdir' -p $log_dir }
@@ -75,7 +77,7 @@ class Resource_Metric {
     }
 }
 
-if (-not (Test-Path $raw_log_file)) { (@('time') + [Simplified_ps_Entry]::col_name) -join ',' | Out-File $raw_log_file } # add csv headers first
+if ((-not $console) -and (-not (Test-Path $raw_log_file))) { (@('time') + [Simplified_ps_Entry]::col_name) -join ',' | Out-File $raw_log_file } # add csv headers first
 
 $compound_resource_metric = [PSCustomObject]@{
     "time" = $null
@@ -99,12 +101,12 @@ if ($pod_name -ne $null) {
     $mem_headers += "mem:pod:$pod_name"
 }
 $cpu_headers + $mem_headers | ForEach-Object { $compound_resource_metric | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
-if (-not (Test-Path $cooked_log_file)) { $compound_resource_metric | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
+if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $compound_resource_metric | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 $ps_pathname = '/usr/bin/ps'
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'
 
-while ($true) {
+$loop_body = {
     $time = Get-Date -Format $time_format
     $compound_resource_metric.time = $time
     $new_raw_ps_entries = New-Object System.Collections.Generic.List[Simplified_ps_Entry]
@@ -152,7 +154,17 @@ while ($true) {
         $compound_resource_metric."CPU:pod:$pod_name" = $pod_metric.CPU
         $compound_resource_metric."mem:pod:$pod_name" = $pod_metric.mem
     }
-    $new_raw_ps_entries | Export-Csv -Append $raw_log_file
-    $compound_resource_metric | Export-Csv -Append $cooked_log_file
+    if ($console) {
+        Write-Output $compound_resource_metric
+    } else {
+        $new_raw_ps_entries | Export-Csv -Append $raw_log_file
+        $compound_resource_metric | Export-Csv -Append $cooked_log_file
+    }
     Start-Sleep($interval)
+}
+
+if ($number_of_records -le 0) {
+    while ($true) { & $loop_body }
+} else {
+    for ($i = 0; $i -lt $number_of_records; ++$i) { & $loop_body }
 }

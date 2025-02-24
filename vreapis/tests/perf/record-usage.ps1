@@ -9,19 +9,27 @@ param(
     [switch]$console = $false               # print usage data to console
 )
 
-if ((Test-Path $log_dir) -eq $false) { & '/usr/bin/mkdir' -p $log_dir }
+if ($console) {
+    Write-Host -NoNewline 'Recording CPU & mem usage at '
+    Write-Host -NoNewline -ForegroundColor Green 'console'
+    Write-Host -NoNewline ' every '
+    Write-Host -NoNewline -ForegroundColor Green $interval
+    Write-Host ' second(s) ...'
+} else {
+    if ((Test-Path $log_dir) -eq $false) { & '/usr/bin/mkdir' -p $log_dir }
 
-$date = Get-Date -Format 'yyyyMMdd-HHmmss'
-$raw_log_file = $log_dir + "/$date.raw.csv"
-$cooked_log_file = $log_dir + "/$date.cooked.csv"
+    $date = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $raw_log_file = $log_dir + "/$date.raw.csv"
+    $cooked_log_file = $log_dir + "/$date.cooked.csv"
 
-Write-Host -NoNewline 'Recording CPU & mem usage at '
-Write-Host -NoNewline -ForegroundColor Green $raw_log_file
-Write-Host -NoNewline ' and '
-Write-Host -NoNewline -ForegroundColor Green $cooked_log_file
-Write-Host -NoNewline ' every '
-Write-Host -NoNewline -ForegroundColor Green $interval
-Write-Host ' second(s) ...'
+    Write-Host -NoNewline 'Recording CPU & mem usage at '
+    Write-Host -NoNewline -ForegroundColor Green $raw_log_file
+    Write-Host -NoNewline ' and '
+    Write-Host -NoNewline -ForegroundColor Green $cooked_log_file
+    Write-Host -NoNewline ' every '
+    Write-Host -NoNewline -ForegroundColor Green $interval
+    Write-Host ' second(s) ...'
+}
 
 class Simplified_ps_Entry {
     static [string] $header_row = 'user,pid,%cpu,rss,command' # complete header row: 'USER,PID,%CPU,%MEM,VSZ,RSS,TTY,STAT,START,TIME,COMMAND'

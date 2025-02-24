@@ -125,7 +125,7 @@ $loop_body = {
             $m = [Simplified_ps_Entry]::new($time, $process)
             $new_raw_ps_entries.Add($m)
             $browser_metric.CPU += $m.CPU
-            $browser_metric.mem += $m.RSS * 1000 / 1024.0
+            $browser_metric.mem += $m.RSS * 1000 / 1024.0 / 1024
         }
         $compound_resource_metric."CPU:browser:$browser_program_name" = $browser_metric.CPU
         $compound_resource_metric."mem:browser:$browser_program_name" = $browser_metric.mem
@@ -137,7 +137,7 @@ $loop_body = {
             $m = [Simplified_ps_Entry]::new($time, $process)
             $new_raw_ps_entries.Add($m)
             $JupyterLab_backend_metric.CPU += [double]$m.CPU
-            $JupyterLab_backend_metric.mem += [double]$m.RSS * 1000 / 1024.0
+            $JupyterLab_backend_metric.mem += [double]$m.RSS * 1000 / 1024.0 / 1024
         }
         $compound_resource_metric."CPU:JupyterLab backend" = $JupyterLab_backend_metric.CPU
         $compound_resource_metric."mem:JupyterLab backend" = $JupyterLab_backend_metric.mem
@@ -149,7 +149,7 @@ $loop_body = {
             $m = [Simplified_ps_Entry]::new($time, $process)
             $new_raw_ps_entries.Add($m)
             $RStudio_backend_metric.CPU += [double]$m.CPU
-            $RStudio_backend_metric.mem += [double]$m.RSS * 1000 / 1024.0
+            $RStudio_backend_metric.mem += [double]$m.RSS * 1000 / 1024.0 / 1024
         }
         $compound_resource_metric."CPU:RStudio backend" = $RStudio_backend_metric.CPU
         $compound_resource_metric."mem:RStudio backend" = $RStudio_backend_metric.mem

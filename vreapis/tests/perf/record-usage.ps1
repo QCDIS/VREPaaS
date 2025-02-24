@@ -2,7 +2,8 @@ param(
     [string]$browser_program_name = $null,  # record resource usage for browser. use this param to specify re pattern for browser pathname
     [switch]$JupyterLab_backend = $false,   # record resource usage for JupyterLab backend
     [switch]$RStudio_backend = $false,      # record resource usage for RStudio backend
-    [string]$pod_name = $null,              # record resource usage for pod [common backend]. use this param to specify re pattern for pod name
+    [string]$vreapi_pod_name = $null,       # record resource usage for vreapi pod [common backend]. use this param to specify re pattern for pod name
+    [string]$database_pod_name = $null,     # record resource usage for db pod [common backend]. use this param to specify re pattern for pod name
     [string]$log_dir = '.log',              # directory to store log files
     [Double]$interval = 1,                  # interval between 2 adjacent resource usage captures [seconds]
     [long]$number_of_records = 0,           # 0 or neg means infinite records, pos value means number of records to capture
@@ -103,10 +104,15 @@ if ($RStudio_backend) {
     $cpu_headers += "CPU:RStudio backend"
     $mem_headers += "mem:RStudio backend"
 }
-if ($pod_name -ne $null) {
-    $pod_name = ((kubectl get pod | Select-String $pod_name).Line -split '\s+')[0]
-    $cpu_headers += "CPU:pod:$pod_name"
-    $mem_headers += "mem:pod:$pod_name"
+if ($vreapi_pod_name -ne $null) {
+    $vreapi_pod_name = ((kubectl get pod | Select-String $vreapi_pod_name).Line -split '\s+')[0]
+    $cpu_headers += "CPU:pod:$vreapi_pod_name"
+    $mem_headers += "mem:pod:$vreapi_pod_name"
+}
+if ($database_pod_name -ne $null) {
+    $database_pod_name = ((kubectl get pod | Select-String $database_pod_name).Line -split '\s+')[0]
+    $cpu_headers += "CPU:pod:$database_pod_name"
+    $mem_headers += "mem:pod:$database_pod_name"
 }
 $cpu_headers + $mem_headers | ForEach-Object { $compound_resource_metric | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
 if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $compound_resource_metric | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
@@ -154,13 +160,21 @@ $loop_body = {
         $compound_resource_metric."CPU:RStudio backend" = $RStudio_backend_metric.CPU
         $compound_resource_metric."mem:RStudio backend" = $RStudio_backend_metric.mem
     }
-    if ($pod_name -ne $null) {
-        $pod_metric = kubectl top pod $pod_name --no-headers | ForEach-Object {
+    if ($vreapi_pod_name -ne $null) {
+        $pod_metric = kubectl top pod $vreapi_pod_name --no-headers | ForEach-Object {
             $col = $_ -split '\s+'
             [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
         }
-        $compound_resource_metric."CPU:pod:$pod_name" = $pod_metric.CPU
-        $compound_resource_metric."mem:pod:$pod_name" = $pod_metric.mem
+        $compound_resource_metric."CPU:pod:$vreapi_pod_name" = $pod_metric.CPU
+        $compound_resource_metric."mem:pod:$vreapi_pod_name" = $pod_metric.mem
+    }
+    if ($database_pod_name -ne $null) {
+        $pod_metric = kubectl top pod $database_pod_name --no-headers | ForEach-Object {
+            $col = $_ -split '\s+'
+            [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
+        }
+        $compound_resource_metric."CPU:pod:$database_pod_name" = $pod_metric.CPU
+        $compound_resource_metric."mem:pod:$database_pod_name" = $pod_metric.mem
     }
     if ($console) {
         $compound_resource_metric | Format-Table | Write-Output

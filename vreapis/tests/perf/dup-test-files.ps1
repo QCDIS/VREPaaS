@@ -23,6 +23,9 @@ foreach ($pathname in $pathnames) {
     # $res.Matches | ForEach-Object { Write-Host $_.Value }
     for ($i = 0; $i -lt $copies; ++$i) {
         $new_content = $content -replace $re, "`$1$magic_prefix$i$magic_suffix"
-        Set-Content "$($pathname.DirectoryName)/$($pathname.BaseName)$extension_prefix_prefix$i$extension_prefix_suffix$($pathname.Extension)" $new_content
+        $dst = "$($pathname.DirectoryName)/$($pathname.BaseName)$extension_prefix_prefix$i$extension_prefix_suffix$($pathname.Extension)"
+        Set-Content $dst $new_content
+        Write-Host -NoNewline "new replica: "
+        Write-Host -ForegroundColor Green $dst
     }
 }

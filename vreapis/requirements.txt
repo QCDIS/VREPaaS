@@ -1,13 +1,13 @@
-django==5.1.4
+django==5.1.6
 djangorestframework==3.15.2
 djangorestframework-gis==1.1
-django-filter==24.3
-whitenoise==6.8.2
+django-filter==25.1
+whitenoise==6.9.0
 gunicorn==23.0.0
 pyyaml==6.0.2
 requests==2.32.3
 django-dotenv==1.4.2
-django-cors-headers==4.6.0
+django-cors-headers==4.7.0
 django-extensions==3.2.3
 psycopg2==2.9.10
 django-probes==1.7.0

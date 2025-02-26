@@ -1,13 +1,15 @@
 param(
-    [string]$browser_program_name = $null,  # record resource usage for browser. use this param to specify re pattern for browser pathname
-    [switch]$JupyterLab_backend = $false,   # record resource usage for JupyterLab backend
-    [switch]$RStudio_backend = $false,      # record resource usage for RStudio backend
-    [string]$vreapi_pod_name = $null,       # record resource usage for vreapi pod [common backend]. use this param to specify re pattern for pod name
-    [string]$database_pod_name = $null,     # record resource usage for db pod [common backend]. use this param to specify re pattern for pod name
-    [string]$log_dir = '.log',              # directory to store log files
-    [Double]$interval = 1,                  # interval between 2 adjacent resource usage captures [seconds]
-    [long]$number_of_records = 0,           # 0 or neg means infinite records, pos value means number of records to capture
-    [switch]$console = $false               # print usage data to console
+    [string]$browser_process_filter = '',               # record resource usage for browser. use this param to specify re pattern to filter browser processes from ps entries
+    [switch]$JupyterLab_backend = $false,               # record resource usage for JupyterLab backend
+    [switch]$RStudio_backend = $false,                  # record resource usage for RStudio backend
+    [alias('v')][string]$vreapi_process_filter = '',    # record resource usage for vreapi [common backend]. use this param to specify re pattern to filter vreapi process from ps entries
+    [alias('d')][string]$database_process_filter = '',  # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
+    [alias('vp')][string]$vreapi_pod_filter = '',       # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
+    [alias('dp')][string]$database_pod_filter = '',     # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
+    [string]$log_dir = '.log',                          # directory to store log files
+    [Double]$interval = 1,                              # interval between 2 adjacent resource usage captures [seconds]
+    [long]$number_of_records = 0,                       # 0 or negative means infinite records. positive means number of records to capture
+    [switch]$console = $false                           # print usage data to console
 )
 
 if ($console) {
@@ -92,9 +94,9 @@ $compound_resource_metric = [PSCustomObject]@{
     "time" = $null
 }
 $cpu_headers = $mem_headers = @()
-if ($browser_program_name -ne $null) {
-    $cpu_headers += "CPU:browser:$browser_program_name"
-    $mem_headers += "mem:browser:$browser_program_name"
+if ($browser_process_filter -ne '') {
+    $cpu_headers += "CPU:browser:$browser_process_filter"
+    $mem_headers += "mem:browser:$browser_process_filter"
 }
 if ($JupyterLab_backend) {
     $cpu_headers += "CPU:JupyterLab backend"
@@ -104,15 +106,23 @@ if ($RStudio_backend) {
     $cpu_headers += "CPU:RStudio backend"
     $mem_headers += "mem:RStudio backend"
 }
-if ($vreapi_pod_name -ne $null) {
-    $vreapi_pod_name = ((kubectl get pod | Select-String $vreapi_pod_name).Line -split '\s+')[0]
-    $cpu_headers += "CPU:pod:$vreapi_pod_name"
-    $mem_headers += "mem:pod:$vreapi_pod_name"
+if ($vreapi_process_filter -ne '') {
+    $cpu_headers += "CPU:vreapi:$vreapi_process_filter"
+    $mem_headers += "mem:vreapi:$vreapi_process_filter"
 }
-if ($database_pod_name -ne $null) {
-    $database_pod_name = ((kubectl get pod | Select-String $database_pod_name).Line -split '\s+')[0]
-    $cpu_headers += "CPU:pod:$database_pod_name"
-    $mem_headers += "mem:pod:$database_pod_name"
+if ($database_process_filter -ne '') {
+    $cpu_headers += "CPU:database:$database_process_filter"
+    $mem_headers += "mem:database:$database_process_filter"
+}
+if ($vreapi_pod_filter -ne '') {
+    $vreapi_pod_filter = ((kubectl get pod | Select-String $vreapi_pod_filter).Line -split '\s+')[0]
+    $cpu_headers += "CPU:pod:$vreapi_pod_filter"
+    $mem_headers += "mem:pod:$vreapi_pod_filter"
+}
+if ($database_pod_filter -ne '') {
+    $database_pod_filter = ((kubectl get pod | Select-String $database_pod_filter).Line -split '\s+')[0]
+    $cpu_headers += "CPU:pod:$database_pod_filter"
+    $mem_headers += "mem:pod:$database_pod_filter"
 }
 $cpu_headers + $mem_headers | ForEach-Object { $compound_resource_metric | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
 if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $compound_resource_metric | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
@@ -124,8 +134,8 @@ $loop_body = {
     $time = Get-Date -Format $time_format
     $compound_resource_metric.time = $time
     $new_raw_ps_entries = New-Object System.Collections.Generic.List[Simplified_ps_Entry]
-    if ($browser_program_name -ne $null) {
-        $browser_processes = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a $browser_program_name
+    if ($browser_process_filter -ne '') {
+        $browser_processes = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a $browser_process_filter
         $browser_metric = [Resource_Metric]::new()
         foreach ($process in $browser_processes) {
             $m = [Simplified_ps_Entry]::new($time, $process)
@@ -133,8 +143,8 @@ $loop_body = {
             $browser_metric.CPU += $m.CPU
             $browser_metric.mem += $m.RSS * 1000 / 1024.0 / 1024
         }
-        $compound_resource_metric."CPU:browser:$browser_program_name" = $browser_metric.CPU
-        $compound_resource_metric."mem:browser:$browser_program_name" = $browser_metric.mem
+        $compound_resource_metric."CPU:browser:$browser_process_filter" = $browser_metric.CPU
+        $compound_resource_metric."mem:browser:$browser_process_filter" = $browser_metric.mem
     }
     if ($JupyterLab_backend) {
         $JupyterLab_backend_processes = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a 'jupyter.?lab'
@@ -160,21 +170,45 @@ $loop_body = {
         $compound_resource_metric."CPU:RStudio backend" = $RStudio_backend_metric.CPU
         $compound_resource_metric."mem:RStudio backend" = $RStudio_backend_metric.mem
     }
-    if ($vreapi_pod_name -ne $null) {
-        $pod_metric = kubectl top pod $vreapi_pod_name --no-headers | ForEach-Object {
-            $col = $_ -split '\s+'
-            [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
+    if ($vreapi_process_filter -ne '') {
+        $vreapi_processes = & $ps_pathname 'exo' $([Simplified_ps_Entry]::header_row) | Select-String -a $vreapi_process_filter
+        $vreapi_metric = [Resource_Metric]::new()
+        foreach ($process in $vreapi_processes) {
+            $m = [Simplified_ps_Entry]::new($time, $process)
+            $new_raw_ps_entries.Add($m)
+            $vreapi_metric.CPU += $m.CPU
+            $vreapi_metric.mem += $m.RSS * 1000 / 1024.0 / 1024
         }
-        $compound_resource_metric."CPU:pod:$vreapi_pod_name" = $pod_metric.CPU
-        $compound_resource_metric."mem:pod:$vreapi_pod_name" = $pod_metric.mem
+        $compound_resource_metric."CPU:vreapi:$vreapi_process_filter" = $vreapi_metric.CPU
+        $compound_resource_metric."mem:vreapi:$vreapi_process_filter" = $vreapi_metric.mem
     }
-    if ($database_pod_name -ne $null) {
-        $pod_metric = kubectl top pod $database_pod_name --no-headers | ForEach-Object {
+    if ($database_process_filter -ne '') {
+        $database_processes = & $ps_pathname 'axo' $([Simplified_ps_Entry]::header_row) | Select-String -a $database_process_filter # axo works fine to filter postgres processes. not sure when it comes to other db systems
+        $database_metric = [Resource_Metric]::new()
+        foreach ($process in $database_processes) {
+            $m = [Simplified_ps_Entry]::new($time, $process)
+            $new_raw_ps_entries.Add($m)
+            $database_metric.CPU += $m.CPU
+            $database_metric.mem += $m.RSS * 1000 / 1024.0 / 1024
+        }
+        $compound_resource_metric."CPU:database:$database_process_filter" = $database_metric.CPU
+        $compound_resource_metric."mem:database:$database_process_filter" = $database_metric.mem
+    }
+    if ($vreapi_pod_filter -ne '') {
+        $pod_metric = kubectl top pod $vreapi_pod_filter --no-headers | ForEach-Object {
             $col = $_ -split '\s+'
             [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
         }
-        $compound_resource_metric."CPU:pod:$database_pod_name" = $pod_metric.CPU
-        $compound_resource_metric."mem:pod:$database_pod_name" = $pod_metric.mem
+        $compound_resource_metric."CPU:pod:$vreapi_pod_filter" = $pod_metric.CPU
+        $compound_resource_metric."mem:pod:$vreapi_pod_filter" = $pod_metric.mem
+    }
+    if ($database_pod_filter -ne '') {
+        $pod_metric = kubectl top pod $database_pod_filter --no-headers | ForEach-Object {
+            $col = $_ -split '\s+'
+            [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
+        }
+        $compound_resource_metric."CPU:pod:$database_pod_filter" = $pod_metric.CPU
+        $compound_resource_metric."mem:pod:$database_pod_filter" = $pod_metric.mem
     }
     if ($console) {
         $compound_resource_metric | Format-Table | Write-Output

@@ -16,7 +16,7 @@
     "cookie": "~1.0.2",
     "http": "~0.0.1-security",
     "keycloak-js": "~26.0.7",
-    "next": "15.1.3",
+    "next": "15.2.3",
     "next-auth": "~4.24.7",
     "react": "~19",
     "react-dom": "~19",

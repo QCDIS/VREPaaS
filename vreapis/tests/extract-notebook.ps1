@@ -1,3 +1,4 @@
+# extract notebook contents from test json files
 param(
     [System.IO.FileInfo[]]$input_files,
     [System.IO.FileInfo]$output_dir

@@ -34,7 +34,7 @@
                     "og_node_id": "603faa7",
                     "outputs": [],
                     "params": [],
-                    "title": "print-names-user",
+                    "title": "print-names-user0",
                     "vars": [
                         {
                             "color": "#ac5397",
@@ -105,8 +105,8 @@
     "outputs": [],
     "param_values": {},
     "params": [],
-    "task_name": "print-names-user",
-    "title": "print-names-user",
+    "task_name": "print-names-user0",
+    "title": "print-names-user0",
     "types": {
         "names": "list"
     }

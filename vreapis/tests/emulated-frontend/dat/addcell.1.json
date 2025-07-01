@@ -34,7 +34,7 @@
                         "names"
                     ],
                     "params": [],
-                    "title": "input-names-user",
+                    "title": "input-names-user0",
                     "vars": [
                         {
                             "color": "#ac5397",
@@ -105,8 +105,8 @@
     ],
     "param_values": {},
     "params": [],
-    "task_name": "input-names-user",
-    "title": "input-names-user",
+    "task_name": "input-names-user0",
+    "title": "input-names-user0",
     "types": {
         "names": "list"
     }

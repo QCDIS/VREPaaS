@@ -35,6 +35,7 @@ if ($console) {
 }
 
 class Simplified_ps_Entry {
+
     static [string] $header_row = 'user,pid,%cpu,rss,command' # complete header row: 'USER,PID,%CPU,%MEM,VSZ,RSS,TTY,STAT,START,TIME,COMMAND'
     static [string[]] $col_name = [Simplified_ps_Entry]::header_row -replace '%', '' -split ','
     static $col_name_index = @{}

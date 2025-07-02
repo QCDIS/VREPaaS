@@ -135,7 +135,6 @@ foreach ($filter in $pod_filters) {
     $mem_headers += "mem:pod:$filter"
 }
 $CPU_headers + $mem_headers | ForEach-Object { $cooked_entry | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
-#if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $cooked_entry | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 # main body
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'

@@ -6,7 +6,7 @@ param(
     [alias('d')][string]$database_process_filter = '',      # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
     [alias('vp')][string]$vreapi_pod_filter = '',           # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
     [alias('dp')][string]$database_pod_filter = '',         # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
-    [string]$log_dir = '.log',                              # directory to store log files
+    [string]$log_dir = 'log',                               # directory to store log files
     [int]$interval = 1,                                     # interval between 2 adjacent resource usage captures [seconds]. [pidstat only supports integer intervals]
     [long]$number_of_records = 0,                           # 0 or negative means infinite records. positive means number of records to capture
     [switch]$console = $false                               # print usage data to console

@@ -105,24 +105,20 @@ class Resource_Metric { # for what are sent by K8s metrics server, and cooked en
 $cooked_entry = [PSCustomObject]@{
     "time" = $null
 }
-$CPU_headers = New-Object System.Collections.Generic.List[string]
-$mem_headers = New-Object System.Collections.Generic.List[string]
 $JupyterLab_backend_filter = 'jupyter.?lab'
 $RStudio_backend_filter = 'rstudio-server'
+$CPU_headers = New-Object System.Collections.Generic.List[string]
+$mem_headers = New-Object System.Collections.Generic.List[string]
 $process_filters = New-Object System.Collections.Generic.List[string]
 $pod_filters = New-Object System.Collections.Generic.List[string]
+if ($JupyterLab_backend) { $process_filters.Add($JupyterLab_backend_filter) }
+if ($RStudio_backend) { $process_filters.Add($RStudio_backend_filter) }
 foreach ($s in @(
     $browser_process_filter,
     $vreapi_process_filter,
     $database_process_filter
 )) {
     if ($s -ne '') { $process_filters.Add($s) }
-}
-if ($JupyterLab_backend) {
-    $process_filters.Add($JupyterLab_backend_filter)
-}
-if ($RStudio_backend) {
-    $process_filters.Add($RStudio_backend_filter)
 }
 foreach ($s in @(
     $vreapi_pod_filter,
@@ -139,7 +135,7 @@ foreach ($filter in $pod_filters) {
     $mem_headers += "mem:pod:$filter"
 }
 $CPU_headers + $mem_headers | ForEach-Object { $cooked_entry | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
-if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $cooked_entry | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
+#if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $cooked_entry | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 # main body
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'
@@ -205,9 +201,9 @@ $loop_body = {
     # filter entries
     foreach ($filter in $process_filters) {
         $new_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $filter }
-        if ($new_CPU_entries.Count -gt 0) { $CPU_entries_to_export.AddRange($new_CPU_entries) }
+        if ($new_CPU_entries.Count -gt 0) { $CPU_entries_to_export.AddRange(($new_CPU_entries -as [System.Collections.Generic.List[Process_CPU_Entry]])) }
         $new_mem_entries = $mem_entries | Where-Object { $_.Command -match $filter }
-        if ($new_mem_entries.Count -gt 0) { $mem_entries_to_export.AddRange($new_mem_entries) }
+        if ($new_mem_entries.Count -gt 0) { $mem_entries_to_export.AddRange(($new_mem_entries -as [System.Collections.Generic.List[Process_Memory_Entry]])) }
         $metric = [Resource_Metric]::new(
             ($new_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
             ($new_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
@@ -223,7 +219,7 @@ $loop_body = {
         $cooked_entry."CPU:pod:$filter" = $pod_metric.CPU
         $cooked_entry."mem:pod:$filter" = $pod_metric.mem
     }
-    
+
     # output
     if ($console) {
         $cooked_entry | Format-Table | Write-Output

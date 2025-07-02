@@ -7,7 +7,7 @@ param(
     [alias('vp')][string]$vreapi_pod_filter = '',           # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
     [alias('dp')][string]$database_pod_filter = '',         # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
     [string]$log_dir = '.log',                              # directory to store log files
-    [double]$interval = 1,                                  # interval between 2 adjacent resource usage captures [seconds]
+    [int]$interval = 1,                                     # interval between 2 adjacent resource usage captures [seconds]. [pidstat only supports integer intervals]
     [long]$number_of_records = 0,                           # 0 or negative means infinite records. positive means number of records to capture
     [switch]$console = $false                               # print usage data to console
 )
@@ -150,7 +150,7 @@ $loop_body = {
     $cooked_entry.time = $time
 
     # convert text-based results from pidstat to .NET objects
-    $process_info = (pidstat -rul -p ALL 0) -join "`n" -split "\n\n" | Select-Object -Skip 1
+    $process_info = (pidstat -rul -p ALL $interval 1) -join "`n" -split "\n\n" | Select-Object -Skip 1
     $util_rows = New-Object System.Collections.Generic.List[System.Collections.Generic.List[string[]]]
     for ($i = 0; $i -lt 2; ++$i) {
         $raw_rows = $process_info[$i] -split '\n' | Select-Object -Skip 1

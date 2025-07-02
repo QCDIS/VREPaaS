@@ -1,15 +1,15 @@
 param(
-    [string]$browser_process_filter = '',               # record resource usage for browser. use this param to specify re pattern to filter browser processes from ps entries
-    [switch]$JupyterLab_backend = $false,               # record resource usage for JupyterLab backend
-    [switch]$RStudio_backend = $false,                  # record resource usage for RStudio backend
-    [alias('v')][string]$vreapi_process_filter = '',    # record resource usage for vreapi [common backend]. use this param to specify re pattern to filter vreapi process from ps entries
-    [alias('d')][string]$database_process_filter = '',  # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
-    [alias('vp')][string]$vreapi_pod_filter = '',       # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
-    [alias('dp')][string]$database_pod_filter = '',     # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
-    [string]$log_dir = '.log',                          # directory to store log files
-    [Double]$interval = 1,                              # interval between 2 adjacent resource usage captures [seconds]
-    [long]$number_of_records = 0,                       # 0 or negative means infinite records. positive means number of records to capture
-    [switch]$console = $false                           # print usage data to console
+    [string]$browser_process_filter = '',                   # record resource usage for browser. use this param to specify re pattern to filter browser processes from ps entries
+    [switch]$JupyterLab_backend = $false,                   # record resource usage for JupyterLab backend
+    [switch]$RStudio_backend = $false,                      # record resource usage for RStudio backend
+    [alias('v')][string]$vreapi_process_filter = '',        # record resource usage for vreapi [common backend]. use this param to specify re pattern to filter vreapi process from ps entries
+    [alias('d')][string]$database_process_filter = '',      # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
+    [alias('vp')][string]$vreapi_pod_filter = '',           # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
+    [alias('dp')][string]$database_pod_filter = '',         # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
+    [string]$log_dir = '.log',                              # directory to store log files
+    [Double]$interval = 1,                                  # interval between 2 adjacent resource usage captures [seconds]
+    [long]$number_of_records = 0,                           # 0 or negative means infinite records. positive means number of records to capture
+    [switch]$console = $false                               # print usage data to console
 )
 
 # intro messages before recording
@@ -35,52 +35,52 @@ if ($console) {
     Write-Host ' second(s) ...'
 }
 
-class Process_CPU_Entry { # pidstat used here. ps shows average CPU util only while top always show units like m, g, t, p for mem util thus less precise
+class Process_CPU_Entry { # pidstat [sudo apt install sysstat] used here. ps shows average CPU util only while top always show units like m, g, t, p for mem util thus less precise
     # columns for CPU util: [time], UID, PID, %usr, %system, %guest, %wait, %CPU, CPU, Command
     [DateTime]$time
     [int]$UID = -1
     [int]$PID = -1
-    [double]${%usr} = 0
-    [double]${%system} = 0
-    [double]${%guest} = 0
-    [double]${%wait} = 0
-    [double]${%CPU} = 0
+    [double]$pct_usr = 0
+    [double]$pct_system = 0
+    [double]$pct_guest = 0
+    [double]$pct_wait = 0
+    [double]$pct_CPU = 0
     [int]$CPU = 0
     [string]$Command = ''
-    Process_CPU_Entry([DateTime]$time, [int]$UID, [int]$PID, [double]${%usr}, [double]${%system}, [double]${%guest}, [double]${%wait}, [double]${%CPU}, [int]$CPU, [string]$Command) {
+    Process_CPU_Entry([DateTime]$time, [int]$UID, [int]$_PID, [double]$pct_usr, [double]$pct_system, [double]$pct_guest, [double]$pct_wait, [double]$pct_CPU, [int]$CPU, [string]$Command) {
         $this.time = $time
         $this.UID = $UID
-        $this.PID = $PID
-        $this.${%usr} = ${%usr}
-        $this.${%system} = ${%system}
-        $this.${%guest} = ${%guest}
-        $this.${%wait} = ${%wait}
-        $this.${%CPU} = ${%CPU}
+        $this.PID = $_PID
+        $this.pct_usr = $pct_usr
+        $this.pct_system = $pct_system
+        $this.pct_guest = $pct_guest
+        $this.pct_wait = $pct_wait
+        $this.pct_CPU = $pct_CPU
         $this.CPU = $CPU
         $this.Command = $Command
     }
 }
 
-class Process_Memory_Entry {
+class Process_Memory_Entry { # pidstat
     # columns for mem util: [time], UID, PID, minflt/s, majflt/s, VSZ, RSS, %MEM, Command
     [DateTime]$time
     [int]$UID = -1
     [int]$PID = -1
-    [double]${minflt/s} = 0
-    [double]${majflt/s} = 0
+    [double]$minflt_p_s = 0
+    [double]$majflt_p_s = 0
     [int]$VSZ = 0 # in KiB
     [int]$RSS = 0 # in KiB
-    [double]${%MEM} = 0
+    [double]$pct_MEM = 0
     [string]$Command = ''
-    Process_Memory_Entry([DateTime]$time, [int]$UID, [int]$PID, [double]${minflt/s}, [double]${majflt/s}, [int]$VSZ, [int]$RSS, [double]${%MEM}, [string]$Command) {
+    Process_Memory_Entry([DateTime]$time, [int]$UID, [int]$_PID, [double]$minflt_p_s, [double]$majflt_p_s, [int]$VSZ, [int]$RSS, [double]$pct_MEM, [string]$Command) {
         $this.time = $time
         $this.UID = $UID
-        $this.PID = $PID
-        $this.${minflt/s} = ${minflt/s}
-        $this.${majflt/s} = ${majflt/s}
+        $this.PID = $_PID
+        $this.minflt_p_s = $minflt_p_s
+        $this.majflt_p_s = $majflt_p_s
         $this.VSZ = $VSZ
         $this.RSS = $RSS
-        $this.${%MEM} = ${%MEM}
+        $this.pct_MEM = $pct_MEM
         $this.Command = $Command
     }
 }
@@ -140,6 +140,12 @@ $CPU_headers + $mem_headers | ForEach-Object { $cooked_entry | Add-Member -Membe
 if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $cooked_entry | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'
+if ($env:LC_NUMERIC -eq $null) {
+    $culture = [System.Globalization.CultureInfo]::CurrentCulture.Name
+} else {
+    $BCP_47_culture_name_for_pidstat = $env:LC_NUMERIC.Substring(0, $env:LC_NUMERIC.IndexOf('.')) # e.g. en-US, nl-NL
+    $culture = New-Object System.Globalization.CultureInfo($BCP_47_culture_name_for_pidstat)
+}
 $loop_body = {
     $time = Get-Date -Format $time_format
     $cooked_entry.time = $time
@@ -153,6 +159,39 @@ $loop_body = {
             $split_rows.Add($columns)
         }
         $util_rows.Add($split_rows)
+    }
+    $CPU_util_rows = $util_rows[0]
+    $mem_util_rows = $util_rows[1]
+    $CPU_entries = New-Object System.Collections.Generic.List[Process_CPU_Entry]
+    $mem_entries = New-Object System.Collections.Generic.List[Process_Memory_Entry]
+    foreach ($seg in $CPU_util_rows) {
+        $e = [Process_CPU_Entry]::new(
+            [DateTime]::ParseExact($time, $time_format, $null),
+            [int]($seg[1]),
+            [int]($seg[2]),
+            [double]::Parse($seg[3], $culture),
+            [double]::Parse($seg[4], $culture),
+            [double]::Parse($seg[5], $culture),
+            [double]::Parse($seg[6], $culture),
+            [double]::Parse($seg[7], $culture),
+            [int]($seg[8]),
+            $seg[9..($seg.Length - 1)] -join ' '
+        )
+        $CPU_entries.Add($e)
+    }
+    foreach ($seg in $mem_util_rows) {
+        $e = [Process_Memory_Entry]::new(
+            [DateTime]::ParseExact($time, $time_format, $null),
+            [int]($seg[1]),
+            [int]($seg[2]),
+            [double]::Parse($seg[3], $culture),
+            [double]::Parse($seg[4], $culture),
+            [int]($seg[5]),
+            [int]($seg[6]),
+            [double]::Parse($seg[7], $culture),
+            $seg[8..($seg.Length - 1)] -join ' '
+        )
+        $mem_entries.Add($e)
     }
     if ($browser_process_filter -ne '') {
 

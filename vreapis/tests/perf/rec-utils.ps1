@@ -71,11 +71,11 @@ class Process_Memory_Entry { # pidstat
     [int]$PID = -1
     [double]$minflt_p_s = 0
     [double]$majflt_p_s = 0
-    [int]$VSZ = 0 # in KiB
-    [int]$RSS = 0 # in KiB
+    [long]$VSZ = 0 # in KiB
+    [long]$RSS = 0 # in KiB
     [double]$pct_MEM = 0
     [string]$Command = ''
-    Process_Memory_Entry([DateTime]$time, [int]$UID, [int]$_PID, [double]$minflt_p_s, [double]$majflt_p_s, [int]$VSZ, [int]$RSS, [double]$pct_MEM, [string]$Command) {
+    Process_Memory_Entry([DateTime]$time, [int]$UID, [int]$_PID, [double]$minflt_p_s, [double]$majflt_p_s, [long]$VSZ, [long]$RSS, [double]$pct_MEM, [string]$Command) {
         $this.time = $time
         $this.UID = $UID
         $this.PID = $_PID
@@ -189,8 +189,8 @@ $loop_body = {
             [int]($seg[2]),
             [double]::Parse($seg[3], $culture),
             [double]::Parse($seg[4], $culture),
-            [int]($seg[5]),
-            [int]($seg[6]),
+            [long]($seg[5]),
+            [long]($seg[6]),
             [double]::Parse($seg[7], $culture),
             $seg[8..($seg.Length - 1)] -join ' '
         )

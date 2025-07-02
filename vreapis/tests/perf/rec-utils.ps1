@@ -101,49 +101,48 @@ class Resource_Metric { # for what are sent by K8s metrics server, and cooked en
     }
 }
 
-# columns for cooked entries
+# add columns according to the designated process/pod filters
 $cooked_entry = [PSCustomObject]@{
     "time" = $null
 }
 $CPU_headers = New-Object System.Collections.Generic.List[string]
 $mem_headers = New-Object System.Collections.Generic.List[string]
-if ($browser_process_filter -ne '') {
-    $CPU_headers += "CPU:browser:$browser_process_filter"
-    $mem_headers += "mem:browser:$browser_process_filter"
+$JupyterLab_backend_filter = 'jupyter.?lab'
+$RStudio_backend_filter = 'rstudio-server'
+$process_filters = New-Object System.Collections.Generic.List[string]
+$pod_filters = New-Object System.Collections.Generic.List[string]
+foreach ($s in @(
+    $browser_process_filter,
+    $vreapi_process_filter,
+    $database_process_filter
+)) {
+    if ($s -ne '') { $process_filters.Add($s) }
 }
 if ($JupyterLab_backend) {
-    $CPU_headers += "CPU:JupyterLab backend"
-    $mem_headers += "mem:JupyterLab backend"
+    $process_filters.Add($JupyterLab_backend_filter)
 }
 if ($RStudio_backend) {
-    $CPU_headers += "CPU:RStudio backend"
-    $mem_headers += "mem:RStudio backend"
+    $process_filters.Add($RStudio_backend_filter)
 }
-if ($vreapi_process_filter -ne '') {
-    $CPU_headers += "CPU:vreapi:$vreapi_process_filter"
-    $mem_headers += "mem:vreapi:$vreapi_process_filter"
+foreach ($s in @(
+    $vreapi_pod_filter,
+    $database_pod_filter
+)) {
+    if ($s -ne '') { $pod_filters.Add($s) }
 }
-if ($database_process_filter -ne '') {
-    $CPU_headers += "CPU:database:$database_process_filter"
-    $mem_headers += "mem:database:$database_process_filter"
+foreach ($filter in $process_filters) {
+    $CPU_headers += "CPU:process:$filter"
+    $mem_headers += "mem:process:$filter"
 }
-if ($vreapi_pod_filter -ne '') {
-    $vreapi_pod_filter = ((kubectl get pod | Select-String $vreapi_pod_filter).Line -split '\s+')[0]
-    $CPU_headers += "CPU:pod:$vreapi_pod_filter"
-    $mem_headers += "mem:pod:$vreapi_pod_filter"
-}
-if ($database_pod_filter -ne '') {
-    $database_pod_filter = ((kubectl get pod | Select-String $database_pod_filter).Line -split '\s+')[0]
-    $CPU_headers += "CPU:pod:$database_pod_filter"
-    $mem_headers += "mem:pod:$database_pod_filter"
+foreach ($filter in $pod_filters) {
+    $CPU_headers += "CPU:pod:$filter"
+    $mem_headers += "mem:pod:$filter"
 }
 $CPU_headers + $mem_headers | ForEach-Object { $cooked_entry | Add-Member -MemberType NoteProperty -Name $_ -Value $null }
 if ((-not $console) -and (-not (Test-Path $cooked_log_file))) { $cooked_entry | ConvertTo-Csv | Select-Object -First 1 | Out-File $cooked_log_file } # add csv headers first
 
 # main body
 $time_format = 'yyyy-MM-dd HH:mm:ss.fff'
-$JupyterLab_backend_filter = 'jupyter.?lab'
-$RStudio_backend_filter = 'rstudio-server'
 if ($env:LC_NUMERIC -eq $null) {
     $culture = [System.Globalization.CultureInfo]::CurrentCulture.Name
 } else {
@@ -156,7 +155,7 @@ $loop_body = {
     $cooked_entry.time = $time
 
     # convert text-based results from pidstat to .NET objects
-    $process_info = (pidstat -ru -p ALL 0) -join "`n" -split "\n\n" | Select-Object -Skip 1
+    $process_info = (pidstat -rul -p ALL 0) -join "`n" -split "\n\n" | Select-Object -Skip 1
     $util_rows = New-Object System.Collections.Generic.List[System.Collections.Generic.List[string[]]]
     for ($i = 0; $i -lt 2; ++$i) {
         $raw_rows = $process_info[$i] -split '\n' | Select-Object -Skip 1
@@ -204,81 +203,25 @@ $loop_body = {
     }
 
     # filter entries
-    if ($browser_process_filter -ne '') {
-        $browser_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $browser_process_filter }
-        $CPU_entries_to_export.AddRange($browser_CPU_entries)
-        $browser_mem_entries = $mem_entries | Where-Object { $_.Command -match $browser_process_filter }
-        $mem_entries_to_export.AddRange($browser_mem_entries)
-        $browser_metric = [Resource_Metric]::new(
-            ($browser_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
-            ($browser_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
+    foreach ($filter in $process_filters) {
+        $new_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $filter }
+        if ($new_CPU_entries.Count -gt 0) { $CPU_entries_to_export.AddRange($new_CPU_entries) }
+        $new_mem_entries = $mem_entries | Where-Object { $_.Command -match $filter }
+        if ($new_mem_entries.Count -gt 0) { $mem_entries_to_export.AddRange($new_mem_entries) }
+        $metric = [Resource_Metric]::new(
+            ($new_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
+            ($new_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
         )
-        $cooked_entry."CPU:browser:$browser_process_filter" = $browser_metric.CPU
-        $cooked_entry."mem:browser:$browser_process_filter" = $browser_metric.mem
+        $cooked_entry."CPU:process:$filter" = $metric.CPU
+        $cooked_entry."mem:process:$filter" = $metric.mem
     }
-    if ($JupyterLab_backend) {
-        $JupyterLab_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $JupyterLab_backend_filter }
-        $CPU_entries_to_export.AddRange($JupyterLab_CPU_entries)
-        $JupyterLab_mem_entries = $mem_entries | Where-Object { $_.Command -match $JupyterLab_backend_filter }
-        $mem_entries_to_export.AddRange($JupyterLab_mem_entries)
-        $JupyterLab_metric = [Resource_Metric]::new(
-            ($JupyterLab_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
-            ($JupyterLab_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
-        )
-        $cooked_entry."CPU:JupyterLab backend" = $JupyterLab_metric.CPU
-        $cooked_entry."mem:JupyterLab backend" = $JupyterLab_metric.mem
-    }
-    if ($RStudio_backend) {
-        $RStudio_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $RStudio_backend_filter }
-        $CPU_entries_to_export.AddRange($RStudio_CPU_entries)
-        $RStudio_mem_entries = $mem_entries | Where-Object { $_.Command -match $RStudio_backend_filter }
-        $mem_entries_to_export.AddRange($RStudio_mem_entries)
-        $RStudio_metric = [Resource_Metric]::new(
-            ($RStudio_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
-            ($RStudio_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
-        )
-        $cooked_entry."CPU:RStudio backend" = $RStudio_metric.CPU
-        $cooked_entry."mem:RStudio backend" = $RStudio_metric.mem
-    }
-    if ($vreapi_process_filter -ne '') {
-        $vreapi_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $vreapi_process_filter }
-        $CPU_entries_to_export.AddRange($vreapi_CPU_entries)
-        $vreapi_mem_entries = $mem_entries | Where-Object { $_.Command -match $vreapi_process_filter }
-        $mem_entries_to_export.AddRange($vreapi_mem_entries)
-        $vreapi_metric = [Resource_Metric]::new(
-            ($vreapi_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
-            ($vreapi_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
-        )
-        $cooked_entry."CPU:vreapi:$vreapi_process_filter" = $vreapi_metric.CPU
-        $cooked_entry."mem:vreapi:$vreapi_process_filter" = $vreapi_metric.mem
-    }
-    if ($database_process_filter -ne '') {
-        $database_CPU_entries = $CPU_entries | Where-Object { $_.Command -match $database_process_filter }
-        $CPU_entries_to_export.AddRange($database_CPU_entries)
-        $database_mem_entries = $mem_entries | Where-Object { $_.Command -match $database_process_filter }
-        $mem_entries_to_export.AddRange($database_mem_entries)
-        $database_metric = [Resource_Metric]::new(
-            ($database_CPU_entries | Measure-Object -Property pct_CPU -Sum).Sum,
-            ($database_mem_entries | Measure-Object -Property RSS -Sum).Sum / 1024.0 # convert KiB to MiB
-        )
-        $cooked_entry."CPU:database:$database_process_filter" = $database_metric.CPU
-        $cooked_entry."mem:database:$database_process_filter" = $database_metric.mem
-    }
-    if ($vreapi_pod_filter -ne '') {
-        $pod_metric = kubectl top pod $vreapi_pod_filter --no-headers | ForEach-Object {
+    foreach ($filter in $pod_filters) {
+        $pod_metric = kubectl top pod $filter --no-headers | ForEach-Object {
             $col = $_ -split '\s+'
             [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
         }
-        $cooked_entry."CPU:pod:$vreapi_pod_filter" = $pod_metric.CPU
-        $cooked_entry."mem:pod:$vreapi_pod_filter" = $pod_metric.mem
-    }
-    if ($database_pod_filter -ne '') {
-        $pod_metric = kubectl top pod $database_pod_filter --no-headers | ForEach-Object {
-            $col = $_ -split '\s+'
-            [Resource_Metric]::new([double]($col[1].substring(0, $col[1].Length - 'm'.Length)) / 10.0, [double]($col[2]).substring(0, $col[2].Length - 'Mi'.Length))
-        }
-        $cooked_entry."CPU:pod:$database_pod_filter" = $pod_metric.CPU
-        $cooked_entry."mem:pod:$database_pod_filter" = $pod_metric.mem
+        $cooked_entry."CPU:pod:$filter" = $pod_metric.CPU
+        $cooked_entry."mem:pod:$filter" = $pod_metric.mem
     }
     
     # output

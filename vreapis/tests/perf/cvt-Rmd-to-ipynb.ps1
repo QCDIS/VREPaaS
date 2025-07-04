@@ -16,7 +16,7 @@ param(
         mimetype = 'text/x-r-source'
         name = 'R'
         pygments_lexer = 'r'
-        version = '4.3.3'   # keep this unchanged to let JupyterLab not adjust automatically [or it will ask to save the file, which brings impacts on performance test results]
+        version = '4.3.3'   # keep this unchanged even if the actual R version mismatches to let JupyterLab not adjust automatically [or it will ask to save the file, which brings impacts on performance test results]
     }
 )
 

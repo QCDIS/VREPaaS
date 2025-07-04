@@ -1,20 +1,26 @@
 param(
-    [System.IO.FileInfo[]]$pathnames # files to convert
+    [System.IO.FileInfo[]]$pathnames,   # files to convert
+#    $kernelspec = @{
+#        display_name = 'R [conda env:jupyterlab] *'
+#        language = 'R'
+#        name = 'conda-env-jupyterlab-r'
+#    }
+    $kernelspec = @{
+        display_name = 'R'
+        language = 'R'
+        name = 'ir'
+    },
+    $language_info = @{
+        codemirror_mode = 'r'
+        file_extension = '.r'
+        mimetype = 'text/x-r-source'
+        name = 'R'
+        pygments_lexer = 'r'
+#        version = '4.3.3'
+        version = '4.4.1'
+    }
 )
 
-$kernelspec = @{
-    display_name = 'R [conda env:jupyterlab] *'
-    language = 'R'
-    name = 'conda-env-jupyterlab-r'
-}
-$language_info = @{
-    codemirror_mode = 'r'
-    file_extension = '.r'
-    mimetype = 'text/x-r-source'
-    name = 'R'
-    pygments_lexer = 'r'
-    version = '4.3.3'
-}
 
 foreach ($pathname in $pathnames) {
     Write-Host -NoNewline "src: "

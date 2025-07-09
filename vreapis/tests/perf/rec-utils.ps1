@@ -1,15 +1,16 @@
 param(
-    [string]$browser_process_filter = '',                   # record resource usage for browser. use this param to specify re pattern to filter browser processes from ps entries
-    [switch]$JupyterLab_backend = $false,                   # record resource usage for JupyterLab backend
-    [switch]$RStudio_backend = $false,                      # record resource usage for RStudio backend
-    [alias('v')][string]$vreapi_process_filter = '',        # record resource usage for vreapi [common backend]. use this param to specify re pattern to filter vreapi process from ps entries
-    [alias('d')][string]$database_process_filter = '',      # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
-    [alias('vp')][string]$vreapi_pod_filter = '',           # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
-    [alias('dp')][string]$database_pod_filter = '',         # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
-    [string]$log_dir = 'log',                               # directory to store log files
-    [int]$interval = 1,                                     # interval between 2 adjacent resource usage captures [seconds]. [pidstat only supports integer intervals]
-    [long]$number_of_records = 0,                           # 0 or negative means infinite records. positive means number of records to capture
-    [switch]$console = $false                               # print usage data to console
+    [string]$browser_process_filter = '',                                   # record resource usage for browser. use this param to specify re pattern to filter browser processes from ps entries
+    [switch]$JupyterLab_backend = $false,                                   # record resource usage for JupyterLab backend
+    [switch]$RStudio_backend = $false,                                      # record resource usage for RStudio backend
+    [alias('v')][string]$vreapi_process_filter = '',                        # record resource usage for vreapi [common backend]. use this param to specify re pattern to filter vreapi process from ps entries
+    [alias('d')][string]$database_process_filter = '',                      # record resource usage for db. use this param to specify re pattern to filter db processes from ps entries
+    [alias('vp')][string]$vreapi_pod_filter = '',                           # record resource usage for vreapi pod [common backend]. use this param to specify re pattern to filter vreapi pod from kubectl top pod entries
+    [alias('dp')][string]$database_pod_filter = '',                         # record resource usage for db pod [common backend]. use this param to specify re pattern to filter db pod from kubectl top pod entries
+    [string]$log_dir = 'log',                                               # directory to store log files
+    [string]$log_filename_prefix = (Get-Date -Format 'yyyyMMdd-HHmmss'),    # prefix for log filename. if not specified, current date and time will be used
+    [int]$interval = 1,                                                     # interval between 2 adjacent resource usage captures [seconds]. [pidstat only supports integer intervals]
+    [long]$number_of_records = 0,                                           # 0 or negative means infinite records. positive means number of records to capture
+    [switch]$console = $false                                               # print usage data to console
 )
 
 # intro messages before recording
@@ -22,10 +23,9 @@ if ($console) {
 } else {
     if ((Test-Path $log_dir) -eq $false) { & '/usr/bin/mkdir' -p $log_dir }
 
-    $date = Get-Date -Format 'yyyyMMdd-HHmmss'
-    $CPU_log_file = $log_dir + "/$date.CPU.csv"
-    $mem_log_file = $log_dir + "/$date.mem.csv"
-    $cooked_log_file = $log_dir + "/$date.cooked.csv"
+    $CPU_log_file = $log_dir + "/$log_filename_prefix.CPU.csv"
+    $mem_log_file = $log_dir + "/$log_filename_prefix.mem.csv"
+    $cooked_log_file = $log_dir + "/$log_filename_prefix.cooked.csv"
 
     Write-Host -NoNewline 'Recording CPU & mem usage at '
     Write-Host -NoNewline -ForegroundColor Green $CPU_log_file
